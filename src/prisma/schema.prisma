@@ -1,0 +1,76 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("NEXT_PUBLIC_MONGODB_URI")
+}
+
+model User {
+    id              String            @id @default(uuid()) @map("_id")
+    password        String
+    email           String            @unique
+    name            String
+    avatar          String?
+    Document        Document[]
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+    LoanApplication LoanApplication[]
+}
+
+model LoanApplication {
+    id                 String    @id @default(uuid()) @map("_id")
+    user               User      @relation(fields: [userId], references: [id])
+    userId             String
+    bankCurrentAccount Boolean   @default(false) // Cuenta corriente
+    bankSavingAccount  Boolean   @default(false) // Ahorros
+    bankNumberAccount  String // Nro. de cuenta
+    entity             String // Entidad
+    fundsOrigin        String // Origen de fondos
+    ccNumber           String    @unique
+    status             Status    @default(PENDIENTE)
+    createdAt          DateTime  @default(now())
+    updatedAt          DateTime  @updatedAt
+    pdfLoan            pdfLoan[]
+}
+
+model pdfLoan {
+    id                String          @id @default(uuid()) @map("_id")
+    loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+    loanApplicationId String
+    headerTitle       String
+    firstExplainText  String
+    secondTitle       String
+    optionAccount     Json
+    threeTitle        String
+    justifyText       String
+    justifyUser       String
+    numberOnce        String
+    textOnce          String
+    finalTitle        String
+    subFinalText      String
+    finalText         String
+}
+
+model Document {
+    id            String   @id @default(uuid()) @map("_id")
+    user          User     @relation(fields: [userId], references: [id])
+    userId        String
+    documentFront String   @default("void")
+    documentBack  String   @default("void")
+    number        String   @default("void")
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+}
+
+enum Status {
+    PENDIENTE
+    APROBADO
+    RECHAZADO
+    PAGADO
+    VENCIDO
+    EN_MORA
+    EN_PROCESO_DE_COBRO
+    EN_NEGOCIACION
+}
