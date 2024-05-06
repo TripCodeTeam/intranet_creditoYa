@@ -1,49 +1,81 @@
 "use client";
 
 import styles from "./page.module.css";
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import socket from "@/Socket";
+import logoIntranet from "@/assets/only_object_logo.png";
+import Image from "next/image";
+import axios from "axios";
 
 export default function Home() {
-  const [preText, setPreText] = useState<string>();
-  const [text, setText] = useState<string>();
+  const [validEmail, setValidEmail] = useState<boolean>(false);
+  const [loadingSession, setLoadingSession] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
 
-  const handleSendText = (e: FormEvent) => {
-    e.preventDefault();
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const typeEmail = e.target.value;
+    setEmail(typeEmail);
 
-    console.log("Enviando test")
-
-    const data = {
-      text: preText,
-    };
-
-    socket.emit("send_text_test", data);
+    if (!e.target.value.includes("@")) {
+      setValidEmail(true);
+    } else {
+      setValidEmail(false);
+    }
   };
 
-  useEffect(() => {
-    socket.emit("connected", "Hello from client");
+  const handleLogin = () => {
+    setLoadingSession(true);
+    if (!email && !password) throw new Error("Credenciales incompletas");
 
-    socket.on("textUpdate", (data) => {
-      const { text } = data;
-      setText(text);
-    });
-
-  }, []);
+    // const response = axios.post("/api")
+  };
 
   return (
-    <main>
-      <h1>Intranet</h1>
+    <main className={styles.containerInit}>
+      <div
+        className={!loadingSession ? styles.centerBox : styles.centerBoxLoading}
+      >
+        {!loadingSession && (
+          <>
+            <div className={styles.boxImage}>
+              <Image
+                className={styles.logoIntranet}
+                src={logoIntranet}
+                alt="logo"
+                width={70}
+              />
+            </div>
+            <div className={styles.boxInputs}>
+              <input
+                className={styles.onlyInput}
+                onChange={handleChangeEmail}
+                type="email"
+                placeholder="Correo Electronico"
+              />
+              <input
+                className={styles.onlyInput}
+                onChange={(e) => setPassword(e.target.value)}
+                type="text"
+                placeholder="Contraseña"
+              />
+            </div>
+            <div className={styles.boxBtnSend}>
+              <p className={styles.btnSend} onClick={handleLogin}>
+                Ingresar
+              </p>
+            </div>
+          </>
+        )}
 
-      <p>Ingresa un texto</p>
-      <form onSubmit={handleSendText}>
-        <input type="text" onChange={(e) => setPreText(e.target.value)} />
-        <button>Enviar</button>
-      </form>
-
-      <h4>Texto Atravez del websocket</h4>
-      <p>{text ? text : "Vacio"}</p>
-
-      <button>Crea una nueva solicitud</button> 
+        {loadingSession && (
+          <>
+            <div className={styles.listMessages}>
+              <p>Ingresando...</p>
+            </div>
+          </>
+        )}
+      </div>
     </main>
   );
 }

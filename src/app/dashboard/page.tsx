@@ -1,15 +1,21 @@
-import axios from "axios";
-import React, { useEffect } from "react";
+import ContentOptions from "@/components/dashboard/ContentOptions";
+import LoansSection from "@/components/dashboard/Loans";
+import SideBar from "@/components/SideBar/SideBar";
+import { DashboardProvider } from "@/context/DashboardContext";
+import React from "react";
+import styles from "./page.module.css";
 
 function Dashboard() {
-  useEffect(() => {
-    const getLoanRequest = async () => {
-      const response = await axios.post("https://creditoya.vercel.app/api/");
-    };
-
-    getLoanRequest();
-  }, []);
-  return <main></main>;
+  return (
+    <>
+      <DashboardProvider>
+        <div className={styles.containerDashboard}>
+          <SideBar />
+          <ContentOptions />
+        </div>
+      </DashboardProvider>
+    </>
+  );
 }
 
 export default Dashboard;

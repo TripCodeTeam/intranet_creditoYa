@@ -1,0 +1,54 @@
+.headerReq {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 2em;
+  margin-top: 1em;
+}
+
+.headerReq h1 {
+  font-weight: 700;
+}
+
+.headerReq p {
+  display: grid;
+  place-content: center;
+}
+
+.containerLoads {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0px 40px;
+}
+
+.titleDate {
+  color: var(--white-900);
+  font-weight: 600;
+}
+
+.textDate {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.boxIconTime {
+  display: grid;
+  place-content: center;
+}
+
+.boxtextClock {
+  display: grid;
+  place-content: center;
+}
+
+.iconClock {
+  filter: drop-shadow(0px 0px 10px #383838);
+}
+
+.listLiveRequests {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}

@@ -1,0 +1,73 @@
+.containerInit {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+}
+
+.centerBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--green-100);
+  padding: 15px 10px;
+  border-radius: 16px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--white-200);
+  width: 280px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.centerBoxLoading {
+  display: grid;
+  place-content: center;
+}
+
+.boxImage {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.logoIntranet {
+  width: 20%;
+  height: auto;
+  filter: drop-shadow(0px 0px 10px #a5a5a5);
+}
+
+.boxInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.onlyInput {
+  padding: 10px;
+  flex: 1;
+  outline: none;
+  border-radius: 8px;
+  /* border: 1px solid transparent; */
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--white-200);
+  font-size: 16px;
+  background: var(--white-100);
+}
+
+.boxBtnSend {
+  display: grid;
+  place-content: center;
+}
+
+.btnSend {
+  color: var(--green-800);
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  /* padding: 5px 10px; */
+}
+
+.btnSend:hover {
+  color: var(--green-600);
+  /* background: var(--white-200); */
+}

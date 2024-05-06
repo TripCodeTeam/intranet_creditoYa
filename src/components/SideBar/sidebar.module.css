@@ -1,0 +1,188 @@
+.sideBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 5px;
+  background: var(--white-200);
+  min-height: 100dvh;
+  position: sticky;
+  width: 70px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.sideBarOpen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--white-200);
+  min-height: 100dvh;
+  position: sticky;
+  width: 200px;
+}
+
+.headerSide {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+
+.headerSideOpen {
+  display: grid;
+  place-content: center;
+  margin-bottom: 2em;
+}
+
+.logoSide {
+  display: grid;
+  place-content: center;
+}
+
+.logo {
+  width: 40px;
+  height: auto;
+}
+
+.BtnOpen {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.BtnOpen:hover {
+  background: var(--white-300);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.BtnClose {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.BtnClose:hover {
+  background: var(--white-300);
+}
+
+.iconMenu {
+  color: var(--red-600);
+  filter: drop-shadow(5px 5px 10px #000000);
+}
+
+.iconOption {
+  color: var(--green-600);
+}
+
+.iconOptionSelect {
+  color: var(--green-300);
+  filter: drop-shadow(0px 0px 10px #000000);
+}
+
+.btnOption {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.btnOptionOpen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.containerSubBtnOpt {
+  display: grid;
+  place-content: center;
+}
+
+.btnOpenOpt {
+  display: flex;
+  flex-direction: row;
+}
+
+.btnOpenOptSelect {
+  display: flex;
+  flex-direction: row;
+  background: var(--white-300);
+  border-radius: 8px;
+}
+
+.btnOpenOpt:hover {
+  background: var(--white-100);
+  color: var(--white-100);
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.subBtnOption {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.subBtnOptionSelect {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  background: var(--white-300);
+}
+
+.subBtnOptionOpen {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.subBtnOption:hover {
+  background: var(--white-100);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.messageBtn {
+  display: grid;
+  place-content: center;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.boxUser {
+  padding-bottom: 3em;
+}
+
+.detailUser {
+  display: grid;
+  place-content: center;
+}
+
+.avatarUser {
+  filter: drop-shadow(0px 0px 10px var(--white-500));
+}
+
+.threePoints {
+  display: grid;
+  place-content: center;
+}
+
+.btnOpenOpt:hover .rolUser {
+  color: var(--white-900);
+}
+
+.btnOpenOpt:hover .iconThreePoint {
+  color: var(--white-900);
+}
+
+/* .detailUser {
+  margin-right: 10px;
+} */

@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+:root {
+  --green-50: #f2fbf2;
+  --green-100: #e1f7e1;
+  --green-200: #c4eec6;
+  --green-300: #96df9a;
+  --green-400: #60c866;
+  --green-500: #41bf49;
+  --green-600: #2b8e31;
+  --green-700: #25702a;
+  --green-800: #225926;
+  --green-900: #1d4a21;
+  --green-950: #0b280e;
+
+  --white-50: #ffffff;
+  --white-100: #efefef;
+  --white-200: #dcdcdc;
+  --white-300: #bdbdbd;
+  --white-400: #989898;
+  --white-500: #7c7c7c;
+  --white-600: #656565;
+  --white-700: #525252;
+  --white-800: #464646;
+  --white-900: #3d3d3d;
+  --white-950: #292929;
+
+  --blue-50: #e8f1ff;
+  --blue-100: #d5e4ff;
+  --blue-200: #b3ccff;
+  --blue-300: #85a8ff;
+  --blue-400: #5676ff;
+  --blue-500: #2f45ff;
+  --blue-600: #0c0eff;
+  --blue-700: #0000ff;
+  --blue-800: #0609cd;
+  --blue-900: #10169f;
+  --blue-950: #0a0b5c;
+
+  --red-50: #fff0f0;
+  --red-100: #ffdddd;
+  --red-200: #ffc0c0;
+  --red-300: #ff9494;
+  --red-400: #ff5757;
+  --red-500: #ff2323;
+  --red-600: #ff0000;
+  --red-700: #d70000;
+  --red-800: #b10303;
+  --red-900: #920a0a;
+  --red-950: #500000;
+}
+
+* {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  color-scheme: light;
+  padding: 0;
+  margin: 0;
+}
+
+/* body {
+  background: var(--white-100);
+} */

@@ -1,0 +1,4 @@
+.containerDashboard {
+  display: flex;
+  flex-direction: row;
+}
