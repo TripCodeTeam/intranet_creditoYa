@@ -2,7 +2,7 @@ import { ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
-import styles from "./styles/CardReq.module.css";
+import styles from "../styles/CardReq.module.css";
 import Image from "next/image";
 import { TbInfoHexagon } from "react-icons/tb";
 import { useRouter } from "next/navigation";

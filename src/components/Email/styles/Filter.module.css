@@ -1,0 +1,227 @@
+.searchContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  flex: 1;
+}
+
+.editorContainer {
+  flex: 1;
+}
+
+.autoMessages {
+  flex-basis: 400px;
+  flex-grow: 1;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.btnOpt {
+  display: flex;
+  flex-direction: row;
+  padding: 5px 10px;
+  background: #f1f1f1;
+  border-radius: 8px;
+  gap: 5px;
+  border: 1px solid #d8d8d8;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.btnOpt:hover {
+  background: #ededed;
+  cursor: pointer;
+}
+
+.iconBtnOpt,
+.btnOpt p {
+  display: grid;
+  place-content: center;
+  color: #5f5f5f;
+}
+
+.boxInput {
+  flex-grow: 1;
+}
+
+.boxInput input {
+  padding: 10px;
+  /* width: 100%; */
+  font-size: 16px;
+  border: 1px solid;
+  outline: none;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.maxCardPerson {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 90%;
+  margin-left: 5%;
+}
+
+.centerCardPerson {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cardPerson {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px;
+  width: 90%;
+}
+
+.centerCardPerson:hover {
+  background: #f1f1f1;
+}
+
+.subBoxDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 5;
+  flex: 1;
+}
+
+.subBoxDetail h5 {
+  margin: 0;
+}
+
+.subBoxDetail p {
+  margin: 0;
+}
+
+.boxOpts {
+  width: 10%;
+}
+
+.masiveFilterBox {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr) minmax(0, 0.8fr)
+  );
+  justify-content: space-between;
+  /* margin: 0 30px; */
+  width: 90%;
+  margin-left: 5%;
+  margin-bottom: 2em;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  /* background: #bbbbbb; */
+  border: 1px solid #c7c7c7;
+  border-radius: 8px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+}
+
+.filterBox {
+  display: grid;
+  place-content: center;
+  /* display: flex;
+    flex-direction: row;
+    gap: 10px; */
+}
+
+.centerFilterBox {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.centerFilterBox h4 {
+  text-align: center;
+}
+
+.iconImage {
+  display: grid;
+  place-content: center;
+}
+
+.imageToMessage {
+  display: grid;
+  place-content: center;
+  background: #ededed;
+  border-radius: 8px;
+  padding: 5px;
+  padding-top: 10px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.imageToMessage:hover {
+  background: #e4e4e4;
+}
+
+.listOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listOpts label {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  background: #ededed;
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.listOpts label:hover {
+  background: #e4e4e4;
+}
+
+.inputBox {
+  display: grid;
+  place-content: center;
+}
+
+.messageBox {
+  /* display: grid;
+    place-content: center; */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.messageBox p {
+  /* width: 90%; */
+  padding-left: 5%;
+}
+
+.textAreaMessage {
+  width: 90%;
+  margin-left: 5%;
+  padding: 5px 10px;
+  border: 1px solid #dadada;
+  outline: none;
+  height: 15vh;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.boxBtnSend {
+  display: grid;
+  place-content: center;
+  /* justify-content: flex-end; */
+}
+
+.boxBtnSend button {
+  padding: 10px 15px;
+  background: var(--green-200);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.boxBtnSend button:hover {
+  background: var(--green-100);
+}

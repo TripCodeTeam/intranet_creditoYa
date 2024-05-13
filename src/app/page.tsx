@@ -2,16 +2,23 @@
 
 import styles from "./page.module.css";
 import React, { FormEvent, useEffect, useState } from "react";
-import socket from "@/Socket";
 import logoIntranet from "@/assets/only_object_logo.png";
 import Image from "next/image";
 import axios from "axios";
+import { toast } from "sonner";
+import { ScalarUser, SessionAuth } from "@/types/session";
+import { useRouter } from "next/navigation";
+import { useGlobalContext } from "@/context/Session";
 
 export default function Home() {
   const [validEmail, setValidEmail] = useState<boolean>(false);
   const [loadingSession, setLoadingSession] = useState<boolean>(false);
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [dataAuth, setDataAuth] = useState<ScalarUser | null>();
+
+  const router = useRouter();
+  const { dataSession, setDataSession } = useGlobalContext();
 
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const typeEmail = e.target.value;
@@ -24,11 +31,24 @@ export default function Home() {
     }
   };
 
-  const handleLogin = () => {
-    setLoadingSession(true);
-    if (!email && !password) throw new Error("Credenciales incompletas");
+  const handleLogin = async () => {
+    if (!email) toast.error("Ingresa tu email");
+    if (!password) toast.error("Ingresa tu contraseña");
 
-    // const response = axios.post("/api")
+    const response = await axios.post("/api/users/signin", {
+      email,
+      password,
+    });
+    const data: SessionAuth = response.data.data;
+    console.log(response);
+    setDataSession(data);
+    setLoadingSession(true);
+
+    if (response.data.success == true) {
+      setInterval(() => {
+        router.push("/dashboard");
+      }, 3000);
+    }
   };
 
   return (
@@ -56,7 +76,7 @@ export default function Home() {
               <input
                 className={styles.onlyInput}
                 onChange={(e) => setPassword(e.target.value)}
-                type="text"
+                type="password"
                 placeholder="Contraseña"
               />
             </div>
@@ -71,7 +91,7 @@ export default function Home() {
         {loadingSession && (
           <>
             <div className={styles.listMessages}>
-              <p>Ingresando...</p>
+              <p>Bienvenido {dataSession?.name}</p>
             </div>
           </>
         )}

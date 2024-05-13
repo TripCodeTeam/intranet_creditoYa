@@ -21,9 +21,9 @@ export type scalarClient = {
   residence_phone_number?: string;
   phone_is_wp?: boolean;
   phone_whatsapp?: string;
-  birth_day?: string;
+  birth_day?: Date;
   place_of_birth?: string;
-  Genre?: string;
+  genre?: string;
   phone_residence?: string;
   residence_address?: string;
   city?: string;
@@ -36,11 +36,11 @@ export type ScalarUser = {
   id?: string;
   password: string;
   email: string;
-  name: string;
-  lastNames: string;
+  name?: string;
+  lastNames?: string;
   avatar?: string;
-  rol: string;
-  phone: string;
+  rol?: string;
+  phone?: string;
   created_at?: Date;
   updated_at?: Date;
 };
@@ -145,7 +145,8 @@ export type Status =
   | "Vencido"
   | "En_mora"
   | "En_proceso_de_cobro"
-  | "En_negociacion";
+  | "En_negociacion"
+  | "Completado";
 
 export type typePayment = "Semanal" | "Quincenal" | "Mensual";
 
@@ -168,10 +169,12 @@ export type TypesDocument = "CC" | "CE" | "PASAPORTE";
 
 export type HouseType = "Familiar" | "Propia" | "Arrendada";
 
+export type TypeRol = "Customer_services" | "Manager" | "Loan_manager";
+
 export interface GlobalContextType {
-  option: SessionAuth | null;
-  // isLoading: boolean;
-  setOption: (option: SessionAuth) => void;
+  dataSession: SessionAuth | null;
+  isLoading: boolean;
+  setDataSession: (option: SessionAuth) => void;
 }
 
 export interface DashboardContextType {

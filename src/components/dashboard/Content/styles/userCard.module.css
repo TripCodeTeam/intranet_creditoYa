@@ -1,0 +1,68 @@
+.cardUser {
+  /* background: var(--white-100); */
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cardUser:hover {
+  border: 1px solid var(--white-200);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.idBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.textId {
+  font-size: 12px;
+}
+
+.boxAvatar {
+  display: grid;
+  place-content: center;
+}
+
+.avatar {
+  filter: drop-shadow(0px 0px 10px #bbbbbb);
+}
+
+.textNameId {
+  display: grid;
+  place-content: center;
+  margin-right: 1em;
+}
+
+.infoUser {
+  display: grid;
+  place-content: center;
+}
+
+.optionsBox {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.boxIconOption {
+  display: grid;
+  place-content: center;
+  background: var(--white-200);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.iconOption {
+  color: var(--white-600);
+}
+
+.iconOption:hover {
+  filter: drop-shadow(0px 0px 10px #000000);
+}
