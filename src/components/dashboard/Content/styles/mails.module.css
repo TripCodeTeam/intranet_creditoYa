@@ -1,5 +1,9 @@
 .mainMasive {
-  flex: 1;
+  /* flex: 1; */
+  height: 100dvh;
+  width: 100%;
+  scrollbar-color: var(--white-100);
+  overflow: scroll;
   padding: 0px 40px;
   display: flex;
   flex-direction: column;
@@ -37,6 +41,10 @@
   padding: 10px 15px 10px 10px;
   background: var(--green-200);
   border-radius: 16px;
+}
+
+.btnSelectActive:hover {
+  scale: 1.01;
 }
 
 .boxIconSelect {

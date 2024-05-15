@@ -8,6 +8,7 @@
 
 .editorContainer {
   flex: 1;
+  margin-top: 1em;
 }
 
 .autoMessages {
@@ -224,4 +225,100 @@
 
 .boxBtnSend button:hover {
   background: var(--green-100);
+}
+
+.boxOpts {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.boxIconSend {
+  display: grid;
+  place-content: center;
+}
+
+.iconSelect {
+  color: var(--white-600);
+  cursor: pointer;
+}
+
+.mailDestinity {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.barDestinities {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 1em;
+}
+
+.btnSelect {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px 10px 5px 5px;
+  border-radius: 16px;
+  background: var(--blue-100);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.boxIconCancel {
+  display: grid;
+  place-content: center;
+  padding: 5px;
+  background: var(--white-100);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.textAll {
+  display: grid;
+  place-content: center;
+  font-weight: 400;
+}
+
+.btnSendMail {
+  display: grid;
+  place-content: center;
+}
+
+.btnSend {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--white-300);
+  outline: none;
+  cursor: pointer;
+  background: var(--green-200);
+  color: var(--green-600);
+  font-weight: 700;
+}
+
+.btnSend:hover {
+  background: var(--green-300);
+}
+
+.noDest {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.noDest p {
+  display: grid;
+  place-content: center;
+}
+
+.warnIconBox {
+  display: grid;
+  place-content: center;
+}
+
+.warnTitle {
+  display: grid;
+  place-content: center;
 }

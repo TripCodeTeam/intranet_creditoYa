@@ -1,8 +1,16 @@
 .mainMail {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 0px 40px;
+  /* width: 100%; */
+  /* padding: 0px 40px; */
+}
+
+.containerDrop {
+  margin-top: 2em;
+}
+
+.containerDropNo {
+  margin-top: 2em;
 }
 
 .containerFilter {
@@ -33,4 +41,18 @@
 .boxIconFile {
   display: grid;
   place-content: center;
+}
+
+.NameFile {
+  width: 100%;
+}
+
+.boxBtnProc {
+  display: grid;
+  place-content: center;
+  margin-top: 1em;
+}
+
+.btnProcess {
+  padding: 10px 15px;
 }

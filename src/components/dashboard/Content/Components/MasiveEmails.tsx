@@ -22,6 +22,7 @@ function MasiveEmails() {
         file.type === "application/vnd.ms-excel"
       ) {
         setSelectedFile(file);
+        processFile()
       } else {
         console.log("El archivo no es un libro de Excel");
       }
@@ -73,7 +74,6 @@ function MasiveEmails() {
   return (
     <>
       <div className={styles.mainMail}>
-
         <div
           {...getRootProps()}
           className={
@@ -107,6 +107,7 @@ function MasiveEmails() {
         {!jsonFile && (
           <div className={styles.boxBtnProc}>
             <button
+              className={styles.btnProcess}
               disabled={selectedFile ? false : true}
               onClick={processFile}
             >
