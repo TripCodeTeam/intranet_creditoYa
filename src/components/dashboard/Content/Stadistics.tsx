@@ -1,9 +1,15 @@
-import React from 'react'
+import React from "react";
+import HeaderContent from "./Components/HeaderContent";
+import styles from "./styles/stadistics.module.css"
 
 function StadisticsComponent() {
   return (
-    <div>Stadistics Component</div>
-  )
+    <>
+      <div className={styles.mainStats}>
+        <HeaderContent label={"Estadisticas de prestamos"} />
+      </div>
+    </>
+  );
 }
 
-export default StadisticsComponent
+export default StadisticsComponent;

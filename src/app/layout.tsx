@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Credito Ya | Intranet",
   description: "Developer by TripCode",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

@@ -7,16 +7,25 @@ import RequestsContent from "./Content/Requests";
 import ListClients from "./Content/ListClients";
 import MailsComponents from "./Content/Mails";
 import StadisticsComponent from "./Content/Stadistics";
+import PaymentsContent from "./Content/Payments";
+import MessagesContent from "./Content/Messages";
+import SettingsContent from "./Content/Settings";
+import AcceptContent from "./Content/Accept";
 
 function ContentOptions() {
   const { option } = useDashboardContext();
+
   return (
     <>
       <div className={styles.containerContent}>
         {option == "Request" && <RequestsContent />}
+        {option == "Accepts" && <AcceptContent />}
         {option == "Clients" && <ListClients />}
         {option == "Emails" && <MailsComponents />}
         {option == "statistics" && <StadisticsComponent />}
+        {option == "payments" && <PaymentsContent />}
+        {option == "messages" && <MessagesContent />}
+        {option == "settings" && <SettingsContent />}
       </div>
     </>
   );

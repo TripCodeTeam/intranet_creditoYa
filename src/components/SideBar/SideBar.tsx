@@ -13,6 +13,11 @@ import {
   TbUserSearch,
   TbX,
   TbChartHistogram,
+  TbTransactionDollar,
+  TbMessageCircle2,
+  TbMessageCircleDown,
+  TbMobiledata,
+  TbAdjustments,
 } from "react-icons/tb";
 
 import Image from "next/image";
@@ -64,7 +69,7 @@ function SideBar() {
                   onClick={() => handleChangeOption({ option: "Request" })}
                 >
                   <div className={styles.subBtnOptionOpen}>
-                    <TbMoneybag
+                    <TbMobiledata
                       className={
                         option == "Request"
                           ? styles.iconOptionSelect
@@ -74,6 +79,27 @@ function SideBar() {
                     />
                   </div>
                   <p className={styles.messageBtn}>Solicitudes</p>
+                </div>
+
+                <div
+                  className={
+                    option == "Accepts"
+                      ? styles.btnOpenOptSelect
+                      : styles.btnOpenOpt
+                  }
+                  onClick={() => handleChangeOption({ option: "Accepts" })}
+                >
+                  <div className={styles.subBtnOptionOpen}>
+                    <TbMoneybag
+                      className={
+                        option == "Accepts"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                  <p className={styles.messageBtn}>Prestamos</p>
                 </div>
 
                 <div
@@ -138,6 +164,69 @@ function SideBar() {
                   </div>
                   <p className={styles.messageBtn}>Estadisticas</p>
                 </div>
+
+                <div
+                  className={
+                    option == "payments"
+                      ? styles.btnOpenOptSelect
+                      : styles.btnOpenOpt
+                  }
+                  onClick={() => handleChangeOption({ option: "payments" })}
+                >
+                  <div className={styles.subBtnOptionOpen}>
+                    <TbTransactionDollar
+                      className={
+                        option == "payments"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                  <p className={styles.messageBtn}>Pagos</p>
+                </div>
+
+                <div
+                  className={
+                    option == "messages"
+                      ? styles.btnOpenOptSelect
+                      : styles.btnOpenOpt
+                  }
+                  onClick={() => handleChangeOption({ option: "messages" })}
+                >
+                  <div className={styles.subBtnOptionOpen}>
+                    <TbMessageCircleDown
+                      className={
+                        option == "messages"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                  <p className={styles.messageBtn}>Mensajes</p>
+                </div>
+
+                <div
+                  className={
+                    option == "settings"
+                      ? styles.btnOpenOptSelect
+                      : styles.btnOpenOpt
+                  }
+                  onClick={() => handleChangeOption({ option: "settings" })}
+                >
+                  <div className={styles.subBtnOptionOpen}>
+                    <TbAdjustments
+                      className={
+                        option == "settings"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                  <p className={styles.messageBtn}>Preferencias</p>
+                </div>
               </>
             )}
             {!isOpen && (
@@ -153,9 +242,31 @@ function SideBar() {
                         : styles.subBtnOption
                     }
                   >
-                    <TbMoneybag
+                    <TbMobiledata
                       className={
                         option == "Request"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={styles.containerSubBtnOpt}
+                  onClick={() => handleChangeOption({ option: "Accepts" })}
+                >
+                  <div
+                    className={
+                      option == "Accepts"
+                        ? styles.subBtnOptionSelect
+                        : styles.subBtnOption
+                    }
+                  >
+                    <TbMoneybag
+                      className={
+                        option == "Accepts"
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }
@@ -222,6 +333,72 @@ function SideBar() {
                     <TbChartHistogram
                       className={
                         option == "statistics"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={styles.containerSubBtnOpt}
+                  onClick={() => handleChangeOption({ option: "payments" })}
+                >
+                  <div
+                    className={
+                      option == "payments"
+                        ? styles.subBtnOptionSelect
+                        : styles.subBtnOption
+                    }
+                  >
+                    <TbTransactionDollar
+                      className={
+                        option == "payments"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={styles.containerSubBtnOpt}
+                  onClick={() => handleChangeOption({ option: "messages" })}
+                >
+                  <div
+                    className={
+                      option == "messages"
+                        ? styles.subBtnOptionSelect
+                        : styles.subBtnOption
+                    }
+                  >
+                    <TbMessageCircleDown
+                      className={
+                        option == "messages"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className={styles.containerSubBtnOpt}
+                  onClick={() => handleChangeOption({ option: "settings" })}
+                >
+                  <div
+                    className={
+                      option == "settings"
+                        ? styles.subBtnOptionSelect
+                        : styles.subBtnOption
+                    }
+                  >
+                    <TbAdjustments
+                      className={
+                        option == "settings"
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }
