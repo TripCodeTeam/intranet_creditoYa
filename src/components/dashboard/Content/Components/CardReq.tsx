@@ -7,13 +7,42 @@ import Image from "next/image";
 import { TbInfoHexagon } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import socket from "@/lib/socket/socket";
+import { Status } from "@/types/session";
+import { useGlobalContext } from "@/context/Session";
 
 function CardRequest({ loan }: { loan: ScalarLoanApplication }) {
   const [avatarPerfil, setAvatarPerfil] = useState<string>("");
   const router = useRouter();
 
-  const handlerDecision = ({ accept }: { accept: boolean }) => {
+  const [reason, setReason] = useState<string | null>(null);
+
+  const { dataSession } = useGlobalContext();
+
+  const handlerDecision = ({
+    accept,
+    reason,
+  }: {
+    accept: boolean;
+    reason: string | null;
+  }) => {
     if (accept === true) {
+      const data: {
+        nameUser: string;
+        emailUser: string;
+        employeeId: string;
+        loanApplicationId: string;
+        state: Status;
+        reason: string | null;
+      } = {
+        nameUser: `${loan.firtLastName} ${loan.secondLastName}`,
+        emailUser: loan.email,
+        employeeId: dataSession?.id as string,
+        loanApplicationId: loan.id as string,
+        reason,
+        state: "Aprobado",
+      };
+      socket.emit("changeState", data);
       toast.success("Solicitud Aceptada");
     } else if (accept === false) {
       toast.error("Solicitud Rechazada");
@@ -30,7 +59,7 @@ function CardRequest({ loan }: { loan: ScalarLoanApplication }) {
 
     getAvatar();
   }, []);
-  
+
   return (
     <>
       <div className={styles.cardRequest}>
@@ -122,13 +151,13 @@ function CardRequest({ loan }: { loan: ScalarLoanApplication }) {
             <div className={styles.BoxInfoAccept}>
               <p
                 className={styles.btnAccept}
-                onClick={() => handlerDecision({ accept: true })}
+                onClick={() => handlerDecision({ accept: true, reason: null })}
               >
                 Aceptar
               </p>
               <p
                 className={styles.btnCancel}
-                onClick={() => handlerDecision({ accept: false })}
+                onClick={() => handlerDecision({ accept: false, reason: null })} 
               >
                 Rechazar
               </p>

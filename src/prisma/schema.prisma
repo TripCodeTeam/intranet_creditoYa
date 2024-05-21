@@ -54,18 +54,17 @@ model UsersIntranet {
 
 model LoanApplication {
     id                                   String        @id @default(uuid()) @map("_id")
-    user                                 User          @relation(fields: [userId], references: [id])
     userId                               String
+    user                                 User          @relation(fields: [userId], references: [id])
     email                                String
     principal_debtor                     String
     co_debtor                            String
     affiliated_company                   String
     nit                                  String
     requested_amount                     String
-    deadline                             Int
+    deadline                             String
     payment                              typePayment
-    quota_value                          Int
-    current_loans                        ifOrNot
+    quota_value                          String
     firtLastName                         String
     secondLastName                       String
     names                                String
@@ -73,12 +72,11 @@ model LoanApplication {
     typeDocument                         TypesDocument
     numberDocument                       String
     persons_in_charge                    String
-    birthDate                            String
+    birthDate                            DateTime
     place_birth                          String
     genre                                String
     marital_status                       String
     cellPhone                            String
-    length_service                       String
     destination_resources                String
     city                                 String
     residence_address                    String
@@ -90,7 +88,6 @@ model LoanApplication {
     pignorado                            String
     in_favor_pignorado                   String?
     commercial_value                     String
-    other_personal_assets                String
     other_personal_commercial_value      String
     family_members_in_company_agreement  ifOrNot
     is_currently_codebtor                ifOrNot
@@ -98,14 +95,13 @@ model LoanApplication {
     codebtor_origin_creditoya            String?
     other_entity                         ifOrNot
     name_other_entity                    String?
-    amount_in_the_other_entity           Int?
+    amount_in_the_other_entity           String?
     complete_name_spouse                 String?
     number_document_spouse               String?
     phone_spouse                         String?
     name_company_spouse                  String?
     phone_company_spoue                  String?
-    total_monthly_income                 Int
-    total_monthly_revenues               Int
+    total_monthly_income                 String
     total_assets                         String
     total_liabilities                    String
     patrimony                            String
@@ -132,29 +128,25 @@ model LoanApplication {
     labor_seniority_contracts            String
     remarks                              String?
     status                               Status        @default(Pendiente)
-    contract_type_fixed_term             ifOrNot
-    contract_type_work                   ifOrNot
     date_relationship                    DateTime
     labor_seniority                      String
     contract_termination_date            String?
-    indefinite_term                      ifOrNot
-    average_variable_salary              Int
-    total_monthly_income_final           Int
-    monthly_discounts                    Int
-    current_loans_affecting              ifOrNot
+    indefinite_term                      ifOrNot?
+    average_variable_salary              String
+    monthly_discounts                    String
+    current_loans_affecting              ifOrNot?
     affecting_loan_entity_name           String?
-    affecting_loan_balance               Int?
-    affecting_loan_quota_value           Int?
+    affecting_loan_balance               String?
+    affecting_loan_quota_value           String?
     bankCurrentAccount                   Boolean       @default(false) // Cuenta corriente
     bankSavingAccount                    Boolean       @default(false) // Ahorros
     bankNumberAccount                    String // Nro. de cuenta
     entity                               String // Entidad
-    fundsOrigin                          String // Origen de fondos
     ccNumber                             String        @unique
-    pdfLoan                              pdfLoan[]
     terms_and_conditions                 Boolean       @default(false)
     createdAt                            DateTime      @default(now())
     updatedAt                            DateTime      @updatedAt
+    pdfLoan                              pdfLoan[]
 }
 
 model Events {
