@@ -1,7 +1,6 @@
 "use client"
 
 import ContentOptions from "@/components/dashboard/ContentOptions";
-import LoansSection from "@/components/dashboard/Loans";
 import SideBar from "@/components/SideBar/SideBar";
 import { DashboardProvider } from "@/context/DashboardContext";
 import React from "react";

@@ -5,30 +5,14 @@ import styles from "./styles/Request.module.css";
 import { ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
 import CardRequest from "./Components/CardReq";
-import { useWebSocket } from "../../../../socket/SocketHook";
 import HeaderContent from "./Components/HeaderContent";
+import socket from "@/lib/socket/socket";
+import { toast } from "sonner";
 
 function RequestsContent() {
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
     null
   );
-  const [textTest, setTextTest] = useState<string | null>(null);
-
-  const handleOnMessage = (event: any) => {
-    const message = JSON.parse(event.data);
-    console.log("Mensaje del servidor: ", event.data);
-
-    switch (message.type) {
-      case "newUserCreate":
-        console.log(message);
-        setTextTest(message.newUser);
-    }
-  };
-
-  const { send } = useWebSocket({
-    url: process.env.NEXT_PUBLIC_ENDPOINT_WEBSOCKET as string,
-    onMessage: handleOnMessage,
-  });
 
   useEffect(() => {
     const getAllLoans = async () => {
