@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma/db";
-import { ScalarUser, scalarClient } from "@/types/session";
-import { User, UsersIntranet } from "@prisma/client";
+import { ScalarUser } from "@/types/session";
+import { UsersIntranet } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 class UserServices {
@@ -26,22 +26,27 @@ class UserServices {
   }
 
   static async signin(email: string, password: string): Promise<UsersIntranet> {
-    const usersIntranet = await prisma.usersIntranet.findUnique({
+    console.log("class log: ", email, password)
+
+    const userIntranet = await prisma.usersIntranet.findUnique({
       where: { email },
-    });
+    }).catch((error) => console.log("class error: ", error));
+
+    console.log("class log userRes: ", userIntranet)
+    !userIntranet && console.log("imposible loguear user con class") 
 
     if (
-      !usersIntranet ||
-      !(await bcrypt.compare(password, usersIntranet.password))
+      !userIntranet ||
+      !(await bcrypt.compare(password, userIntranet.password))
     ) {
       throw new Error("Credenciales invalidas");
     }
 
-    return usersIntranet;
+    return userIntranet;
   }
 
-  static async all(): Promise<User[]> {
-    return prisma.user.findMany();
+  static async all(): Promise<UsersIntranet[]> {
+    return prisma.usersIntranet.findMany();
   }
 
   static async verifyData(userId: string): Promise<{
