@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./page.module.css";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import logoIntranet from "@/assets/only_object_logo.png";
 import Image from "next/image";
 import axios from "axios";
@@ -31,7 +31,9 @@ export default function Home() {
     }
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+
     if (!email) toast.error("Ingresa tu email");
     if (!password) toast.error("Ingresa tu contraseña");
 
@@ -53,8 +55,9 @@ export default function Home() {
 
   return (
     <main className={styles.containerInit}>
-      <div
+      <form
         className={!loadingSession ? styles.centerBox : styles.centerBoxLoading}
+        onSubmit={handleLogin}
       >
         {!loadingSession && (
           <>
@@ -81,9 +84,9 @@ export default function Home() {
               />
             </div>
             <div className={styles.boxBtnSend}>
-              <p className={styles.btnSend} onClick={handleLogin}>
+              <button type="submit" className={styles.btnSend} onClick={handleLogin}>
                 Ingresar
-              </p>
+              </button>
             </div>
           </>
         )}
@@ -95,7 +98,7 @@ export default function Home() {
             </div>
           </>
         )}
-      </div>
+      </form>
     </main>
   );
 }
