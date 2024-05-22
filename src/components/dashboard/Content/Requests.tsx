@@ -8,16 +8,19 @@ import CardRequest from "./Components/CardReq";
 import HeaderContent from "./Components/HeaderContent";
 import socket from "@/lib/socket/socket";
 import { toast } from "sonner";
+import { useGlobalContext } from "@/context/Session";
 
 function RequestsContent() {
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
     null
   );
 
+  const { dataSession } = useGlobalContext();
+
   useEffect(() => {
     const getAllLoans = async () => {
       const response = await axios.post("/api/loans/all");
-      console.log(response)
+      console.log(response);
       setLiveLoans(response.data.data);
     };
 
@@ -54,7 +57,11 @@ function RequestsContent() {
           {liveLoans
             ?.filter((loan) => loan.status === "Pendiente")
             .map((loan) => (
-              <CardRequest loan={loan} key={loan.id} />
+              <CardRequest
+                loan={loan}
+                token={dataSession?.token as string}
+                key={loan.id}
+              />
             ))}
         </div>
       </div>

@@ -18,6 +18,7 @@ import {
   TbMessageCircleDown,
   TbMobiledata,
   TbAdjustments,
+  TbBrandWhatsapp,
 } from "react-icons/tb";
 
 import Image from "next/image";
@@ -146,27 +147,6 @@ function SideBar() {
 
                 <div
                   className={
-                    option == "statistics"
-                      ? styles.btnOpenOptSelect
-                      : styles.btnOpenOpt
-                  }
-                  onClick={() => handleChangeOption({ option: "statistics" })}
-                >
-                  <div className={styles.subBtnOptionOpen}>
-                    <TbChartHistogram
-                      className={
-                        option == "statistics"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                  <p className={styles.messageBtn}>Estadisticas</p>
-                </div>
-
-                <div
-                  className={
                     option == "payments"
                       ? styles.btnOpenOptSelect
                       : styles.btnOpenOpt
@@ -195,7 +175,7 @@ function SideBar() {
                   onClick={() => handleChangeOption({ option: "messages" })}
                 >
                   <div className={styles.subBtnOptionOpen}>
-                    <TbMessageCircleDown
+                    <TbBrandWhatsapp
                       className={
                         option == "messages"
                           ? styles.iconOptionSelect
@@ -321,28 +301,6 @@ function SideBar() {
 
                 <div
                   className={styles.containerSubBtnOpt}
-                  onClick={() => handleChangeOption({ option: "statistics" })}
-                >
-                  <div
-                    className={
-                      option == "statistics"
-                        ? styles.subBtnOptionSelect
-                        : styles.subBtnOption
-                    }
-                  >
-                    <TbChartHistogram
-                      className={
-                        option == "statistics"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={styles.containerSubBtnOpt}
                   onClick={() => handleChangeOption({ option: "payments" })}
                 >
                   <div
@@ -374,7 +332,7 @@ function SideBar() {
                         : styles.subBtnOption
                     }
                   >
-                    <TbMessageCircleDown
+                    <TbBrandWhatsapp
                       className={
                         option == "messages"
                           ? styles.iconOptionSelect

@@ -10,8 +10,15 @@ import { toast } from "sonner";
 import socket from "@/lib/socket/socket";
 import { Status } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
+import InfoEmployee from "./IdForName";
 
-function CardRequest({ loan }: { loan: ScalarLoanApplication }) {
+function CardRequest({
+  loan,
+  token,
+}: {
+  loan: ScalarLoanApplication;
+  token: string;
+}) {
   const [avatarPerfil, setAvatarPerfil] = useState<string>("");
   const router = useRouter();
 
@@ -147,22 +154,40 @@ function CardRequest({ loan }: { loan: ScalarLoanApplication }) {
             <p className={styles.textCantity}>$ {loan.requested_amount} COP</p>
           </div>
 
-          <div className={styles.barBtnsActios}>
-            <div className={styles.BoxInfoAccept}>
-              <p
-                className={styles.btnAccept}
-                onClick={() => handlerDecision({ accept: true, reason: null })}
-              >
-                Aceptar
-              </p>
-              <p
-                className={styles.btnCancel}
-                onClick={() => handlerDecision({ accept: false, reason: null })} 
-              >
-                Rechazar
-              </p>
+          {loan.status === "Pendiente" && (
+            <div className={styles.barBtnsActios}>
+              <div className={styles.BoxInfoAccept}>
+                <p
+                  className={styles.btnAccept}
+                  onClick={() =>
+                    handlerDecision({ accept: true, reason: null })
+                  }
+                >
+                  Aceptar
+                </p>
+                <p
+                  className={styles.btnCancel}
+                  onClick={() =>
+                    handlerDecision({ accept: false, reason: null })
+                  }
+                >
+                  Rechazar
+                </p>
+              </div>
             </div>
-          </div>
+          )}
+
+          {loan.status === "Aprobado" && (
+            <div className={styles.employeeInfo}>
+              <div className={styles.centerEmployeeInfo}>
+                <h3>Asesor encargado</h3>
+                <InfoEmployee
+                  employeeId={loan.employeeId as string}
+                  token={token}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

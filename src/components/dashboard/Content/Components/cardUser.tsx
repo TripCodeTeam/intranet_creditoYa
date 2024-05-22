@@ -15,7 +15,6 @@ import Tooltip from "@/components/gadget/Tooltip";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal/modal";
 import ContainerMail from "@/components/Email/ContainerMail";
-import SendMessagePriv from "@/components/chat/SendMessagePriv";
 
 function CardUser({ user, token }: { user: scalarClient; token: string }) {
   const [openModel, setOpenModel] = useState<boolean>(false);
@@ -116,9 +115,7 @@ function CardUser({ user, token }: { user: scalarClient; token: string }) {
       {openModel && (
         <Modal isOpen={openModel} onClose={toggleOpenModel}>
           {typeModel == "mail" && <ContainerMail mail={user.email} />}
-          {typeModel == "message" && (
-            <SendMessagePriv userId={user.id as string} />
-          )}
+          {typeModel == "message" && "Whatsapp Coming soon..."}
         </Modal>
       )}
     </>
