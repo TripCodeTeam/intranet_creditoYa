@@ -26,14 +26,14 @@ class UserServices {
   }
 
   static async signin(email: string, password: string): Promise<UsersIntranet> {
-    console.log("class log: ", email, password)
+    console.log("class log: ", email, password);
 
     const userIntranet = await prisma.usersIntranet.findUnique({
       where: { email },
-    }).catch((error) => console.log("class error: ", error));
+    });
 
-    console.log("class log userRes: ", userIntranet)
-    !userIntranet && console.log("imposible loguear user con class") 
+    console.log("class log userRes: ", userIntranet);
+    !userIntranet && console.log("imposible loguear user con class");
 
     if (
       !userIntranet ||
