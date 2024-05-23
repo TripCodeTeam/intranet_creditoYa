@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma/db";
 import { ScalarUser } from "@/types/session";
-import { UsersIntranet } from "@prisma/client";
+import { LoanApplication, UsersIntranet } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 class UserServices {
@@ -26,20 +26,26 @@ class UserServices {
   }
 
   static async signin(email: string, password: string): Promise<UsersIntranet> {
-    console.log("class log: ", email, password);
+    // Evitar logging en producción
+    if (process.env.NODE_ENV !== "production") {
+      console.log("class log: ", email, password);
+    }
 
     const userIntranet = await prisma.usersIntranet.findUnique({
       where: { email },
     });
 
-    console.log("class log userRes: ", userIntranet);
-    !userIntranet && console.log("imposible loguear user con class");
+    // Evitar logging en producción
+    if (process.env.NODE_ENV !== "production") {
+      console.log("class log userRes: ", userIntranet);
+      !userIntranet && console.log("imposible loguear user con class");
+    }
 
-    if (
-      !userIntranet ||
-      !(await bcrypt.compare(password, userIntranet.password))
-    ) {
-      throw new Error("Credenciales invalidas");
+    // Almacenar el hash de la contraseña en una variable local
+    const hashedPassword = userIntranet ? userIntranet.password : "";
+
+    if (!userIntranet || !(await bcrypt.compare(password, hashedPassword))) {
+      throw new Error("Credenciales inválidas");
     }
 
     return userIntranet;

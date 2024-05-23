@@ -45,18 +45,18 @@ model UsersIntranet {
     lastNames  String
     email      String   @unique
     password   String
-    phone      String  @unique @default("No definido")
-    rol        String  @default("No definido")
-    avatar     String  @default("No definido")
+    phone      String   @unique @default("No definido")
+    rol        String   @default("No definido")
+    avatar     String   @default("No definido")
     updated_at DateTime @default(now())
     created_at DateTime @default(now())
 }
 
 model LoanApplication {
-    id                                   String        @id @default(uuid()) @map("_id")
+    id                                   String         @id @default(uuid()) @map("_id")
     userId                               String
-    employeeId                           String?       @default("Standby")
-    user                                 User          @relation(fields: [userId], references: [id])
+    employeeId                           String?        @default("Standby")
+    user                                 User           @relation(fields: [userId], references: [id])
     email                                String
     principal_debtor                     String
     co_debtor                            String
@@ -128,7 +128,7 @@ model LoanApplication {
     labor_or_work                        ifOrNot?
     labor_seniority_contracts            String
     remarks                              String?
-    status                               Status        @default(Pendiente)
+    status                               Status         @default(Pendiente)
     date_relationship                    DateTime
     labor_seniority                      String
     contract_termination_date            String?
@@ -139,15 +139,25 @@ model LoanApplication {
     affecting_loan_entity_name           String?
     affecting_loan_balance               String?
     affecting_loan_quota_value           String?
-    bankCurrentAccount                   Boolean       @default(false) // Cuenta corriente
-    bankSavingAccount                    Boolean       @default(false) // Ahorros
+    bankCurrentAccount                   Boolean        @default(false) // Cuenta corriente
+    bankSavingAccount                    Boolean        @default(false) // Ahorros
     bankNumberAccount                    String // Nro. de cuenta
     entity                               String // Entidad
-    ccNumber                             String        @unique
-    terms_and_conditions                 Boolean       @default(false)
-    createdAt                            DateTime      @default(now())
-    updatedAt                            DateTime      @updatedAt
+    ccNumber                             String         @unique
+    terms_and_conditions                 Boolean        @default(false)
+    createdAt                            DateTime       @default(now())
+    updatedAt                            DateTime       @updatedAt
     pdfLoan                              pdfLoan[]
+    paymentsLoan                         paymentsLoan[]
+}
+
+model paymentsLoan {
+    id                String          @id @default(uuid()) @map("_id")
+    loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+    loanApplicationId String
+    imagesEvidence    String[]
+    createdAt         DateTime        @default(now())
+    updateAt          DateTime        @updatedAt
 }
 
 model Events {

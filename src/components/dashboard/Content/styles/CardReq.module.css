@@ -1,13 +1,18 @@
 .cardRequest {
-  background: var(--white-100);
-  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* background: var(--green-100); */
+  /* box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1); */
   padding: 30px;
-  border-radius: 16px;
-  border: 1px solid var(--white-200);
+  /* border-radius: 16px; */
+  /* border-top: 2px solid var(--white-200); */
+  border-bottom: 2px solid var(--white-200);
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
 }
 
-.cardRequest:hover {
-  border: 1px solid var(--white-300);
+.titlePreview {
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: var(--green-900);
 }
 
 .barDetails {
@@ -50,16 +55,20 @@
 .BoxInfo {
   display: grid;
   place-content: center;
-  background: var(--blue-100);
-  /* box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1); */
-  /* border: 1px solid var(--white-300); */
-  padding: 8px 10px;
+}
+
+.centerBoxInfo {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 8px 15px;
   border-radius: 8px;
+  background: var(--green-200);
   cursor: pointer;
 }
 
-.BoxInfo:hover {
-  background: var(--blue-200);
+.centerBoxInfo:hover {
+  background: var(--green-300);
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
@@ -72,14 +81,9 @@
   color: var(--blue-400);
 }
 
-.centerBoxInfo {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-}
-
 .textBtnDetails {
-  color: var(--blue-300);
+  color: var(--green-600);
+  font-weight: 600;
 }
 
 .BoxInfoAccept {
@@ -127,13 +131,18 @@
 
 .centerBoxInfo p {
   font-weight: 500;
-  color: var(--blue-700);
+  color: var(--green-600);
 }
 
 .boxDetail {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  padding: 5px 10px;
+  background: var(--green-100);
+  border-radius: 8px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--green-200);
 }
 
 .label {
@@ -153,11 +162,13 @@
 
 .textCantity {
   text-align: center;
+  font-size: 30px;
 }
 
 .barBtnsActios {
-  display: grid;
-  place-content: center;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .loadCantity {
@@ -174,4 +185,37 @@
 .centerEmployeeInfo {
   display: flex;
   flex-direction: column;
+}
+
+.centerEmployeeInfo h3 {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.prevDocsStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.previewDocs {
+  flex-basis: 400px;
+  flex-grow: 1;
+  display: grid;
+  place-content: center;
+}
+
+.titleDocs {
+  font-weight: 600;
+  color: var(--green-900);
+}
+
+.listDocs {
+  display: flex;
+  flex-direction: row;
+}
+
+.titleEmployee {
+  font-size: 20px;
+  font-weight: 500;
 }

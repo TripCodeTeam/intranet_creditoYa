@@ -11,6 +11,8 @@ import socket from "@/lib/socket/socket";
 import { Status } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
 import InfoEmployee from "./IdForName";
+import StatsLoan from "./StatsLoan";
+import CopText from "./copText";
 
 function CardRequest({
   loan,
@@ -70,13 +72,14 @@ function CardRequest({
   return (
     <>
       <div className={styles.cardRequest}>
+        <h2 className={styles.titlePreview}>Informacion previa</h2>
         <div className={styles.barDetails}>
           <div className={styles.boxAvatar}>
             <Avatar
               className={styles.iconAvatar}
               src={avatarPerfil}
               round={true}
-              size="40"
+              size="50"
             />
           </div>
           <div className={styles.boxDetail}>
@@ -95,43 +98,64 @@ function CardRequest({
             <h4 className={styles.label}>Ingresos Mensuales</h4>
             <p className={styles.textDetail}>$ {loan.monthly_income} COP</p>
           </div>
+
+          <div className={styles.boxDetail}>
+            <h4 className={styles.label}>Codeudor</h4>
+            <p className={styles.textDetail}>{loan.co_debtor}</p>
+          </div>
+
+          <div className={styles.boxDetail}>
+            <h4 className={styles.label}>Creacion de prestamo</h4>
+            <p className={styles.textDetail}>{String(loan.createdAt)}</p>
+          </div>
         </div>
 
-        <div className={styles.previewDocs}>
-          <div className={styles.boxAvatar}>
-            <Image
-              src={
-                "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
-              }
-              className={styles.imgDocPrew}
-              alt={"logo"}
-              width={250}
-              height={150}
-            />
-          </div>
-          <div className={styles.boxAvatar}>
-            <Image
-              src={
-                "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
-              }
-              className={styles.imgDocPrew}
-              alt={"logo"}
-              width={250}
-              height={150}
-            />
-          </div>
+        <div className={styles.prevDocsStats}>
+          <div className={styles.previewDocs}>
+            <div className={styles.listDocs}>
+              <div className={styles.boxAvatar}>
+                <Image
+                  src={
+                    "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
+                  }
+                  className={styles.imgDocPrew}
+                  alt={"logo"}
+                  width={250}
+                  height={150}
+                />
+              </div>
 
-          <div className={styles.boxAvatar}>
-            <Image
-              src={
-                "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
-              }
-              className={styles.imgDocPrew}
-              alt={"logo"}
-              width={250}
-              height={150}
-            />
+              <div className={styles.boxAvatar}>
+                <Image
+                  src={
+                    "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
+                  }
+                  className={styles.imgDocPrew}
+                  alt={"logo"}
+                  width={250}
+                  height={150}
+                />
+              </div>
+
+              <div className={styles.boxAvatar}>
+                <Image
+                  src={
+                    "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
+                  }
+                  className={styles.imgDocPrew}
+                  alt={"logo"}
+                  width={250}
+                  height={150}
+                />
+              </div>
+            </div>
           </div>
+          {loan.status === "Aprobado" && (
+            <StatsLoan
+              loanId={loan.id as string}
+              token={dataSession?.token as string}
+            />
+          )}
         </div>
 
         <div className={styles.btnsActions}>
@@ -141,18 +165,24 @@ function CardRequest({
                 className={styles.centerBoxInfo}
                 onClick={() => router.push(`/req/${loan.id}`)}
               >
-                {/* <div className={styles.boxIconInfo}>
-                <TbInfoHexagon size={20} className={styles.iconInfo} />
-              </div> */}
-                <p className={styles.textBtnDetails}>Detalles</p>
+                <p className={styles.textBtnDetails}>Detalles Completos</p>
+              </div>
+            </div>
+
+            <div className={styles.BoxInfo}>
+              <div
+                className={styles.centerBoxInfo}
+                onClick={() => router.push(`/req/${loan.id}/payments`)}
+              >
+                <p className={styles.textBtnDetails}>Registros de pago</p>
               </div>
             </div>
           </div>
 
-          <div className={styles.loadCantity}>
-            <h4 className={styles.titleCantity}>Cantidad Requerida</h4>
-            <p className={styles.textCantity}>$ {loan.requested_amount} COP</p>
-          </div>
+          <CopText
+            label={"Cantidad Requerida"}
+            cantity={loan.requested_amount}
+          />
 
           {loan.status === "Pendiente" && (
             <div className={styles.barBtnsActios}>
@@ -180,7 +210,7 @@ function CardRequest({
           {loan.status === "Aprobado" && (
             <div className={styles.employeeInfo}>
               <div className={styles.centerEmployeeInfo}>
-                <h3>Asesor encargado</h3>
+                <h3 className={styles.titleEmployee}>Asesor encargado</h3>
                 <InfoEmployee
                   employeeId={loan.employeeId as string}
                   token={token}

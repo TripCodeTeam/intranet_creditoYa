@@ -31,6 +31,7 @@
     "socket.io-client": "^4.7.5",
     "sonner": "^1.4.41",
     "utf-8-validate": "^5.0.10",
+    "victory": "^37.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

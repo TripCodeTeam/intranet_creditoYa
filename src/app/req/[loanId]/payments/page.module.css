@@ -1,0 +1,61 @@
+.mainPay {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 3em;
+}
+
+.barBack {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1em;
+}
+
+.centerBarBack {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--white-100);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.centerBarBack:hover {
+    background: var(--white-200);
+    border-radius: 8px;
+}
+
+.boxIcon {
+  display: grid;
+  place-content: center;
+}
+
+.iconArrow {
+    color: var(--white-600);
+}
+
+.labelBtn {
+  display: grid;
+  place-content: center;
+  font-weight: 400;
+  color: var(--white-600);
+}
+
+.headerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.headerInfo h1 {
+    font-weight: 600;
+    color: var(--white-900);
+}
+
+.detailText {
+    font-weight: 500;
+}
+
+.containerPay {
+    margin-top: 3em;
+}

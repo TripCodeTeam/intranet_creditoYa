@@ -10,6 +10,7 @@ function AcceptContent() {
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
     null
   );
+  const [status, setStatus] = useState<string>("Aprobado");
   const { dataSession } = useGlobalContext();
 
   useEffect(() => {
@@ -21,19 +22,24 @@ function AcceptContent() {
 
     getAllLoans();
   }, []);
+
+  const handleChangeStatus = (status: string) => {
+    setStatus(status);
+  };
+
   return (
     <>
       <div className={styles.mainActives}>
         <HeaderContent label={"Prestaciones activas"} />
 
         <div className={styles.barTypeLoan}>
-          <p>Aprobados</p>
-          <p>Rechazados</p>
+          <p onClick={() => handleChangeStatus("Aprobado")}>Aprobados</p>
+          <p onClick={() => handleChangeStatus("Rechazado")}>Rechazados</p>
         </div>
 
         <div className={styles.listLiveRequests}>
           {liveLoans
-            ?.filter((loan) => loan.status === "Aprobado")
+            ?.filter((loan) => loan.status === status)
             .map((loan) => (
               <CardRequest
                 loan={loan}

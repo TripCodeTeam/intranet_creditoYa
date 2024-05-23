@@ -30,7 +30,10 @@ function InfoEmployee({
   return (
     <>
       <div>
-        <p>{infoEmployee?.name}</p>
+        <p style={{ fontSize: "20px" }}>
+          {infoEmployee?.name} {infoEmployee?.lastNames}
+        </p>
+        <h5>{infoEmployee?.phone}</h5>
       </div>
     </>
   );

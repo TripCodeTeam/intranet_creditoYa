@@ -141,6 +141,14 @@ export type ScalarLoanApplication = {
   updatedAt: Date;
 };
 
+export type ScalarPaymentLoan = {
+  id?: string;
+  loanApplicationId: string;
+  imagesEvidence: string[];
+  createdAt?: Date
+  updatedAt?: Date
+};
+
 export type Status =
   | "Pendiente"
   | "Aprobado"
