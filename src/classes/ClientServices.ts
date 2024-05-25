@@ -34,6 +34,10 @@ class ClientServices {
     return prisma.user.findUnique({ where: { id } });
   }
 
+  static async all(): Promise<User[]> {
+    return prisma.user.findMany();
+  }
+
   // Update user method
   static async update(
     id: string,

@@ -19,7 +19,7 @@ function ListClients() {
   useEffect(() => {
     const getAllUsers = async () => {
       const response = await axios.post(
-        "/api/users/all",
+        "/api/clients/all",
         {},
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );

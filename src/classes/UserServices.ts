@@ -21,6 +21,7 @@ class UserServices {
         lastNames: data.lastNames as string,
         email: data.email,
         password: hashedPassword,
+        rol: data.rol,
       },
     });
   }

@@ -19,25 +19,14 @@ import ContainerMail from "@/components/Email/ContainerMail";
 function CardUser({ user, token }: { user: scalarClient; token: string }) {
   const [openModel, setOpenModel] = useState<boolean>(false);
   const [typeModel, setTypeModel] = useState<string | null>(null);
-  // useEffect(() => {
-  //   const getHistory = async () => {
-  //     const response = await axios.post(
-  //       "/api/user/count",
-  //       {
-  //         userId: user.id,
-  //       },
-  //       { headers: { Authorization: `Bearer ${token}` } }
-  //     );
-  //   };
-
-  //   getHistory();
-  // }, []);
 
   const router = useRouter();
 
   const toggleOpenModel = () => {
     setOpenModel(!openModel);
   };
+
+  console.log(user.names, user.firstLastName, user.secondLastName)
 
   return (
     <>
