@@ -6,13 +6,13 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    console.log("dates received: ", email, password)
+    // console.log("dates received: ", email, password)
 
     if (!email) throw new Error("email is required");
     if (!password) throw new Error("Psassword is required");
 
     const user = await UserServices.signin(email, password);
-    console.log("user complete: ", user)
+    // console.log("user complete: ", user)
 
     const payload = { userId: user.id, userEmail: user.email };
     const secret = process.env.JWT_SECRET as string;

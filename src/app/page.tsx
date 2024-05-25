@@ -13,6 +13,7 @@ import { useGlobalContext } from "@/context/Session";
 export default function Home() {
   const [validEmail, setValidEmail] = useState<boolean>(false);
   const [loadingSession, setLoadingSession] = useState<boolean>(false);
+  const [missingSession, setMissingSession] = useState<boolean>(false);
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [dataAuth, setDataAuth] = useState<ScalarUser | null>();
@@ -34,6 +35,8 @@ export default function Home() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
 
+    setMissingSession(true);
+
     if (!email) toast.error("Ingresa tu email");
     if (!password) toast.error("Ingresa tu contraseña");
 
@@ -41,10 +44,15 @@ export default function Home() {
       email,
       password,
     });
+
     const data: SessionAuth = response.data.data;
     console.log(response);
-    setDataSession(data);
-    setLoadingSession(true);
+
+    if (response.data.success) {
+      setMissingSession(false);
+      setDataSession(data);
+      setLoadingSession(true);
+    }
 
     if (response.data.success == true) {
       setInterval(() => {
@@ -84,10 +92,16 @@ export default function Home() {
               />
             </div>
             <div className={styles.boxBtnSend}>
-              <button type="submit" className={styles.btnSend} onClick={handleLogin}>
+              <button
+                type="submit"
+                className={styles.btnSend}
+                onClick={handleLogin}
+              >
                 Ingresar
               </button>
             </div>
+
+            {missingSession && "Ingresando ..."}
           </>
         )}
 
