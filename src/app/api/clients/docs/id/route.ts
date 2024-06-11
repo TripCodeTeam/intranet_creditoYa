@@ -1,5 +1,5 @@
+import ClientServices from "@/classes/ClientServices";
 import TokenService from "@/classes/TokenServices";
-import UserServices from "@/classes/UserServices";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -22,14 +22,13 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { employeeId } = await req.json();
+    const { userId } = await req.json();
 
-    console.log(employeeId, token)
+    if (!userId) throw new Error("userId is required!");
 
-    const response = await UserServices.get(employeeId);
+    const response = await ClientServices.getDocumentByUserId(userId);
 
-    return NextResponse.json({ success: true, data: response });
-
+    if (response) return NextResponse.json({ success: true, data: response });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

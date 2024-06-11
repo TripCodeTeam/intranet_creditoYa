@@ -25,6 +25,23 @@ function HeaderContent({ label }: { label: string }) {
       } else {
         setIsOpen(false);
       }
+
+      setFormattedDate(
+        `${now.toLocaleDateString("es-ES", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })}, ${now.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })}`
+      );
+
+      return () => {
+        clearInterval(timer);
+      };
     }, 1000);
 
     const date = new Date();
@@ -45,7 +62,7 @@ function HeaderContent({ label }: { label: string }) {
       clearInterval(timer);
     };
   }, []);
-  
+
   return (
     <>
       <div className={styles.headerReq}>

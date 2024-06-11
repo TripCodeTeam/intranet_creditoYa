@@ -1,4 +1,4 @@
-import { ScalarLoanApplication } from "@/types/session";
+import { ScalarDocument, ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
@@ -22,6 +22,7 @@ function CardRequest({
   token: string;
 }) {
   const [avatarPerfil, setAvatarPerfil] = useState<string>("");
+  const [docsClient, setDocsClient] = useState<ScalarDocument | null>(null);
   const router = useRouter();
 
   const [reason, setReason] = useState<string | null>(null);
@@ -66,7 +67,22 @@ function CardRequest({
       setAvatarPerfil(response.data.data);
     };
 
+    const getDocs = async () => {
+      const response = await axios.post(
+        "/api/clients/docs/id",
+        {
+          userId: loan.userId,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log(response.data)
+
+      if (response.data.success) setDocsClient(response.data.data);
+    };
+
     getAvatar();
+    getDocs();
   }, []);
 
   return (
@@ -91,7 +107,7 @@ function CardRequest({
 
           <div className={styles.boxDetail}>
             <h4 className={styles.label}>Cedula ({loan.typeDocument})</h4>
-            <p className={styles.textDetail}>{loan.ccNumber}</p>
+            <p className={styles.textDetail}>{loan.numberDocument}</p>
           </div>
 
           <div className={styles.boxDetail}>
@@ -110,114 +126,102 @@ function CardRequest({
           </div>
         </div>
 
-        <div className={styles.prevDocsStats}>
-          <div className={styles.previewDocs}>
-            <div className={styles.listDocs}>
-              <div className={styles.boxAvatar}>
-                <Image
-                  src={
-                    "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
-                  }
-                  className={styles.imgDocPrew}
-                  alt={"logo"}
-                  width={250}
-                  height={150}
-                />
-              </div>
+        <div className={styles.optionContainer}>
+          <div className={styles.prevDocsStats}>
+            <div className={styles.previewDocs}>
+              <div className={styles.listDocs}>
 
-              <div className={styles.boxAvatar}>
-                <Image
-                  src={
-                    "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
-                  }
-                  className={styles.imgDocPrew}
-                  alt={"logo"}
-                  width={250}
-                  height={150}
-                />
-              </div>
+                <div className={styles.boxAvatar}>
+                  <Image
+                    src={docsClient?.documentFront as string}
+                    className={styles.imgDocPrew}
+                    alt={"logo"}
+                    width={250}
+                    height={150}
+                  />
+                </div>
 
-              <div className={styles.boxAvatar}>
-                <Image
-                  src={
-                    "https://res.cloudinary.com/df2gu30lb/image/upload/v1714866540/lof8bc8zqyy5ttrafzia.jpg"
-                  }
-                  className={styles.imgDocPrew}
-                  alt={"logo"}
-                  width={250}
-                  height={150}
-                />
+                <div className={styles.boxAvatar}>
+                  <Image
+                    src={docsClient?.documentBack as string}
+                    className={styles.imgDocPrew}
+                    alt={"logo"}
+                    width={250}
+                    height={150}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          {loan.status === "Aprobado" && (
+            {/* {loan.status === "Aprobado" && (
             <StatsLoan
               loanId={loan.id as string}
               token={dataSession?.token as string}
             />
-          )}
-        </div>
-
-        <div className={styles.btnsActions}>
-          <div className={styles.barBtnsActios}>
-            <div className={styles.BoxInfo}>
-              <div
-                className={styles.centerBoxInfo}
-                onClick={() => router.push(`/req/${loan.id}`)}
-              >
-                <p className={styles.textBtnDetails}>Detalles Completos</p>
-              </div>
-            </div>
-
-            <div className={styles.BoxInfo}>
-              <div
-                className={styles.centerBoxInfo}
-                onClick={() => router.push(`/req/${loan.id}/payments`)}
-              >
-                <p className={styles.textBtnDetails}>Registros de pago</p>
-              </div>
-            </div>
+          )} */}
           </div>
 
-          <CopText
-            label={"Cantidad Requerida"}
-            cantity={loan.requested_amount}
-          />
+          <div className={styles.btnsActions}>
+            <div className={styles.supraInfo}>
+              <CopText
+                label={"Cantidad Requerida"}
+                cantity={loan.requested_amount}
+              />
+              {loan.status === "Aprobado" && (
+                <div className={styles.employeeInfo}>
+                  <div className={styles.centerEmployeeInfo}>
+                    <h3 className={styles.titleEmployee}>Asesor encargado</h3>
+                    <InfoEmployee
+                      employeeId={loan.employeeId as string}
+                      token={token}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
 
-          {loan.status === "Pendiente" && (
             <div className={styles.barBtnsActios}>
-              <div className={styles.BoxInfoAccept}>
-                <p
-                  className={styles.btnAccept}
-                  onClick={() =>
-                    handlerDecision({ accept: true, reason: null })
-                  }
+              <div className={styles.BoxInfo}>
+                <div
+                  className={styles.centerBoxInfo}
+                  onClick={() => router.push(`/req/${loan.id}`)}
                 >
-                  Aceptar
-                </p>
-                <p
-                  className={styles.btnCancel}
-                  onClick={() =>
-                    handlerDecision({ accept: false, reason: null })
-                  }
-                >
-                  Rechazar
-                </p>
+                  <p className={styles.textBtnDetails}>Detalles Completos</p>
+                </div>
               </div>
-            </div>
-          )}
 
-          {loan.status === "Aprobado" && (
-            <div className={styles.employeeInfo}>
-              <div className={styles.centerEmployeeInfo}>
-                <h3 className={styles.titleEmployee}>Asesor encargado</h3>
-                <InfoEmployee
-                  employeeId={loan.employeeId as string}
-                  token={token}
-                />
+              <div className={styles.BoxInfo}>
+                <div
+                  className={styles.centerBoxInfo}
+                  onClick={() => router.push(`/req/${loan.id}/payments`)}
+                >
+                  <p className={styles.textBtnDetails}>Registros de pago</p>
+                </div>
               </div>
             </div>
-          )}
+
+            {loan.status === "Pendiente" && (
+              <div className={styles.barBtnsActios}>
+                <div className={styles.BoxInfoAccept}>
+                  <p
+                    className={styles.btnAccept}
+                    onClick={() =>
+                      handlerDecision({ accept: true, reason: null })
+                    }
+                  >
+                    Aceptar
+                  </p>
+                  <p
+                    className={styles.btnCancel}
+                    onClick={() =>
+                      handlerDecision({ accept: false, reason: null })
+                    }
+                  >
+                    Rechazar
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

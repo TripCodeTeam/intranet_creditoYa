@@ -1,8 +1,8 @@
+import ClientServices from "@/classes/ClientServices";
 import TokenService from "@/classes/TokenServices";
-import UserServices from "@/classes/UserServices";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export default async function POST(req: Request) {
   try {
     // Verificar la autenticación JWT
     const authorizationHeader = req.headers.get("Authorization");
@@ -22,14 +22,15 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { employeeId } = await req.json();
+    const { loanId, reason }: { loanId: string; reason: string } =
+      await req.json();
 
-    console.log(employeeId, token)
+    if (!loanId) throw new Error("loanId is required");
+    if (!reason) throw new Error("reason is required");
 
-    const response = await UserServices.get(employeeId);
+    const response = await ClientServices.changeReject(loanId, reason);
 
-    return NextResponse.json({ success: true, data: response });
-
+    if (response) return NextResponse.json({ success: true, data: response });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

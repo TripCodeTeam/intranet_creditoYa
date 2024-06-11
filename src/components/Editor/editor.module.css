@@ -1,0 +1,97 @@
+.boxOptions {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.mailTitle {
+  margin-bottom: 10px;
+}
+
+.centerBoxOptions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.containerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.btnOpt {
+  padding: 10px;
+  background: var(--white-100);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--white-200);
+  color: var(--white-700);
+}
+
+.btnOptActive {
+  padding: 10px;
+  background: var(--white-200);
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--white-300);
+  color: var(--white-700);
+  border-radius: 8px;
+}
+
+.containerContent {
+  margin-top: 1em;
+}
+
+.groupInput {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.groupInput h4 {
+  font-weight: 500;
+}
+
+.inputSubject {
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
+  border: 1px solid var(--white-300);
+  border-radius: 8px;
+}
+
+.inputContent {
+  padding: 5px 10px;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
+  min-height: 400px;
+  border: 1px solid var(--white-300);
+  border-radius: 8px;
+}
+
+.boxBtnSend {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2em;
+}
+
+.boxBtnSend p {
+  padding: 10px 30px;
+  background: var(--green-300);
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--green-700);
+  cursor: pointer;
+}
+
+.boxBtnSend p:hover {
+  background: var(--green-400);
+  color: var(--green-800);
+}

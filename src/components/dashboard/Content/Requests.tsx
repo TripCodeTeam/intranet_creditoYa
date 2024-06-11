@@ -9,6 +9,7 @@ import HeaderContent from "./Components/HeaderContent";
 import socket from "@/lib/socket/socket";
 import { toast } from "sonner";
 import { useGlobalContext } from "@/context/Session";
+import { TbMobiledata, TbRss } from "react-icons/tb";
 
 function RequestsContent() {
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
@@ -35,6 +36,8 @@ function RequestsContent() {
       setLiveLoans(data);
     });
 
+    console.log("uri ws: ", process.env.NEXT_PUBLIC_ENDPOINT_WS);
+
     socket.on(
       "successAcept",
       (data: { message: string; loan: ScalarLoanApplication[] }) => {
@@ -54,15 +57,27 @@ function RequestsContent() {
         <HeaderContent label="Solicitudes de prestamos" />
 
         <div className={styles.listLiveRequests}>
-          {liveLoans
-            ?.filter((loan) => loan.status === "Pendiente")
-            .map((loan) => (
-              <CardRequest
-                loan={loan}
-                token={dataSession?.token as string}
-                key={loan.id}
-              />
-            ))}
+          {liveLoans &&
+          liveLoans.filter((loan) => loan.status === "Pendiente").length > 0 ? (
+            liveLoans
+              .filter((loan) => loan.status === "Pendiente")
+              .map((loan) => (
+                <CardRequest
+                  loan={loan}
+                  token={dataSession?.token as string}
+                  key={loan.id}
+                />
+              ))
+          ) : (
+            <div className={styles.containerVoidReqss}>
+              <div className={styles.centerContainerVoidReqss}>
+                <div className={styles.boxRssIcon}>
+                  <TbRss className={styles.iconRss} size={20} />
+                </div>
+                <p>Solicitudes en tiempo real</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

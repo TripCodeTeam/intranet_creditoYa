@@ -48,6 +48,10 @@ export default function Home() {
     const data: SessionAuth = response.data.data;
     console.log(response);
 
+    if (response.data.success == false) {
+      toast.error(response.data.error);
+    }
+
     if (response.data.success) {
       setMissingSession(false);
       setDataSession(data);
@@ -57,7 +61,7 @@ export default function Home() {
     if (response.data.success == true) {
       setInterval(() => {
         router.push("/dashboard");
-      }, 3000);
+      }, 2000);
     }
   };
 

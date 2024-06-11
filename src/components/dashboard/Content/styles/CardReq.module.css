@@ -7,6 +7,7 @@
   border-bottom: 2px solid var(--white-200);
   border-left: 2px solid transparent;
   border-right: 2px solid transparent;
+  flex: 1;
 }
 
 .titlePreview {
@@ -47,7 +48,9 @@
 
 .btnsActions {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  flex-basis: 400px;
+  flex-grow: 1;
   margin-top: 1em;
   justify-content: space-between;
 }
@@ -145,6 +148,12 @@
   border: 1px solid var(--green-200);
 }
 
+.supraInfo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 .label {
   font-weight: 600;
   color: var(--white-900);
@@ -167,7 +176,7 @@
 
 .barBtnsActios {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -192,10 +201,17 @@
   justify-content: flex-start;
 }
 
-.prevDocsStats {
+.optionContainer {
   display: flex;
   flex-wrap: wrap;
+}
+
+.prevDocsStats {
+  display: flex;
+  flex-direction: row;
   gap: 10px;
+  flex-basis: 400px;
+  flex-grow: 1;
 }
 
 .previewDocs {
@@ -213,6 +229,7 @@
 .listDocs {
   display: flex;
   flex-direction: row;
+  gap: 10px;
 }
 
 .titleEmployee {

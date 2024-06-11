@@ -1,0 +1,87 @@
+.boxAgreePics {
+  display: flex;
+  flex-direction: column;
+}
+
+.boxAddImg {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.centerBoxAddImg {
+  background: var(--white-100);
+  padding: 20px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--white-200);
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+.centerBoxAddImg:hover {
+  background: var(--white-200);
+}
+
+.boxMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.boxMessage p {
+  font-weight: 500;
+  color: var(--white-600);
+}
+
+.boxIconFile {
+  display: grid;
+  place-content: center;
+}
+
+.iconLoadFile {
+  color: var(--white-600);
+}
+
+.imagePreviews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.boxImagePrev {
+  display: grid;
+  place-content: center;
+  flex: 1;
+}
+
+.imagePreview {
+  object-fit: cover;
+  width: 200px;
+  height: auto;
+}
+
+.fileContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  object-fit: cover;
+  border-radius: 16px;
+  padding: 10px;
+  border: 1px solid var(--white-200);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.removeButton {
+  background: var(--red-300);
+  outline: none;
+  border: 1px solid var(--white-100);
+  padding: 5px 10px;
+  border-radius: 8px;
+  color: var(--white-100);
+  cursor: pointer;
+}
+
+.removeButton:hover {
+  background: var(--red-400);
+}

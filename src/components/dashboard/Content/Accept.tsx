@@ -33,8 +33,18 @@ function AcceptContent() {
         <HeaderContent label={"Prestaciones activas"} />
 
         <div className={styles.barTypeLoan}>
-          <p onClick={() => handleChangeStatus("Aprobado")}>Aprobados</p>
-          <p onClick={() => handleChangeStatus("Rechazado")}>Rechazados</p>
+          <p
+            className={styles.btnAprove}
+            onClick={() => handleChangeStatus("Aprobado")}
+          >
+            Aprobados
+          </p>
+          <p
+            className={styles.btnReject}
+            onClick={() => handleChangeStatus("Rechazado")}
+          >
+            Rechazados
+          </p>
         </div>
 
         <div className={styles.listLiveRequests}>

@@ -1,16 +1,13 @@
 .cardUser {
-  /* background: var(--white-100); */
   padding: 10px;
   border-radius: 16px;
   border: 1px solid transparent;
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
   justify-content: space-between;
-}
-
-.cardUser:hover {
-  border: 1px solid var(--white-200);
-  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--white-300);
+  background: var(--white-200);
 }
 
 .idBox {
@@ -30,6 +27,7 @@
 
 .avatar {
   filter: drop-shadow(0px 0px 10px #bbbbbb);
+  object-fit: cover;
 }
 
 .textNameId {
@@ -52,17 +50,35 @@
 .boxIconOption {
   display: grid;
   place-content: center;
-  background: var(--white-200);
-  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
   padding: 5px 10px;
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  background: var(--white-100);
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.boxIconOption:hover {
+  background: var(--white-400);
+  border: 1px solid var(--white-200);
+}
+
+.boxIconOption:hover .iconOption {
+  color: var(--white-100);
 }
 
 .iconOption {
-  color: var(--white-600);
+  color: var(--white-800);
 }
 
 .iconOption:hover {
   filter: drop-shadow(0px 0px 10px #000000);
+}
+
+
+@media screen and (max-width: 700px) {
+  .boxIconOption {
+    border-radius: 8px;
+  }
 }

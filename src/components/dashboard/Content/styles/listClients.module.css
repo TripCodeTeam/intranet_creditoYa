@@ -3,6 +3,40 @@
   padding: 0px 40px;
 }
 
+.containerListUsers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btnBack {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2em;
+}
+
+.boxIconBtnBack {
+  display: grid;
+  place-content: center;
+}
+
+.centerBtnBack {
+  display: flex;
+  flex-direction: row;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.centerBtnBack:hover {
+  background: var(--white-200);
+}
+
+.centerBtnBack p {
+  display: grid;
+  place-content: center;
+}
+
 .headerReq {
   display: flex;
   flex-wrap: wrap;

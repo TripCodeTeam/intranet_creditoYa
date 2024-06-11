@@ -12,7 +12,7 @@ import { TbFileTypeXls, TbUsersGroup } from "react-icons/tb";
 import MasiveEmails from "./Components/MasiveEmails";
 
 function MailsComponents() {
-  const [option, setOption] = useState<string | null>(null);
+  const [option, setOption] = useState<string | null>("excel");
 
   const handleSelect = ({ option }: { option: string }) => {
     setOption(option);

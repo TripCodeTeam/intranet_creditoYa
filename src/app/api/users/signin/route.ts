@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     // console.log("dates received: ", email, password)
 
     if (!email) throw new Error("email is required");
-    if (!password) throw new Error("Psassword is required");
+    if (!password) throw new Error("Password is required");
 
     const user = await UserServices.signin(email, password);
     // console.log("user complete: ", user)

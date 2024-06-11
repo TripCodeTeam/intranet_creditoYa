@@ -1,6 +1,5 @@
 import { scalarClient } from "@/types/session";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "../styles/userCard.module.css";
 import Avatar from "react-avatar";
 import DatesComplete from "./datesComplete";
@@ -16,7 +15,21 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/modal/modal";
 import ContainerMail from "@/components/Email/ContainerMail";
 
-function CardUser({ user, token }: { user: scalarClient; token: string }) {
+function CardUser({
+  user,
+  token,
+  changeOption,
+}: {
+  user: scalarClient;
+  token: string;
+  changeOption: ({
+    option,
+    userId,
+  }: {
+    option: string;
+    userId: string;
+  }) => void;
+}) {
   const [openModel, setOpenModel] = useState<boolean>(false);
   const [typeModel, setTypeModel] = useState<string | null>(null);
 
@@ -25,8 +38,6 @@ function CardUser({ user, token }: { user: scalarClient; token: string }) {
   const toggleOpenModel = () => {
     setOpenModel(!openModel);
   };
-
-  console.log(user.names, user.firstLastName, user.secondLastName)
 
   return (
     <>
@@ -53,34 +64,12 @@ function CardUser({ user, token }: { user: scalarClient; token: string }) {
         <div className={styles.optionsBox}>
           <div
             className={styles.boxIconOption}
-            onClick={() => router.push(`/client/${user.id}/events`)}
-          >
-            <Tooltip message="Eventos">
-              <TbTimelineEventText size={20} className={styles.iconOption} />
-            </Tooltip>
-          </div>
-
-          <div
-            className={styles.boxIconOption}
-            onClick={() => {
-              setTypeModel("mail");
-              toggleOpenModel();
-            }}
+            onClick={() =>
+              changeOption({ option: "email", userId: user.id as string })
+            }
           >
             <Tooltip message="Enviar correo">
               <TbMailPlus size={20} className={styles.iconOption} />
-            </Tooltip>
-          </div>
-
-          <div
-            className={styles.boxIconOption}
-            onClick={() => {
-              setTypeModel("message");
-              toggleOpenModel();
-            }}
-          >
-            <Tooltip message="Enviar mensaje">
-              <TbMessageCirclePlus size={20} className={styles.iconOption} />
             </Tooltip>
           </div>
 
@@ -103,7 +92,6 @@ function CardUser({ user, token }: { user: scalarClient; token: string }) {
 
       {openModel && (
         <Modal isOpen={openModel} onClose={toggleOpenModel}>
-          {typeModel == "mail" && <ContainerMail mail={user.email} />}
           {typeModel == "message" && "Whatsapp Coming soon..."}
         </Modal>
       )}

@@ -64,7 +64,7 @@
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  /* padding: 5px 10px; */
+  font-size: 20;
 }
 
 .btnSend:hover {

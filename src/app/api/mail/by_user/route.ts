@@ -1,5 +1,6 @@
+import { transporter } from "@/lib/NodeMailer";
 import TokenService from "@/classes/TokenServices";
-import UserServices from "@/classes/UserServices";
+// import { EmailTemplate } from "@/components/mail/Template";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -22,17 +23,28 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { employeeId } = await req.json();
+    const {
+      addressee,
+      content,
+      subject,
+    }: {
+      name: string;
+      addressee: string;
+      code: number;
+      content: string;
+      subject: string;
+    } = await req.json();
 
-    console.log(employeeId, token)
+    const data = await transporter.sendMail({
+      from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
+      to: addressee,
+      subject: subject,
+      text: "¡Funciona!",
+      html: content,
+    });
 
-    const response = await UserServices.get(employeeId);
-
-    return NextResponse.json({ success: true, data: response });
-
+    return NextResponse.json(data);
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json({ success: false, error: error.message });
-    }
+    return NextResponse.json({ error });
   }
 }

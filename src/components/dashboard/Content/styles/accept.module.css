@@ -1,4 +1,36 @@
 .mainActives {
-    flex: 1;
-    padding: 0px 40px;
+  flex: 1;
+  padding: 0px 40px;
+}
+
+.barTypeLoan {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.btnAprove {
+  padding: 10px;
+  background: var(--green-100);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--green-600);
+  font-weight: 400;
+}
+
+.btnAprove:hover {
+  background: var(--green-200);
+}
+
+.btnReject {
+  padding: 10px;
+  background: var(--red-100);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--red-600);
+  font-weight: 400;
+}
+
+.btnReject:hover {
+  background: var(--red-200);
 }

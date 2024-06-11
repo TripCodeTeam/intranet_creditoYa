@@ -21,6 +21,7 @@ function InfoEmployee({
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      console.log(response.data)
       response.data.success === true && setInfoEmployee(response.data.data);
     };
 
@@ -33,7 +34,7 @@ function InfoEmployee({
         <p style={{ fontSize: "20px" }}>
           {infoEmployee?.name} {infoEmployee?.lastNames}
         </p>
-        <h5>{infoEmployee?.phone}</h5>
+        <h5>{infoEmployee?.rol}</h5>
       </div>
     </>
   );

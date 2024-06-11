@@ -148,6 +148,14 @@ class ClientServices {
 
     return document;
   }
+
+  // Metodo para cambiar rejectReason de una solicitud
+  static async changeReject(loanApplicationId: string, reason: string) {
+    return prisma.loanApplication.update({
+      where: { id: loanApplicationId },
+      data: { reasonReject: reason },
+    });
+  }
 }
 
 // Export the UserService class

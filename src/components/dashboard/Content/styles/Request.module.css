@@ -15,6 +15,10 @@
   place-content: center;
 }
 
+.boxNoReqs {
+  margin-top: 7em;
+}
+
 .containerLoads {
   display: flex;
   flex-direction: column;
@@ -49,6 +53,34 @@
 
 .listLiveRequests {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 10px;
+}
+
+.containerVoidReqss {
+  min-height: 80dvh;
+  display: grid;
+  place-content: center;
+}
+
+.centerContainerVoidReqss {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.centerContainerVoidReqss p {
+  color: var(--white-600);
+  font-weight: 600;
+  display: grid;
+  place-content: center;
+}
+
+.boxRssIcon {
+  display: grid;
+  place-content: center;
+}
+
+.iconRss {
+  color: var(--white-600);
 }

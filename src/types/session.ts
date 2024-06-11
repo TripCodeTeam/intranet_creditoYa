@@ -32,6 +32,17 @@ export type scalarClient = {
   updatedAt?: Date;
 };
 
+export type ScalarDocument = {
+  id: string;
+  userId: string;
+  typeDocument: TypesDocument;
+  documentFront: string | undefined;
+  documentBack: string | undefined;
+  number: string | undefined;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type ScalarUser = {
   id?: string;
   password: string;
@@ -135,7 +146,6 @@ export type ScalarLoanApplication = {
   bankSavingAccount: boolean;
   bankNumberAccount: string;
   entity: string;
-  ccNumber: string;
   terms_and_conditions: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -145,8 +155,8 @@ export type ScalarPaymentLoan = {
   id?: string;
   loanApplicationId: string;
   imagesEvidence: string[];
-  createdAt?: Date
-  updatedAt?: Date
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type Status =
