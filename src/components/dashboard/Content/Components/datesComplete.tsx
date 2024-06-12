@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styles from "../styles/datesComplete.module.css";
-import { NextResponse } from "next/server";
 
 interface infoPreview {
   total: number;

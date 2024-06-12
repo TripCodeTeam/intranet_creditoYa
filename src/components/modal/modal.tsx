@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, Dispatch, SetStateAction } from "react";
+import React, { ReactNode } from "react";
 import styles from "./modal.module.css";
 
 interface modalProps {

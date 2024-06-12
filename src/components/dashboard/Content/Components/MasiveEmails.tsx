@@ -5,7 +5,6 @@ import { JsonExcelConvert } from "@/types/ExcelFile";
 import axios from "axios";
 import { toast } from "sonner";
 import { PiMicrosoftExcelLogoDuotone } from "react-icons/pi";
-import HeaderContent from "./HeaderContent";
 import { useDropzone } from "react-dropzone";
 import { FiUpload } from "react-icons/fi";
 

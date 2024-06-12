@@ -1,4 +1,4 @@
-import { read, utils, WorkBook } from "xlsx";
+import { utils, WorkBook } from "xlsx";
 
 export interface TableProps {
   [key: string]: string | undefined;

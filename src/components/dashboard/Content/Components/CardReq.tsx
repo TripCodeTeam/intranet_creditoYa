@@ -7,7 +7,7 @@ import Image from "next/image";
 import { TbInfoHexagon } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import socket from "@/lib/socket/socket";
+import socket from "@/lib/socket";
 import { Status } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
 import InfoEmployee from "./IdForName";

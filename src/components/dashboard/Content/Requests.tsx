@@ -6,7 +6,7 @@ import { ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
 import CardRequest from "./Components/CardReq";
 import HeaderContent from "./Components/HeaderContent";
-import socket from "@/lib/socket/socket";
+import socket from "@/lib/socket";
 import { toast } from "sonner";
 import { useGlobalContext } from "@/context/Session";
 import { TbMobiledata, TbRss } from "react-icons/tb";

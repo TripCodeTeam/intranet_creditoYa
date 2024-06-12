@@ -3,17 +3,10 @@ import React, { useState } from "react";
 import styles from "../styles/userCard.module.css";
 import Avatar from "react-avatar";
 import DatesComplete from "./datesComplete";
-import {
-  TbAdjustmentsCog,
-  TbHistoryToggle,
-  TbMailPlus,
-  TbMessageCirclePlus,
-  TbTimelineEventText,
-} from "react-icons/tb";
+import { TbAdjustmentsCog, TbHistoryToggle, TbMailPlus } from "react-icons/tb";
 import Tooltip from "@/components/gadget/Tooltip";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal/modal";
-import ContainerMail from "@/components/Email/ContainerMail";
 
 function CardUser({
   user,

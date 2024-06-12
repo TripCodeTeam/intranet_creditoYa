@@ -2,7 +2,7 @@ import ClientServices from "@/classes/ClientServices";
 import TokenService from "@/classes/TokenServices";
 import { NextResponse } from "next/server";
 
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
   try {
     // Verificar la autenticación JWT
     const authorizationHeader = req.headers.get("Authorization");

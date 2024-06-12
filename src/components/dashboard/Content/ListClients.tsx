@@ -6,7 +6,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CardUser from "./Components/cardUser";
 import styles from "./styles/listClients.module.css";
-import { TbArrowLeft, TbClock24 } from "react-icons/tb";
+import { TbArrowLeft } from "react-icons/tb";
 import HeaderContent from "./Components/HeaderContent";
 import ContainerMail from "@/components/Email/ContainerMail";
 
