@@ -25,7 +25,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
     };
 
     getLoanInfo();
-  }, [params.loanId]);
+  }, [dataSession?.token, params.loanId]);
   return (
     <>
       <pre>{JSON.stringify(dataLoan, null, 2)}</pre>

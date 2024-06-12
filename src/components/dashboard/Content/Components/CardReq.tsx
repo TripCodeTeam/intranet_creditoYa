@@ -76,14 +76,14 @@ function CardRequest({
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      console.log(response.data)
+      console.log(response.data);
 
       if (response.data.success) setDocsClient(response.data.data);
     };
 
     getAvatar();
     getDocs();
-  }, []);
+  }, [loan.userId, token]);
 
   return (
     <>
@@ -130,7 +130,6 @@ function CardRequest({
           <div className={styles.prevDocsStats}>
             <div className={styles.previewDocs}>
               <div className={styles.listDocs}>
-
                 <div className={styles.boxAvatar}>
                   <Image
                     src={docsClient?.documentFront as string}

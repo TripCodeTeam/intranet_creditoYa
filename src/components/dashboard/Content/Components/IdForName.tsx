@@ -26,7 +26,7 @@ function InfoEmployee({
     };
 
     getName();
-  }, [employeeId]);
+  }, [employeeId, token]);
 
   return (
     <>

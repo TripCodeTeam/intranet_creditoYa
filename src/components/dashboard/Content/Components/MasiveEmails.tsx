@@ -12,22 +12,6 @@ function MasiveEmails() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [jsonFile, setJsonFile] = useState<JsonExcelConvert[] | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      // Comprueba si el archivo es un libro de Excel
-      if (
-        file.type ===
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-        file.type === "application/vnd.ms-excel"
-      ) {
-        setSelectedFile(file);
-        processFile()
-      } else {
-        console.log("El archivo no es un libro de Excel");
-      }
-    });
-  }, []);
-
   const processFile = async () => {
     if (selectedFile) {
       const reader = new FileReader();
@@ -67,6 +51,25 @@ function MasiveEmails() {
       reader.readAsArrayBuffer(selectedFile);
     }
   };
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      acceptedFiles.forEach((file) => {
+        // Comprueba si el archivo es un libro de Excel
+        if (
+          file.type ===
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+          file.type === "application/vnd.ms-excel"
+        ) {
+          setSelectedFile(file);
+          processFile();
+        } else {
+          console.log("El archivo no es un libro de Excel");
+        }
+      });
+    },
+    [processFile]
+  );
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 

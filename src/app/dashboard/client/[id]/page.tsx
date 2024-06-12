@@ -23,7 +23,7 @@ function ProfileInfo({ params }: { params: { id: string } }) {
     };
 
     getUser();
-  }, []);
+  }, [dataSession?.token, params.id]);
   return (
     <>
       <p>{params.id}</p>

@@ -28,7 +28,7 @@ function StatsLoan({ loanId, token }: { loanId: string; token: string }) {
     };
 
     getLoan();
-  }, [loanId]);
+  }, [loanId, token]);
 
   const handleSide = (side: string) => {
     side == "right" && setCount(count + 1);
