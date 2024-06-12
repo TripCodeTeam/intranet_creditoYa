@@ -61,6 +61,7 @@ export type ScalarLoanApplication = {
   userId: string;
   employeeId?: string;
   email: string;
+  signature: string;
   principal_debtor: string;
   co_debtor: string;
   affiliated_company: string;
@@ -98,12 +99,16 @@ export type ScalarLoanApplication = {
   is_currently_codebtor: ifOrNot;
   codebtor_in_creditoya?: ifOrNot;
   codebtor_origin_creditoya?: string;
+  other_economy_activity_principal: ifOrNot;
+  which_other_economy_activity_principal: string;
+  monthly_income_other_economy_activity_principal: string;
   other_entity: ifOrNot;
   name_other_entity?: string;
   amount_in_the_other_entity?: string;
   complete_name_spouse?: string;
   number_document_spouse?: string;
   phone_spouse?: string;
+  landline_telephone_spouse: string;
   name_company_spouse?: string;
   phone_company_spoue?: string;
   total_monthly_income: string;
@@ -129,6 +134,7 @@ export type ScalarLoanApplication = {
   family_reference_number_phone: string;
   remarks?: string;
   status: Status;
+  reasonReject?: string;
   fixed_term: ifOrNot;
   labor_or_work: ifOrNot;
   labor_seniority_contracts: string;
