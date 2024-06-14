@@ -156,6 +156,25 @@ class ClientServices {
       data: { reasonReject: reason },
     });
   }
+
+  // Método para obtener id, email y nombres de todos los clientes existentes
+  static async getAllClientsInfo(): Promise<
+    { id: string; email: string; names: string }[]
+  > {
+    const clients = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        names: true,
+      },
+    });
+
+    return clients.map((client) => ({
+      id: client.id,
+      email: client.email,
+      names: client.names,
+    }));
+  }
 }
 
 // Export the UserService class

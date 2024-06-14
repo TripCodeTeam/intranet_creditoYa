@@ -52,6 +52,13 @@ model UsersIntranet {
     created_at DateTime @default(now())
 }
 
+model Session {
+    id          String          @id @default(uuid()) @map("_id")
+    nameSession String          @unique
+    status      StatusSessionWp @default(active)
+    created_at  DateTime        @default(now())
+}
+
 model LoanApplication {
     id                                              String         @id @default(uuid()) @map("_id")
     userId                                          String
@@ -223,6 +230,17 @@ enum Status {
     En_proceso_de_cobro
     En_negociacion
     Completado
+}
+
+enum StatusSessionWp {
+    active
+    disabled
+}
+
+enum RolIntranet {
+    supra_admin
+    admin
+    employee
 }
 
 enum namesSocial {

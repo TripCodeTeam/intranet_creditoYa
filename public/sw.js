@@ -4,6 +4,6 @@ self.addEventListener("push", (e) => {
   console.log("Notification Received");
   self.registration.showNotification(data.title, {
     body: data.body,
-    icon: "https://res.cloudinary.com/dvquomppa/image/upload/v1716227392/credito_ya/twwyldy5hmbwf1mppf6b.png",
+    icon: "https://res.cloudinary.com/df2gu30lb/image/upload/v1709795888/logo-tripcode_hoo2vp.png",
   });
 });

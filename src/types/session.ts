@@ -4,9 +4,16 @@ export type SessionAuth = {
   lastNames: string;
   email: string;
   phone: string;
-  rol: string;
+  rol: RolIntranet;
   avatar: string;
   token: string;
+};
+
+export type ScalarSession = {
+  id?: string;
+  nameSession: string;
+  status: StatusSessionWp;
+  created_at?: Date;
 };
 
 export type scalarClient = {
@@ -50,7 +57,7 @@ export type ScalarUser = {
   name?: string;
   lastNames?: string;
   avatar?: string;
-  rol?: string;
+  rol?: RolIntranet;
   phone?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -180,6 +187,10 @@ export type Status =
 export type typePayment = "Semanal" | "Quincenal" | "Mensual";
 
 export type ifOrNot = "Si" | "No";
+
+export type RolIntranet = "supra_admin" | "admin" | "employee";
+
+export type StatusSessionWp = "active" | "disabled";
 
 export type MaritalStatus =
   | "Casado"

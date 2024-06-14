@@ -2,24 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { JsonExcelConvert } from "@/types/ExcelFile";
-import {
-  TbFlame,
-  TbInfoOctagon,
-  TbMailCancel,
-  TbMailCheck,
-  TbPhotoPlus,
-  TbX,
-} from "react-icons/tb";
+import { TbInfoOctagon, TbMailCancel, TbMailCheck, TbX } from "react-icons/tb";
 import styles from "./styles/Filter.module.css";
-import Dropzone from "react-dropzone";
-import axios from "axios";
-import { toast } from "sonner";
 import { useGlobalContext } from "@/context/Session";
 
-import { Editor } from "primereact/editor";
-import { MdFormatListBulletedAdd } from "react-icons/md";
 import Modal from "../modal/modal";
 import VerifySend from "./verifySend";
+import EditorComponent from "../Editor/Editor";
 
 interface EditorEvent {
   htmlValue: string;
@@ -42,7 +31,8 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     null
   );
   const [verfMailSend, setVerfMailSend] = useState<boolean>(false);
-  const [contentMail, setContentMail] = useState("");
+
+  const [sendMail, setSendMail] = useState<boolean>(false);
   const { dataSession } = useGlobalContext();
 
   useEffect(() => {
@@ -51,15 +41,30 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     setMasivePerfils(JsonFile);
   }, [JsonFile]);
 
-  const handleTextChange = (e: EditorEvent) => {
-    setContentMail(e.htmlValue);
-    // console.log(e.htmlValue);
+  const findEmailInDetail = (detail: JsonExcelConvert) => {
+    for (let prop in detail) {
+      if (typeof detail[prop] === "string" && detail[prop].includes("@")) {
+        return detail[prop];
+      }
+    }
+    return null;
   };
 
   const handleSelectUsers = (detail: JsonExcelConvert) => {
     setMasivePerfils(null);
     setPerfilsSelects((prevPerfils) => [...(prevPerfils || []), detail]);
-    setMailsSelects((prevEmails) => [...(prevEmails || []), detail]);
+    setMailsSelects((prevEmails) => {
+      const email = findEmailInDetail(detail);
+      if (email) {
+        const newJsonExcelConvert = {
+          ...detail,
+          email: email,
+        };
+        return [...(prevEmails || []), newJsonExcelConvert];
+      } else {
+        return prevEmails;
+      }
+    });
   };
 
   const handleDeleteSelect = (id: string) => {
@@ -94,26 +99,43 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     setMasiveEmails(null);
   };
 
-  const filteredDetails = JsonFile.filter(
-    (detail) =>
-      detail.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      detail.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredDetails = JsonFile.filter((detail) => {
+    // Buscamos en todas las claves del objeto detail
+    for (const key in detail) {
+      // Verificamos si el valor de la clave parece ser un correo electrónico
+      if (typeof detail[key] === "string" && /\S+@\S+\.\S+/.test(detail[key])) {
+        // Si el valor parece ser un correo electrónico, hacemos más comprobaciones
+        const email = detail[key].toLowerCase();
+        // Hacemos diferentes comprobaciones para detectar diferentes tipos de correo electrónico
+        if (
+          email.includes("@gmail") ||
+          email.includes("@yahoo") ||
+          email.includes("@hotmail") ||
+          email.includes("@outlook")
+        ) {
+          return true; // Si es uno de los correos electrónicos específicos, lo incluimos en los detalles filtrados
+        }
+      }
+    }
+    return false; // Si no encontramos un correo electrónico válido, excluimos este detalle
+  });
 
   const handleSubmit = () => {
     setVerfMailSend(!verfMailSend);
   };
 
-  console.log();
+  const successSendMail = (complete: boolean): void => {
+    setSendMail(complete);
+  };
+
+  console.log("Mails para enviar: ", mailSelects);
+  console.log("Perfiles seleccionados: ", perfilsSelects);
+  console.log("All Emails: ", masiveEmails);
 
   return (
     <>
       <div className={styles.editorContainer}>
-        <Editor
-          value={contentMail}
-          onTextChange={handleTextChange}
-          style={{ height: "300px" }}
-        />
+        <EditorComponent success={successSendMail} email={masiveEmails} />
       </div>
 
       <div className={styles.mailDestinity}>
@@ -180,25 +202,12 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
         {filteredDetails.map((detail) => (
           <div className={styles.centerCardPerson} key={detail.id}>
             <div className={styles.cardPerson}>
-              <div className={styles.subBoxDetail}>
-                <h5>Nombre</h5>
-                <p>{detail.Nombre}</p>
-              </div>
-
-              <div className={styles.subBoxDetail}>
-                <h5>Email</h5>
-                <p>{detail.email}</p>
-              </div>
-
-              <div className={styles.subBoxDetail}>
-                <h5>Telefono</h5>
-                <p>{detail.telefono}</p>
-              </div>
-
-              <div className={styles.subBoxDetail}>
-                <h5>Profesion</h5>
-                <p>{detail.rol}</p>
-              </div>
+              {Object.entries(detail).map(([key, value]) => (
+                <div className={styles.subBoxDetail} key={key}>
+                  <h5>{key}</h5>
+                  <p>{value}</p>
+                </div>
+              ))}
             </div>
 
             <div className={styles.boxOpts}>
@@ -217,13 +226,6 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
                   />
                 )}
               </div>
-
-              {/* <div className={styles.boxIconSend}>
-                <MdFormatListBulletedAdd
-                  className={styles.iconSelect}
-                  size={23}
-                />
-              </div> */}
             </div>
           </div>
         ))}

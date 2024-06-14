@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
 import ImagesBox from "./ImagesBox";
+import { Editor } from "primereact/editor";
+import { JsonExcelConvert } from "@/types/ExcelFile";
 
 interface UserTypes {
   subject: string;
@@ -15,9 +17,8 @@ function EditorComponent({
   email,
 }: {
   success: (complete: boolean) => void;
-  email: string;
+  email: string | string[] | JsonExcelConvert[] | null;
 }) {
-  const [option, setOption] = useState<string | null>("text");
   const { dataSession } = useGlobalContext();
   const [images, setImages] = useState<File[] | null>(null);
 
@@ -25,10 +26,6 @@ function EditorComponent({
     subject: "",
     content: "",
   });
-
-  const handleChangeOption = (option: string) => {
-    setOption(option);
-  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,22 +43,44 @@ function EditorComponent({
     } else if (data.content.length !== 0 && data.subject.length == 0) {
       toast.error("Correo sin asunto");
     } else if (data.subject.length !== 0 && data.content.length !== 0) {
-      console.log(data.content, data.subject);
-      const response = await axios.post(
-        "/api/mail/by_user",
-        {
-          content: data.content,
-          subject: data.subject,
-          addressee: email,
-        },
-        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-      );
+      const formData = new FormData();
+      formData.append("content", data.content);
+      formData.append("subject", data.subject);
 
-      // console.log(response);
+      if (Array.isArray(email)) {
+        email.forEach((address) => {
+          formData.append("addressee", JSON.stringify(address));
+        });
+      } else {
+        formData.append("addressee", email as string);
+      }
 
-      if (response.data.accepted) {
-        toast.success("Correo enviado exitosamente");
-        success(true);
+      if (images) {
+        images.forEach((image, _index) => {
+          formData.append("files", image);
+        });
+      }
+
+      // console.log({
+      //   content: formData.get("content"),
+      //   subject: formData.get("subject"),
+      //   addressee: formData.get("addressee"),
+      //   files: formData.get("files")
+      // });
+
+      try {
+        const response = await axios.post("/api/mail/by_user", formData, {
+          headers: { Authorization: `Bearer ${dataSession?.token}` },
+        });
+
+        console.log(response);
+
+        if (response.data.success) {
+          toast.success("Correo enviado exitosamente");
+          success(true);
+        }
+      } catch (error) {
+        toast.error("Error al enviar el correo");
       }
     } else if (data.subject.length == 0 && data.content.length == 0) {
       toast.error("Correo vacio");
@@ -73,62 +92,8 @@ function EditorComponent({
     setImages(images);
   };
 
-  const handleSendMailWithImages = async () => {
-    if (data.content.length == 0 && data.subject.length !== 0) {
-      toast.error("Correo sin contenido");
-    } else if (data.content.length !== 0 && data.subject.length == 0) {
-      toast.error("Correo sin asunto");
-    } else if (data.subject.length !== 0 && data.content.length !== 0) {
-      const formData = new FormData();
-      images?.forEach((image, index) => {
-        formData.append(`image-${index}`, image);
-      });
-      formData.append("content", data.content);
-      formData.append("subject", data.subject);
-      formData.append("addressee", email);
-      const response = await axios.post("/api/mail/by_user_images", formData, {
-        headers: { Authorization: `Bearer ${dataSession?.token}` },
-      });
-
-      // console.log(response);
-
-      if (response.data.accepted) {
-        toast.success("Correo enviado exitosamente");
-        success(true);
-      }
-    } else if (data.subject.length == 0 && data.content.length == 0) {
-      toast.error("Correo vacio");
-    }
-  };
-
   return (
     <>
-      <div className={styles.boxOptions}>
-        <h1 className={styles.mailTitle}>Selecciona el tipo de correo</h1>
-        <div className={styles.centerBoxOptions}>
-          <p
-            className={option == "text" ? styles.btnOptActive : styles.btnOpt}
-            onClick={() => handleChangeOption("text")}
-          >
-            Texto
-          </p>
-          <p
-            className={option == "image" ? styles.btnOptActive : styles.btnOpt}
-            onClick={() => handleChangeOption("image")}
-          >
-            Imagenes
-          </p>
-          <p
-            className={
-              option == "textAndImage" ? styles.btnOptActive : styles.btnOpt
-            }
-            onClick={() => handleChangeOption("textAndImage")}
-          >
-            Texto y Imagenes
-          </p>
-        </div>
-      </div>
-
       <div className={styles.containerContent}>
         <div className={styles.groupInput}>
           <h4>Asunto</h4>
@@ -143,36 +108,21 @@ function EditorComponent({
 
         <div className={styles.groupInput}>
           <h4>Contenido</h4>
-          {option == "text" || option == "textAndImage" ? (
-            <textarea
-              className={styles.inputContent}
-              onChange={handleChange}
-              value={data.content}
-              name={"content"}
-            />
-          ) : null}
+          <textarea
+            className={styles.inputContent}
+            onChange={handleChange}
+            value={data.content}
+            name={"content"}
+          />
         </div>
 
-        {option == "image" && (
-          <div className={styles.groupInput}>
-            <ImagesBox transfer={agreeImages} />
-          </div>
-        )}
-
-        {option == "textAndImage" && (
-          <>
-            <div className={styles.groupInput}>
-              <h4>Imagenes</h4>
-              <ImagesBox transfer={agreeImages} />
-            </div>
-          </>
-        )}
+        <div className={styles.groupInput}>
+          <h4>Multimedia</h4>
+          <ImagesBox transfer={agreeImages} />
+        </div>
 
         <div className={styles.boxBtnSend}>
-          {option == "textAndImage" && (
-            <p onClick={handleSendMailWithImages}>Enviar</p>
-          )}
-          {option == "text" && <p onClick={handleSendMail}>Enviar</p>}
+          <p onClick={handleSendMail}>Enviar</p>
         </div>
       </div>
     </>

@@ -1,0 +1,78 @@
+.registerWp {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.unregisterWp {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detailSession {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.boxStatus {
+  justify-content: flex-start;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.centerBoxStatus {
+  display: flex;
+  flex-direction: row;
+}
+
+.centerNameStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.centerBoxStatus h5 {
+  font-weight: 500;
+}
+
+.inputNameSession {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--white-300);
+  outline: none;
+  border-radius: 8px;
+}
+
+.btnGenerateClient {
+  display: grid;
+  place-content: center;
+}
+
+.btnCenterGenerateClient {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px 15px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: var(--green-100);
+  border: 1px solid var(--green-400);
+}
+
+.btnCenterGenerateClient:hover {
+  background: var(--green-200);
+}
+
+.iconSetting {
+  color: var(--green-600);
+}
+
+.btnCenterGenerateClient p {
+  font-weight: 400;
+  color: var(--green-600);
+}
+
+.boxIconBtn {
+  display: grid;
+  place-content: center;
+}

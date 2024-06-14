@@ -1,12 +1,15 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { GlobalProvider } from "@/context/Session";
 import { Toaster } from "sonner";
+import { WebSocketProvider } from "next-ws/client";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Credito Ya | Intranet",
   description: "Developer by TripCode",
   manifest: "/manifest.json",
@@ -20,10 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GlobalProvider>
-          <Toaster richColors />
-          {children}
-        </GlobalProvider>
+        <WebSocketProvider url="/api/ws">
+          <GlobalProvider>
+            <Toaster richColors />
+            {children}
+          </GlobalProvider>
+        </WebSocketProvider>
       </body>
     </html>
   );

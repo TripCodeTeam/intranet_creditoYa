@@ -2,3 +2,45 @@
   display: flex;
   flex-direction: row;
 }
+
+/* css loader  */
+
+.mainLoader {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+}
+
+.centerMainLoader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.boxIconSpinner,
+.boxImgLogo {
+  display: grid;
+  place-content: center;
+}
+
+.centerMainLoader p {
+  text-align: center;
+}
+
+.iconSpinner {
+  animation: spin 1s linear infinite;
+}
+
+.imgLogo {
+  width: 50px;
+  height: auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

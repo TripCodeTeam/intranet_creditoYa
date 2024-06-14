@@ -1,4 +1,13 @@
 .mainMessages {
-    flex: 1;
-    padding: 0px 40px;
+  flex: 1;
+  padding: 0px 40px;
+}
+
+.containerMessage {
+  padding: 30px;
+  border-radius: 16px;
+}
+
+.titleMessages {
+  margin-bottom: 10px;
 }
