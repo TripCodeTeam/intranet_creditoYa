@@ -1,6 +1,4 @@
 import LoanApplicationService from "@/classes/LoanServices";
-import { createSessionWP } from "@/controllers/Whassap";
-import { ScalarLoanApplication } from "@/types/session";
 import { EventWs, reqChangeState } from "@/types/ws";
 import axios from "axios";
 
