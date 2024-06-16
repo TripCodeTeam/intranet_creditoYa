@@ -1,0 +1,136 @@
+.mainLoan {
+  margin-top: 7em;
+  width: 90%;
+  margin-left: 5%;
+}
+
+.DateContainer {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.dateLoan {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.boxIconDate,
+.dateLoan p {
+  display: grid;
+  place-content: center;
+}
+
+.listDetails {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* .firstTitle {
+    margin-top: 1em;
+  } */
+
+.secondTitle {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.secondTitleActive {
+  background: var(--green-100);
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.secondTitleActive h3 {
+  font-weight: 500;
+  color: var(--green-900);
+}
+
+.secondTitle h3 {
+  font-weight: 500;
+  color: var(--green-900);
+}
+
+.secondTitle:hover {
+  background: var(--green-50);
+  border: 1px solid var(--green-100);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.boxChevron {
+  display: grid;
+  place-content: center;
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  /* border-radius: 8px; */
+  padding: 5px 10px;
+}
+
+.cardInfo:hover {
+  background: var(--green-50);
+}
+
+.boxIconAction,
+.barAction {
+  display: grid;
+  place-content: center;
+}
+
+.iconPensil {
+  color: var(--green-600);
+  cursor: pointer;
+}
+
+.iconPensil:hover {
+  filter: drop-shadow(0px 0px 10px #000000);
+}
+
+.barBack {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1em;
+}
+
+.centerBarBack {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--white-100);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.centerBarBack:hover {
+  background: var(--white-200);
+  border-radius: 8px;
+}
+
+.boxIcon {
+  display: grid;
+  place-content: center;
+}
+
+.iconArrow {
+  color: var(--white-600);
+}

@@ -65,8 +65,8 @@ model LoanApplication {
     employeeId                                      String?        @default("Standby")
     user                                            User           @relation(fields: [userId], references: [id])
     email                                           String
-    principal_debtor                                String
-    co_debtor                                       String
+    principal_debtor                                String         @unique
+    co_debtor                                       String         @unique
     affiliated_company                              String
     nit                                             String
     requested_amount                                String
@@ -77,7 +77,7 @@ model LoanApplication {
     secondLastName                                  String
     names                                           String
     occupation                                      String
-    typeDocument                                    TypesDocument
+    typeDocument                                    TypesDocument  @default(CC)
     numberDocument                                  String
     persons_in_charge                               String
     birthDate                                       DateTime
@@ -140,8 +140,8 @@ model LoanApplication {
     reasonReject                                    String?
     signature                                       String
     other_economy_activity_principal                ifOrNot
-    which_other_economy_activity_principal          String
-    monthly_income_other_economy_activity_principal String
+    which_other_economy_activity_principal          String?        @default("No")
+    monthly_income_other_economy_activity_principal String?        @default("No")
     date_relationship                               DateTime
     labor_seniority                                 String
     contract_termination_date                       String?

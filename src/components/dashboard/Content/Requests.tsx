@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./styles/Request.module.css";
 import { ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
 import CardRequest from "./Components/CardReq";
 import HeaderContent from "./Components/HeaderContent";
-import socket from "@/lib/socket";
 import { toast } from "sonner";
 import { useGlobalContext } from "@/context/Session";
 import { TbMobiledata, TbRss } from "react-icons/tb";
+import { useWebSocket } from "next-ws/client";
+import { EventClient } from "@/types/ws";
+import LoanApplicationService from "@/classes/LoanServices";
 
 function RequestsContent() {
+  const ws = useWebSocket();
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
     null
   );
@@ -26,25 +29,22 @@ function RequestsContent() {
     getAllLoans();
   }, []);
 
-  useEffect(() => {
-    socket.emit("connected", "Hello from live requests");
+  const newLoan = useCallback(async (event: MessageEvent<Blob>) => {
+    console.log(event);
 
-    socket.on("updateLoan", (data: ScalarLoanApplication[]) => {
-      setLiveLoans(data);
-    });
+    const resLoan = JSON.parse(String(event.data));
+    console.log(resLoan)
 
-    socket.on(
-      "successAcept",
-      (data: { message: string; loan: ScalarLoanApplication[] }) => {
-        toast.success(data.message);
-      }
-    );
-
-    return () => {
-      socket.off("updateLoan");
-      socket.off("successAcept");
-    };
+    if (resLoan.type == "onNewLoan") {
+      const response = await axios.post("/api/loans/all");
+      setLiveLoans(response.data.data);
+    }
   }, []);
+
+  useEffect(() => {
+    ws?.addEventListener("message", newLoan);
+    return () => ws?.removeEventListener("message", newLoan);
+  }, [newLoan, ws]);
 
   const pendingLoans = useMemo(() => {
     return liveLoans

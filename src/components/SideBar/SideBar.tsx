@@ -15,7 +15,6 @@ import {
   TbTransactionDollar,
   TbMobiledata,
   TbAdjustments,
-  TbBrandWhatsapp,
 } from "react-icons/tb";
 
 import Image from "next/image";
@@ -165,27 +164,6 @@ function SideBar() {
 
                 <div
                   className={
-                    option == "messages"
-                      ? styles.btnOpenOptSelect
-                      : styles.btnOpenOpt
-                  }
-                  onClick={() => handleChangeOption({ option: "messages" })}
-                >
-                  <div className={styles.subBtnOptionOpen}>
-                    <TbBrandWhatsapp
-                      className={
-                        option == "messages"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                  <p className={styles.messageBtn}>Mensajes</p>
-                </div>
-
-                <div
-                  className={
                     option == "settings"
                       ? styles.btnOpenOptSelect
                       : styles.btnOpenOpt
@@ -310,28 +288,6 @@ function SideBar() {
                     <TbTransactionDollar
                       className={
                         option == "payments"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={styles.containerSubBtnOpt}
-                  onClick={() => handleChangeOption({ option: "messages" })}
-                >
-                  <div
-                    className={
-                      option == "messages"
-                        ? styles.subBtnOptionSelect
-                        : styles.subBtnOption
-                    }
-                  >
-                    <TbBrandWhatsapp
-                      className={
-                        option == "messages"
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }

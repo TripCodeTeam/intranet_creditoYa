@@ -7,12 +7,13 @@ import Image from "next/image";
 import { TbInfoHexagon } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import socket from "@/lib/socket";
 import { Status } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
 import InfoEmployee from "./IdForName";
 import StatsLoan from "./StatsLoan";
 import CopText from "./copText";
+import Link from "next/link";
+import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 
 function CardRequest({
   loan,
@@ -52,7 +53,7 @@ function CardRequest({
         reason,
         state: "Aprobado",
       };
-      socket.emit("changeState", data);
+      // socket.emit("changeState", data);
       toast.success("Solicitud Aceptada");
     } else if (accept === false) {
       toast.error("Solicitud Rechazada");
@@ -88,138 +89,36 @@ function CardRequest({
   return (
     <>
       <div className={styles.cardRequest}>
-        <h2 className={styles.titlePreview}>Informacion previa</h2>
-        <div className={styles.barDetails}>
-          <div className={styles.boxAvatar}>
-            <Avatar
-              className={styles.iconAvatar}
-              src={avatarPerfil}
-              round={true}
-              size="50"
-            />
-          </div>
-          <div className={styles.boxDetail}>
-            <h4 className={styles.label}>Nombre</h4>
-            <p className={styles.textDetail}>
-              {loan.names} {loan.firtLastName} {loan.secondLastName}
-            </p>
-          </div>
+        <div className={styles.boxInfo}>
+          <div className={styles.user}>
+            <div className={styles.boxAvatarClient}>
+              <Avatar src={avatarPerfil} round={true} size="55" />
+            </div>
+            <div className={styles.perfilInfo}>
+              <h3>{`${loan.names} ${loan.firtLastName} ${loan.secondLastName}`}</h3>
 
-          <div className={styles.boxDetail}>
-            <h4 className={styles.label}>Cedula ({loan.typeDocument})</h4>
-            <p className={styles.textDetail}>{loan.numberDocument}</p>
-          </div>
-
-          <div className={styles.boxDetail}>
-            <h4 className={styles.label}>Ingresos Mensuales</h4>
-            <p className={styles.textDetail}>$ {loan.monthly_income} COP</p>
-          </div>
-
-          <div className={styles.boxDetail}>
-            <h4 className={styles.label}>Codeudor</h4>
-            <p className={styles.textDetail}>{loan.co_debtor}</p>
-          </div>
-
-          <div className={styles.boxDetail}>
-            <h4 className={styles.label}>Creacion de prestamo</h4>
-            <p className={styles.textDetail}>{String(loan.createdAt)}</p>
+              <Link
+                className={styles.linkPerfil}
+                href={`/client/${loan.userId}`}
+              >
+                Visitar perfil
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className={styles.optionContainer}>
-          <div className={styles.prevDocsStats}>
-            <div className={styles.previewDocs}>
-              <div className={styles.listDocs}>
-                <div className={styles.boxAvatar}>
-                  <Image
-                    src={docsClient?.documentFront as string}
-                    className={styles.imgDocPrew}
-                    alt={"logo"}
-                    width={250}
-                    height={150}
-                  />
-                </div>
-
-                <div className={styles.boxAvatar}>
-                  <Image
-                    src={docsClient?.documentBack as string}
-                    className={styles.imgDocPrew}
-                    alt={"logo"}
-                    width={250}
-                    height={150}
-                  />
-                </div>
-              </div>
+        <div className={styles.boxInfo}>
+          <div className={styles.centerDocs}>
+            <div className={styles.detailInfo}>
+              <h5>Monto solicitado</h5>
+              <h1>{stringToPriceCOP(loan.requested_amount)}</h1>
             </div>
-            {/* {loan.status === "Aprobado" && (
-            <StatsLoan
-              loanId={loan.id as string}
-              token={dataSession?.token as string}
-            />
-          )} */}
           </div>
+        </div>
 
-          <div className={styles.btnsActions}>
-            <div className={styles.supraInfo}>
-              <CopText
-                label={"Cantidad Requerida"}
-                cantity={loan.requested_amount}
-              />
-              {loan.status === "Aprobado" && (
-                <div className={styles.employeeInfo}>
-                  <div className={styles.centerEmployeeInfo}>
-                    <h3 className={styles.titleEmployee}>Asesor encargado</h3>
-                    <InfoEmployee
-                      employeeId={loan.employeeId as string}
-                      token={token}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.barBtnsActios}>
-              <div className={styles.BoxInfo}>
-                <div
-                  className={styles.centerBoxInfo}
-                  onClick={() => router.push(`/req/${loan.id}`)}
-                >
-                  <p className={styles.textBtnDetails}>Detalles Completos</p>
-                </div>
-              </div>
-
-              <div className={styles.BoxInfo}>
-                <div
-                  className={styles.centerBoxInfo}
-                  onClick={() => router.push(`/req/${loan.id}/payments`)}
-                >
-                  <p className={styles.textBtnDetails}>Registros de pago</p>
-                </div>
-              </div>
-            </div>
-
-            {loan.status === "Pendiente" && (
-              <div className={styles.barBtnsActios}>
-                <div className={styles.BoxInfoAccept}>
-                  <p
-                    className={styles.btnAccept}
-                    onClick={() =>
-                      handlerDecision({ accept: true, reason: null })
-                    }
-                  >
-                    Aceptar
-                  </p>
-                  <p
-                    className={styles.btnCancel}
-                    onClick={() =>
-                      handlerDecision({ accept: false, reason: null })
-                    }
-                  >
-                    Rechazar
-                  </p>
-                </div>
-              </div>
-            )}
+        <div className={styles.boxInfoActs}>
+          <div className={styles.centerInfoActs}>
+            <p onClick={() => router.push(`/req/${loan.id}`)}>Revisar</p>
           </div>
         </div>
       </div>

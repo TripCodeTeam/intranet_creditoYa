@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "../styles/BoxSession.module.css";
 import { ScalarSession } from "@/types/session";
 import { TbSettings, TbTrash } from "react-icons/tb";
 import { toast } from "sonner";
 import QRCode from "react-qr-code";
-import socket from "@/lib/socket";
-import { getUserId } from "@/handlers/getUserId";
 import { useGlobalContext } from "@/context/Session";
+import { useWebSocket } from "next-ws/client";
+import { Message } from "whatsapp-web.js";
+import { createSessionWP } from "@/controllers/Whassap";
 
 interface PropsSession {
   infoSession: ScalarSession[] | null;
@@ -20,21 +21,28 @@ function BoxControlSession({ infoSession, setName }: PropsSession) {
   const [nameSession, setNameSession] = useState<string>("");
   const [finalNameSession, setFinalNameSession] = useState<string | null>(null);
 
+  const ws = useWebSocket();
+
   const [qr, setQr] = useState<string | null>(null);
   const [loadingQr, setLoadingQr] = useState<boolean>(false);
 
-  useEffect(() => {
-    socket.emit("userConnected", {
-      userId: dataSession?.id,
-    });
+  const onMessage = useCallback((event: MessageEvent<Blob>) => {
+    // console.log(event.data);
+    const dataJson = JSON.parse(String(event.data));
 
-    socket.on("qr", (data) => {
-      const { qr } = data;
-      console.log(qr);
-      setQr(qr);
-      setLoadingQr(false);
-    });
+    if (dataJson.data.socket) {
+      const id = nameSession;
+      const socket = dataJson.data.socket;
+      console.log(socket);
+    }
+
+    console.log(dataJson);
   }, []);
+
+  useEffect(() => {
+    ws?.addEventListener("message", onMessage);
+    return () => ws?.removeEventListener("message", onMessage);
+  }, [onMessage, ws]);
 
   const handleGenerate = async () => {
     try {
@@ -42,12 +50,10 @@ function BoxControlSession({ infoSession, setName }: PropsSession) {
       setFinalNameSession(nameSession);
       setLoadingQr(true);
 
-      const data = {
-        id: nameSession,
-      };
-      // console.log(data)
-
-      socket.emit("createSession", data);
+      ws?.send(
+        JSON.stringify({ type: "createSession", data: { id: nameSession } })
+      );
+      // createSessionWP(id, socket);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
