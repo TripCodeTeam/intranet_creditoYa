@@ -20,6 +20,7 @@ import {
 import Image from "next/image";
 import Avatar from "react-avatar";
 import { useGlobalContext } from "@/context/Session";
+import { OptionDash } from "@/types/session";
 
 function SideBar() {
   const { option, setOption } = useDashboardContext();
@@ -27,7 +28,7 @@ function SideBar() {
 
   const { dataSession } = useGlobalContext();
 
-  const handleChangeOption = ({ option }: { option: string }) => {
+  const handleChangeOption = ({ option }: { option: OptionDash }) => {
     console.log(option);
     setOption(option);
   };
@@ -142,7 +143,7 @@ function SideBar() {
                 </div>
               </>
             )}
-            
+
             {!isOpen && (
               <>
                 <div

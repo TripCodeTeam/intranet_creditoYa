@@ -17,6 +17,7 @@ import {
 
 import Avatar from "react-avatar";
 import { useGlobalContext } from "@/context/Session";
+import { OptionDash } from "@/types/session";
 
 function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
   const { option, setOption } = useDashboardContext();
@@ -24,7 +25,7 @@ function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
 
   const { dataSession } = useGlobalContext();
 
-  const handleChangeOption = ({ option }: { option: string }) => {
+  const handleChangeOption = ({ option }: { option: OptionDash }) => {
     console.log(option);
     setOption(option);
   };
