@@ -10,23 +10,27 @@ import {
 
 import Cookies from "js-cookie";
 
-import { SessionAuth, DashboardContextType } from "../types/session";
+import {
+  SessionAuth,
+  DashboardContextType,
+  OptionDash,
+} from "../types/session";
 
 const GlobalContext = createContext<DashboardContextType | undefined>(
   undefined
 );
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
-  const [option, setOptionDashboard] = useState<string>("Request");
+  const [option, setOptionDashboard] = useState<OptionDash>("Request");
 
   useEffect(() => {
     const optsDash = Cookies.get("optionDash");
     if (optsDash) {
-      setOption(JSON.parse(optsDash));
+      setOption(JSON.parse(optsDash) as OptionDash);
     }
   }, []);
 
-  const setOption = (option: string) => {
+  const setOption = (option: OptionDash) => {
     setOptionDashboard(option);
     Cookies.set("optionDash", JSON.stringify(option));
   };
@@ -41,7 +45,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 export function useDashboardContext() {
   const context = useContext(GlobalContext);
   if (context === undefined) {
-    throw new Error("useGlobalContext must be used within a GlobalProvider");
+    throw new Error(
+      "useDashboardContext must be used within a DashboardProvider"
+    );
   }
   return context;
 }

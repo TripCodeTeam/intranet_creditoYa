@@ -224,9 +224,9 @@ export interface GlobalContextType {
   setDataSession: (option: SessionAuth) => void;
 }
 
+export type OptionDash = "Request" | "Accepts" | "Clients" | "Emails"
+
 export interface DashboardContextType {
   option: OptionDash;
-  setOption: (option: string) => void;
+  setOption: (option: OptionDash) => void;
 }
-
-export type OptionDash = "Request" | "Accepts" | "Clients" | "Emails"
