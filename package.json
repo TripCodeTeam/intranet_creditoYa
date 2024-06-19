@@ -34,6 +34,8 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-icons": "^5.2.0",
+    "react-responsive": "^10.0.0",
+    "react-select": "^5.8.0",
     "sonner": "^1.4.41",
     "utf-8-validate": "^5.0.10",
     "victory": "^37.0.2",

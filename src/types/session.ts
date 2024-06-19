@@ -167,7 +167,12 @@ export type ScalarLoanApplication = {
 export type ScalarPaymentLoan = {
   id?: string;
   loanApplicationId: string;
-  imagesEvidence: string[];
+  nameClient: string;
+  documentClient: string;
+  status?: StatusPayment;
+  quantity: string;
+  quota: string;
+  signature?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -183,6 +188,8 @@ export type Status =
   | "En_proceso_de_cobro"
   | "En_negociacion"
   | "Completado";
+
+export type StatusPayment = "unauthorized" | "authorized";
 
 export type typePayment = "Semanal" | "Quincenal" | "Mensual";
 
@@ -218,6 +225,8 @@ export interface GlobalContextType {
 }
 
 export interface DashboardContextType {
-  option: string;
+  option: OptionDash;
   setOption: (option: string) => void;
 }
+
+export type OptionDash = "Request" | "Accepts" | "Clients" | "Emails"

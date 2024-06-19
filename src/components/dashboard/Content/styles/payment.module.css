@@ -1,4 +1,166 @@
 .mainPayment {
-    flex: 1;
-    padding: 0px 40px;
+  flex: 1;
+  padding: 0px 40px;
+}
+
+.barOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2em;
+}
+
+.inputNumbercc {
+  padding: 10px 15px;
+  outline: none;
+  border-radius: 6px;
+  border: 1px solid var(--white-300);
+  font-size: 16px;
+}
+
+.boxDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.boxDetail h4 {
+  font-weight: 400;
+}
+
+.barBtnSearch {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.barBtnSearch h4 {
+  background: var(--white-100);
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.barBtnSearch h4:hover {
+  background: var(--white-200);
+}
+
+.SpinnerContainer {
+  display: grid;
+  place-content: center;
+}
+
+.centerSpinnerContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.boxSpinner {
+  display: grid;
+  place-content: center;
+}
+
+.iconSpinner {
+  animation: spin 1s linear infinite;
+}
+
+.containerNewRegister {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1em;
+  border: 1px solid transparent;
+  padding: 15px;
+  border-radius: 16px;
+}
+
+.titlePending {
+  margin-top: 1em;
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--white-900);
+}
+
+.titleComplete {
+  margin-top: 1em;
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--white-900);
+}
+
+.containerNewRegister:hover {
+  border: 1px solid var(--blue-100);
+  background: var(--blue-50);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.InfoLoan {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 50px;
+}
+
+.InfoLoanActs {
+  display: grid;
+  place-content: center;
+}
+
+.boxInfoLoan h5 {
+  font-weight: 500;
+  color: var(--white-900);
+}
+
+.boxInfoLoan h3 {
+  color: var(--white-400);
+}
+
+.InfoLoanActs p {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  background: var(--blue-50);
+  color: var(--blue-400);
+  font-weight: 400;
+  border: 1px solid transparent;
+}
+
+.containerNewRegister:hover .InfoLoanActs p {
+  background: var(--white-50);
+}
+
+.InfoLoanActs p:hover {
+  background: var(--white-50);
+  border: 1px solid var(--blue-100);
+}
+
+@media screen and (max-width: 800px) {
+  .InfoLoan {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .boxInfoLoan {
+    width: 100%;
+  }
+
+  .containerNewRegister {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .titlePending,
+  .titleComplete {
+    font-size: 20px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

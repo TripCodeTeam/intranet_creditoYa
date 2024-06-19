@@ -98,6 +98,22 @@ export function SOCKET(
       } catch (error) {
         console.log(error);
       }
+    } else if (event.type == "newApprove") {
+      console.log(event);
+      server.clients.forEach((receiver) => {
+        console.log(receiver);
+        if (receiver === client) return;
+
+        if (receiver != client && receiver.readyState === receiver.OPEN) {
+          receiver.send(
+            JSON.stringify({
+              type: "onNewState",
+              for: event.from,
+              by: event.owner,
+            })
+          );
+        }
+      });
     }
   });
 

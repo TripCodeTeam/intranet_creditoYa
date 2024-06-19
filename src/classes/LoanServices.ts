@@ -50,6 +50,14 @@ class LoanApplicationService {
     return prisma.loanApplication.findFirst({ where: { userId } });
   }
 
+  // Método para obtener una solicitud de préstamo por el numero de documento
+  static async getByNumberDocument(
+    numberDocument: string
+  ): Promise<LoanApplication | null> {
+    console.log(numberDocument);
+    return prisma.loanApplication.findFirst({ where: { numberDocument } });
+  }
+
   // Método para obtener todas las solicitudes de préstamo por userId
   static async getAllByUserId(userId: string): Promise<LoanApplication[]> {
     return prisma.loanApplication.findMany({

@@ -12,9 +12,11 @@ import { TbMobiledata, TbRss } from "react-icons/tb";
 import { useWebSocket } from "next-ws/client";
 import { EventClient } from "@/types/ws";
 import LoanApplicationService from "@/classes/LoanServices";
+import { useMediaQuery } from "react-responsive";
 
 function RequestsContent() {
   const ws = useWebSocket();
+  const isMobile = useMediaQuery({ query: "(max-width: 700px)" });
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
     null
   );
@@ -55,7 +57,8 @@ function RequestsContent() {
   return (
     <>
       <div className={styles.containerLoads}>
-        <HeaderContent label="Solicitudes de prestamos" />
+        {!isMobile && <HeaderContent label="Solicitudes de prestamos" />}
+        
 
         <div className={styles.listLiveRequests}>
           {pendingLoans.length > 0 ? (

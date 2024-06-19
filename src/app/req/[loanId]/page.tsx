@@ -1,18 +1,23 @@
 "use client";
 
 import { useGlobalContext } from "@/context/Session";
-import { ScalarLoanApplication } from "@/types/session";
+import { ScalarDocument, ScalarLoanApplication, Status } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CardInfo from "@/components/dashboard/ReqInfoCard";
 import styles from "./page.module.css";
 import { TbArrowLeft, TbChevronDown, TbChevronRight } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { toast } from "sonner";
+import { useWebSocket } from "next-ws/client";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
   const { dataSession } = useGlobalContext();
   const router = useRouter();
+
   const [dataLoan, setDataLoan] = useState<ScalarLoanApplication | null>(null);
+  const [dataDocument, setDataDocument] = useState<ScalarDocument | null>(null);
 
   const [openFirst, setOpenFirst] = useState<boolean>(false);
   const [openSecond, setOpenSecond] = useState<boolean>(false);
@@ -20,11 +25,14 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [openFour, setOpenFour] = useState<boolean>(false);
   const [openFive, setOpenFive] = useState<boolean>(false);
   const [openSix, setOpenSix] = useState<boolean>(false);
+  const [isReject, setIsReject] = useState<string | null>(null);
+
+  const ws = useWebSocket();
 
   useEffect(() => {
     const getLoanInfo = async () => {
       const response = await axios.post(
-        "/api/loans/id",
+        "/api/loans/by/id",
         {
           loanId: params.loanId,
         },
@@ -33,11 +41,77 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
       console.log(response);
 
-      if (response.data.success === true) setDataLoan(response.data.data);
+      if (response.data.success === true) {
+        setDataLoan(response.data.data);
+
+        const data: ScalarLoanApplication = response.data.data;
+
+        const responseDocs = await axios.post(
+          "/api/clients/docs/id",
+          {
+            userId: data.userId,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
+
+        console.log(responseDocs);
+
+        if (responseDocs.data.success === true) {
+          const dataDocs = responseDocs.data.data;
+          setDataDocument(dataDocs);
+        }
+      }
     };
 
     getLoanInfo();
   }, [dataSession?.token, params.loanId]);
+
+  const onDes = async ({ newStatus }: { newStatus: Status }) => {
+    const loanApplicationId = dataLoan?.id as string;
+    const employeeId = dataSession?.id as string;
+    const reason = isReject;
+
+    const response = await axios.post(
+      "/api/loans/status",
+      {
+        newStatus,
+        employeeId,
+        loanApplicationId,
+        reason,
+      },
+      { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+    );
+
+    console.log(response.data);
+
+    if (response.data.success == true) {
+      const data: ScalarLoanApplication = response.data.data;
+
+      const responseReload = await axios.post(
+        "/api/loans/by/id",
+        {
+          loanId: params.loanId,
+        },
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      if (responseReload.data.success == true) {
+        const dataReload: ScalarLoanApplication = responseReload.data.data;
+        setDataLoan(dataReload);
+
+        ws?.send(
+          JSON.stringify({
+            type: "newApprove",
+            owner: dataLoan?.userId,
+            from: employeeId,
+          })
+        );
+
+        if (data && reason == null) toast.success("Solicitud aprobada");
+        if (data && reason !== null) toast.success("Solicitud rechazado");
+      }
+    }
+  };
 
   return (
     <>
@@ -53,8 +127,30 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             <p className={styles.labelBtn}>Volver</p>
           </div>
         </div>
-        <h1>Detalles completos de tu prestamo</h1>
-        <p>Solicitud ID: {dataLoan?.id}</p>
+
+        <div className={styles.boxTitleLoan}>
+          <div className={styles.centerBoxTitleLoan}>
+            <h1>Detalles del prestamo</h1>
+            <p>Solicitud ID: {dataLoan?.id}</p>
+          </div>
+
+          {dataLoan?.status === "Pendiente" && (
+            <div className={styles.listBtns}>
+              <p
+                className={styles.btnAprove}
+                onClick={() => onDes({ newStatus: "Aprobado" })}
+              >
+                Aprobar
+              </p>
+              <p
+                className={styles.btnReject}
+                onClick={() => onDes({ newStatus: "Rechazado" })}
+              >
+                Rechazar
+              </p>
+            </div>
+          )}
+        </div>
 
         <div
           className={openSecond ? styles.secondTitleActive : styles.secondTitle}
@@ -653,6 +749,36 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             />
           </div>
         )}
+
+        <div className={styles.documentsBox}>
+          <div className={styles.boxImageDoc}>
+            <h3>Documento lado frontal</h3>
+            <div className={styles.centerBoxImage}>
+              <Image
+                width={300}
+                height={400}
+                src={`${dataDocument?.documentFront as string}`}
+                alt="frontDoc"
+                className={styles.imgDoc}
+              />
+            </div>
+          </div>
+
+          <div className={styles.boxImageDoc}>
+            <h3>Documento lado trasero</h3>
+            <div className={styles.centerBoxImage}>
+              <Image
+                src={dataDocument?.documentBack as string}
+                className={styles.imgDoc}
+                width={300}
+                height={400}
+                alt="frontDoc"
+              />
+            </div>
+          </div>
+        </div>
+
+        <h3>Carta laboral</h3>
       </main>
     </>
   );

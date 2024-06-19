@@ -26,6 +26,11 @@ export type EventWs = {
     | reqChangeState;
 };
 
-type Events = "create_new_loan" | "changeState" | "createSession" | "new_loan";
+type Events =
+  | "create_new_loan"
+  | "changeState"
+  | "createSession"
+  | "new_loan"
+  | "newApprove";
 
-type EventsClient = "updateLoan" | "onNewLoan";
+type EventsClient = "updateLoan" | "onNewLoan" | "newApprove";

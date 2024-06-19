@@ -5,8 +5,8 @@
   padding: 10px 5px;
   background: var(--white-200);
   min-height: 100dvh;
-  position: sticky;
-  width: 70px;
+  /* position: sticky; */
+  width: 50px;
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
@@ -17,8 +17,9 @@
   padding: 10px;
   background: var(--white-200);
   min-height: 100dvh;
-  position: sticky;
+  /* position: absolute; */
   width: 200px;
+  z-index: 1;
 }
 
 .headerSide {
@@ -79,7 +80,7 @@
 }
 
 .iconOptionSelect {
-  color: var(--green-300);
+  color: var(--white-100);
   filter: drop-shadow(0px 0px 10px #000000);
 }
 
@@ -153,7 +154,7 @@
 .messageBtn {
   display: grid;
   place-content: center;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--green-900);
 }
 
@@ -186,3 +187,60 @@
 /* .detailUser {
   margin-right: 10px;
 } */
+
+@media screen and (max-width: 700px) {
+  .sideBarOpen {
+    position: absolute;
+  }
+}
+
+/* Css for Sidebar responsive */
+.resHeader {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 90%;
+  margin-left: 5%;
+  padding-top: 10px;
+}
+
+.resHeader p {
+  display: grid;
+  place-content: center;
+}
+
+.boxIconOpen {
+  display: grid;
+  place-content: center;
+  padding: 5px;
+}
+
+.boxIconOpen:hover {
+  background: var(--white-100);
+  border-radius: 8px;
+}
+
+.logoSUpraResHeader {
+  display: grid;
+  place-content: center;
+}
+
+.sideBarSupra {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--white-200);
+  min-height: 100dvh;
+  position: absolute;
+  width: 190px;
+  z-index: 1;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.logoAndBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}

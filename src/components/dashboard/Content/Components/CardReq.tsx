@@ -3,15 +3,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
 import styles from "../styles/CardReq.module.css";
-import Image from "next/image";
-import { TbInfoHexagon } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Status } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
-import InfoEmployee from "./IdForName";
-import StatsLoan from "./StatsLoan";
-import CopText from "./copText";
 import Link from "next/link";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 

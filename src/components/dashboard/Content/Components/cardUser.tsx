@@ -48,7 +48,7 @@ function CardUser({
             <h2>
               {user.names} {user.firstLastName} {user.secondLastName}
             </h2>
-            <p className={styles.textId}>ID: {user.id}</p>
+            <p className={styles.textId}>Email: {user.email}</p>
           </div>
           <div className={styles.infoUser}>
             <DatesComplete userId={user.id as string} token={token} />

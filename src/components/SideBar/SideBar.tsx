@@ -72,7 +72,7 @@ function SideBar() {
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }
-                      size={25}
+                      size={18}
                     />
                   </div>
                   <p className={styles.messageBtn}>Solicitudes</p>
@@ -93,7 +93,7 @@ function SideBar() {
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }
-                      size={25}
+                      size={18}
                     />
                   </div>
                   <p className={styles.messageBtn}>Prestamos</p>
@@ -114,7 +114,7 @@ function SideBar() {
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }
-                      size={25}
+                      size={18}
                     />
                   </div>
                   <p className={styles.messageBtn}>Clientes</p>
@@ -135,55 +135,14 @@ function SideBar() {
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }
-                      size={25}
+                      size={18}
                     />
                   </div>
                   <p className={styles.messageBtn}>Crear Correos</p>
                 </div>
-
-                <div
-                  className={
-                    option == "payments"
-                      ? styles.btnOpenOptSelect
-                      : styles.btnOpenOpt
-                  }
-                  onClick={() => handleChangeOption({ option: "payments" })}
-                >
-                  <div className={styles.subBtnOptionOpen}>
-                    <TbTransactionDollar
-                      className={
-                        option == "payments"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                  <p className={styles.messageBtn}>Pagos</p>
-                </div>
-
-                <div
-                  className={
-                    option == "settings"
-                      ? styles.btnOpenOptSelect
-                      : styles.btnOpenOpt
-                  }
-                  onClick={() => handleChangeOption({ option: "settings" })}
-                >
-                  <div className={styles.subBtnOptionOpen}>
-                    <TbAdjustments
-                      className={
-                        option == "settings"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                  <p className={styles.messageBtn}>Preferencias</p>
-                </div>
               </>
             )}
+            
             {!isOpen && (
               <>
                 <div
@@ -266,50 +225,6 @@ function SideBar() {
                     <TbMailPlus
                       className={
                         option == "Emails"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={styles.containerSubBtnOpt}
-                  onClick={() => handleChangeOption({ option: "payments" })}
-                >
-                  <div
-                    className={
-                      option == "payments"
-                        ? styles.subBtnOptionSelect
-                        : styles.subBtnOption
-                    }
-                  >
-                    <TbTransactionDollar
-                      className={
-                        option == "payments"
-                          ? styles.iconOptionSelect
-                          : styles.iconOption
-                      }
-                      size={25}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={styles.containerSubBtnOpt}
-                  onClick={() => handleChangeOption({ option: "settings" })}
-                >
-                  <div
-                    className={
-                      option == "settings"
-                        ? styles.subBtnOptionSelect
-                        : styles.subBtnOption
-                    }
-                  >
-                    <TbAdjustments
-                      className={
-                        option == "settings"
                           ? styles.iconOptionSelect
                           : styles.iconOption
                       }

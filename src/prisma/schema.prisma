@@ -166,7 +166,12 @@ model paymentsLoan {
     id                String          @id @default(uuid()) @map("_id")
     loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
     loanApplicationId String
-    File              String[]
+    nameClient        String
+    documentClient    String
+    status            StatusPayment?   @default(unauthorized)
+    quantity          String
+    quota             String
+    signature         String?
     createdAt         DateTime        @default(now())
     updateAt          DateTime        @updatedAt
 }
@@ -230,6 +235,11 @@ enum Status {
     En_proceso_de_cobro
     En_negociacion
     Completado
+}
+
+enum StatusPayment {
+    authorized
+    unauthorized
 }
 
 enum StatusSessionWp {
