@@ -17,26 +17,15 @@ model User {
     avatar                 String            @default("No definido")
     phone                  String            @unique @default("No definido")
     residence_phone_number String            @default("No definido")
-    phone_is_wp            Boolean           @default(false)
     phone_whatsapp         String            @default("No definido")
     birth_day              DateTime?
-    place_of_birth         String            @default("No definido")
     genre                  String            @default("No definido")
     residence_address      String            @default("No definidos")
     city                   String            @default("No definidos")
-    housing_type           HousingType?
-    social                 SocialNetworks[]
     Document               Document[]
     createdAt              DateTime          @default(now())
     updatedAt              DateTime          @updatedAt
     LoanApplication        LoanApplication[]
-}
-
-model SocialNetworks {
-    id         String @id @default(uuid()) @map("_id")
-    nameSocial String
-    userId     String
-    User       User?  @relation(fields: [userId], references: [id])
 }
 
 model UsersIntranet {
@@ -52,165 +41,25 @@ model UsersIntranet {
     created_at DateTime @default(now())
 }
 
-model Session {
-    id          String          @id @default(uuid()) @map("_id")
-    nameSession String          @unique
-    status      StatusSessionWp @default(active)
-    created_at  DateTime        @default(now())
-}
-
 model LoanApplication {
-    id                                              String         @id @default(uuid()) @map("_id")
-    userId                                          String
-    employeeId                                      String?        @default("Standby")
-    user                                            User           @relation(fields: [userId], references: [id])
-    email                                           String
-    principal_debtor                                String         @unique
-    co_debtor                                       String         @unique
-    affiliated_company                              String
-    nit                                             String
-    requested_amount                                String
-    deadline                                        String
-    payment                                         typePayment
-    quota_value                                     String
-    firtLastName                                    String
-    secondLastName                                  String
-    names                                           String
-    occupation                                      String
-    typeDocument                                    TypesDocument  @default(CC)
-    numberDocument                                  String
-    persons_in_charge                               String
-    birthDate                                       DateTime
-    place_birth                                     String
-    genre                                           String
-    marital_status                                  String
-    cellPhone                                       String
-    landline_telephone_spouse                       String
-    destination_resources                           String
-    city                                            String
-    residence_address                               String
-    residence_phone                                 String
-    vehicle                                         ifOrNot
-    vehicleType                                     String?
-    housing_type                                    HousingType
-    whatsapp_number                                 String
-    pignorado                                       String
-    in_favor_pignorado                              String?
-    commercial_value                                String
-    other_personal_commercial_value                 String
-    family_members_in_company_agreement             ifOrNot
-    is_currently_codebtor                           ifOrNot
-    codebtor_in_creditoya                           ifOrNot?
-    codebtor_origin_creditoya                       String?
-    other_entity                                    ifOrNot
-    name_other_entity                               String?
-    amount_in_the_other_entity                      String?
-    complete_name_spouse                            String?
-    number_document_spouse                          String?
-    phone_spouse                                    String?
-    name_company_spouse                             String?
-    phone_company_spoue                             String?
-    total_monthly_income                            String
-    total_assets                                    String
-    total_liabilities                               String
-    patrimony                                       String
-    court                                           DateTime
-    number_employees                                String
-    other_income_other_principal                    ifOrNot
-    which_other_income                              String?
-    monthly_income                                  String?
-    monthly_expenses                                String
-    personal_reference_name                         String
-    personal_reference_work_company_name            String
-    personal_reference_city                         String
-    personal_reference_address                      String
-    personal_reference_number_residence             String?
-    personal_reference_number_phone                 String
-    family_reference_name                           String
-    family_reference_work_company_name              String
-    family_reference_city                           String
-    family_reference_address                        String
-    family_reference_number_residence               String?
-    family_reference_number_phone                   String
-    fixed_term                                      ifOrNot?
-    labor_or_work                                   ifOrNot?
-    labor_seniority_contracts                       String
-    remarks                                         String?
-    status                                          Status         @default(Pendiente)
-    reasonReject                                    String?
-    signature                                       String
-    other_economy_activity_principal                ifOrNot
-    which_other_economy_activity_principal          String?        @default("No")
-    monthly_income_other_economy_activity_principal String?        @default("No")
-    date_relationship                               DateTime
-    labor_seniority                                 String
-    contract_termination_date                       String?
-    indefinite_term                                 ifOrNot?
-    average_variable_salary                         String
-    monthly_discounts                               String
-    current_loans_affecting                         ifOrNot?
-    affecting_loan_entity_name                      String?
-    affecting_loan_balance                          String?
-    affecting_loan_quota_value                      String?
-    bankCurrentAccount                              Boolean        @default(false) // Cuenta corriente
-    bankSavingAccount                               Boolean        @default(false) // Ahorros
-    bankNumberAccount                               String         @unique // Nro. de cuenta
-    entity                                          String // Entidad
-    terms_and_conditions                            Boolean        @default(false)
-    createdAt                                       DateTime       @default(now())
-    updatedAt                                       DateTime       @updatedAt
-    paymentsLoan                                    paymentsLoan[]
-}
-
-model paymentsLoan {
-    id                String          @id @default(uuid()) @map("_id")
-    loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
-    loanApplicationId String
-    nameClient        String
-    documentClient    String
-    status            StatusPayment?   @default(unauthorized)
-    quantity          String
-    quota             String
-    signature         String?
-    createdAt         DateTime        @default(now())
-    updateAt          DateTime        @updatedAt
-}
-
-model Events {
-    id         String   @id @default(uuid()) @map("_id")
-    nameEvent  String
-    created_at DateTime @default(now())
-    updated_at DateTime @default(now())
-}
-
-model LoanConfiguration {
-    id                               String   @id @default(uuid()) @map("_id")
-    minimum_monthly_income           Int // Cantidad mínima de ingresos mensuales permitida para los solicitantes
-    maximum_loan_amount              Int // Monto máximo del préstamo permitido
-    maximum_loan_term                Int // Plazo máximo del préstamo permitido
-    maximum_interest_rate            Float // Tasa de interés máxima permitida
-    require_collateral               Boolean // Indicador de si se requiere garantía para los préstamos
-    minimum_employment_length        Int // Duración mínima del empleo requerida para los solicitantes
-    require_cosigner                 Boolean // Indicador de si se requiere un codeudor para los préstamos
-    maximum_debt_to_income_ratio     Float // Relación deuda-ingresos máxima permitida
-    maximum_monthly_payment_ratio    Float // Relación de pago mensual máximo permitido
-    require_additional_documents     Boolean // Indicador de si se requieren documentos adicionales para la solicitud
-    acceptable_loan_purposes         String[] // Propósitos de préstamo aceptables (por ejemplo, educación, vivienda, automóvil, etc.)
-    require_legal_consultation       Boolean // Indicador de si se requiere consulta legal para los solicitantes
-    allow_joint_applications         Boolean // Indicador de si se permiten solicitudes conjuntas
-    allow_revolving_credit           Boolean // Indicador de si se permiten líneas de crédito rotativas
-    require_proof_of_income          Boolean // Indicador de si se requiere comprobante de ingresos para los solicitantes
-    require_proof_of_residency       Boolean // Indicador de si se requiere comprobante de residencia para los solicitantes
-    maximum_total_monthly_debt       Int // Deuda mensual total máxima permitida
-    maximum_number_of_dependents     Int // Número máximo de dependientes permitidos para los solicitantes
-    require_government_id            Boolean // Indicador de si se requiere identificación gubernamental para los solicitantes
-    require_additional_income_source String[] // Indicador de si se requiere fuente de ingresos adicional para los solicitantes
-    allow_prepayment                 Boolean // Indicador de si se permite la cancelación anticipada del préstamo sin penalización
-    grace_period                     Int // Período de gracia después del vencimiento del préstamo antes de aplicar cargos por mora
-    require_good_credit_history      Boolean // Indicador de si se requiere un historial crediticio sólido para los solicitantes
-    require_verified_employment      Boolean // Indicador de si se requiere empleo verificado para los solicitantes
-    require_bank_account             Boolean // Indicador de si se requiere una cuenta bancaria para los solicitantes
-    require_phone_verification       Boolean // Indicador de si se requiere verificación telefónica para los solicitantes
+    id                   String     @id @default(uuid()) @map("_id")
+    userId               String
+    employeeId           String?    @default("Standby")
+    user                 User       @relation(fields: [userId], references: [id])
+    fisrt_flyer          String
+    second_flyer         String
+    third_flyer          String
+    reasonReject         String?
+    cantity              String
+    bankSavingAccount    Boolean    @default(true)
+    bankNumberAccount    String
+    entity               String
+    labor_card           String
+    terms_and_conditions Boolean
+    signature            String
+    status               StatusLoan @default(Pendiente)
+    created_at           DateTime   @default(now())
+    updated_at           DateTime   @updatedAt
 }
 
 model Document {
@@ -224,75 +73,21 @@ model Document {
     updatedAt     DateTime @updatedAt
 }
 
-enum Status {
+enum StatusLoan {
     Pendiente
     Aprobado
     Rechazado
     Borrador
-    Pagado
-    Vencido
-    En_mora
-    En_proceso_de_cobro
-    En_negociacion
-    Completado
-}
-
-enum StatusPayment {
-    authorized
-    unauthorized
-}
-
-enum StatusSessionWp {
-    active
-    disabled
+    Archivado
 }
 
 enum RolIntranet {
-    supra_admin
     admin
     employee
-}
-
-enum namesSocial {
-    Facebook
-    Instagram
-    X
-    Linkedin
 }
 
 enum TypesDocument {
     CC
     CE
     PASAPORTE
-}
-
-enum typePayment {
-    Semanal
-    Quincenal
-    Mensual
-}
-
-enum ifOrNot {
-    Si
-    No
-}
-
-enum MaritalStatus {
-    Casado
-    Casada
-    Soltero
-    Soltera
-    Separado
-    Separada
-    Divorciado
-    Divorciada
-    Union_libre
-    Viudo
-    Viuda
-}
-
-enum HousingType {
-    Familiar
-    Propia
-    Arrendada
 }

@@ -9,13 +9,6 @@ export type SessionAuth = {
   token: string;
 };
 
-export type ScalarSession = {
-  id?: string;
-  nameSession: string;
-  status: StatusSessionWp;
-  created_at?: Date;
-};
-
 export type scalarClient = {
   id?: string;
   password: string;
@@ -31,10 +24,8 @@ export type scalarClient = {
   birth_day?: Date;
   place_of_birth?: string;
   genre?: string;
-  phone_residence?: string;
   residence_address?: string;
   city?: string;
-  housing_type?: HouseType;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -67,114 +58,21 @@ export type ScalarLoanApplication = {
   id?: string;
   userId: string;
   employeeId?: string;
-  email: string;
+  fisrt_flyer: string;
+  second_flyer: string;
+  third_flyer: string;
   signature: string;
-  principal_debtor: string;
-  co_debtor: string;
-  affiliated_company: string;
-  nit: string;
-  requested_amount: string;
-  deadline: string;
-  payment: typePayment;
-  quota_value: string;
-  firtLastName: string;
-  secondLastName: string;
-  names: string;
-  occupation: string;
-  typeDocument: TypesDocument;
-  numberDocument: string;
-  persons_in_charge: string;
-  monthly_expenses: string;
-  birthDate: Date;
-  place_birth: string;
-  destination_resources: string;
-  city: string;
-  genre: string;
-  marital_status: string;
-  cellPhone: string;
-  residence_address: string;
-  residence_phone: string;
-  housing_type: HouseType;
-  vehicle: ifOrNot;
-  vehicleType?: string;
-  whatsapp_number: string;
-  pignorado: string;
-  in_favor_pignorado?: string;
-  commercial_value: string;
-  other_personal_commercial_value: string;
-  family_members_in_company_agreement: ifOrNot;
-  is_currently_codebtor: ifOrNot;
-  codebtor_in_creditoya?: ifOrNot;
-  codebtor_origin_creditoya?: string;
-  other_economy_activity_principal: ifOrNot;
-  which_other_economy_activity_principal: string;
-  monthly_income_other_economy_activity_principal: string;
-  other_entity: ifOrNot;
-  name_other_entity?: string;
-  amount_in_the_other_entity?: string;
-  complete_name_spouse?: string;
-  number_document_spouse?: string;
-  phone_spouse?: string;
-  landline_telephone_spouse: string;
-  name_company_spouse?: string;
-  phone_company_spoue?: string;
-  total_monthly_income: string;
-  total_assets: string;
-  total_liabilities: string;
-  patrimony: string;
-  court: Date;
-  number_employees: string;
-  other_income_other_principal: ifOrNot;
-  which_other_income?: string;
-  monthly_income?: string;
-  personal_reference_name: string;
-  personal_reference_work_company_name: string;
-  personal_reference_city: string;
-  personal_reference_address: string;
-  personal_reference_number_residence?: string;
-  personal_reference_number_phone: string;
-  family_reference_name: string;
-  family_reference_work_company_name: string;
-  family_reference_city: string;
-  family_reference_address: string;
-  family_reference_number_residence?: string;
-  family_reference_number_phone: string;
-  remarks?: string;
+  cantity: string;
   status: Status;
   reasonReject?: string;
-  fixed_term: ifOrNot;
-  labor_or_work: ifOrNot;
-  labor_seniority_contracts: string;
-  date_relationship: Date;
-  labor_seniority: string;
-  contract_termination_date?: string;
-  indefinite_term: ifOrNot;
-  average_variable_salary: string;
-  monthly_discounts: string;
-  current_loans_affecting: ifOrNot;
-  affecting_loan_entity_name?: string;
-  affecting_loan_balance?: string;
-  affecting_loan_quota_value?: string;
   bankCurrentAccount: boolean;
   bankSavingAccount: boolean;
   bankNumberAccount: string;
+  labor_card: string;
   entity: string;
   terms_and_conditions: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type ScalarPaymentLoan = {
-  id?: string;
-  loanApplicationId: string;
-  nameClient: string;
-  documentClient: string;
-  status?: StatusPayment;
-  quantity: string;
-  quota: string;
-  signature?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  created_at: Date;
+  updated_at: Date;
 };
 
 export type Status =
@@ -182,35 +80,9 @@ export type Status =
   | "Aprobado"
   | "Rechazado"
   | "Borrador"
-  | "Pagado"
-  | "Vencido"
-  | "En_mora"
-  | "En_proceso_de_cobro"
-  | "En_negociacion"
-  | "Completado";
+  | "Archivado";
 
-export type StatusPayment = "unauthorized" | "authorized";
-
-export type typePayment = "Semanal" | "Quincenal" | "Mensual";
-
-export type ifOrNot = "Si" | "No";
-
-export type RolIntranet = "supra_admin" | "admin" | "employee";
-
-export type StatusSessionWp = "active" | "disabled";
-
-export type MaritalStatus =
-  | "Casado"
-  | "Casada"
-  | "Soltero"
-  | "Soltera"
-  | "Separado"
-  | "Separada"
-  | "Divorciado"
-  | "Divorciada"
-  | "Union libre"
-  | "Viudo"
-  | "Viuda";
+export type RolIntranet = "admin" | "employee";
 
 export type TypesDocument = "CC" | "CE" | "PASAPORTE";
 
@@ -224,7 +96,7 @@ export interface GlobalContextType {
   setDataSession: (option: SessionAuth) => void;
 }
 
-export type OptionDash = "Request" | "Accepts" | "Clients" | "Emails" | "User"
+export type OptionDash = "Request" | "Accepts" | "Clients" | "Emails" | "User";
 
 export interface DashboardContextType {
   option: OptionDash;

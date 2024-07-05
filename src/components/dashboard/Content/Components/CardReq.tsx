@@ -1,4 +1,8 @@
-import { ScalarDocument, ScalarLoanApplication } from "@/types/session";
+import {
+  scalarClient,
+  ScalarDocument,
+  ScalarLoanApplication,
+} from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
@@ -19,6 +23,8 @@ function CardRequest({
 }) {
   const [avatarPerfil, setAvatarPerfil] = useState<string>("");
   const [docsClient, setDocsClient] = useState<ScalarDocument | null>(null);
+  const [infoClient, setInfoClient] = useState<scalarClient | null>(null);
+
   const router = useRouter();
 
   const [reason, setReason] = useState<string | null>(null);
@@ -41,8 +47,8 @@ function CardRequest({
         state: Status;
         reason: string | null;
       } = {
-        nameUser: `${loan.firtLastName} ${loan.secondLastName}`,
-        emailUser: loan.email,
+        nameUser: `${infoClient?.names} ${infoClient?.firstLastName} ${infoClient?.secondLastName}`,
+        emailUser: infoClient?.email!,
         employeeId: dataSession?.id as string,
         loanApplicationId: loan.id as string,
         reason,
@@ -57,27 +63,52 @@ function CardRequest({
 
   useEffect(() => {
     const getAvatar = async () => {
-      const response = await axios.post("/api/clients/avatar", {
-        userId: loan.userId,
-      });
-      setAvatarPerfil(response.data.data);
+      try {
+        const response = await axios.post("/api/clients/avatar", {
+          userId: loan.userId,
+        });
+        setAvatarPerfil(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getUserInfo = async () => {
+      try {
+        const response = await axios.post(
+          "/api/clients/id",
+          {
+            userId: loan.userId,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
+
+        const data = response.data.data;
+        setInfoClient(data);
+        console.log(data);
+      } catch (error) {}
     };
 
     const getDocs = async () => {
-      const response = await axios.post(
-        "/api/clients/docs/id",
-        {
-          userId: loan.userId,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      try {
+        const response = await axios.post(
+          "/api/clients/docs/id",
+          {
+            userId: loan.userId,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      console.log(response.data);
+        console.log(response.data);
 
-      if (response.data.success) setDocsClient(response.data.data);
+        if (response.data.success) setDocsClient(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     getAvatar();
+    getUserInfo();
     getDocs();
   }, [loan.userId, token]);
 
@@ -90,7 +121,7 @@ function CardRequest({
               <Avatar src={avatarPerfil} round={true} size="55" />
             </div>
             <div className={styles.perfilInfo}>
-              <h3>{`${loan.names} ${loan.firtLastName} ${loan.secondLastName}`}</h3>
+              <h3>{`${infoClient?.names} ${infoClient?.firstLastName} ${infoClient?.secondLastName}`}</h3>
 
               <Link
                 className={styles.linkPerfil}
@@ -106,7 +137,7 @@ function CardRequest({
           <div className={styles.centerDocs}>
             <div className={styles.detailInfo}>
               <h5>Monto solicitado</h5>
-              <h1>{stringToPriceCOP(loan.requested_amount)}</h1>
+              <h1>{stringToPriceCOP(loan.cantity)}</h1>
             </div>
           </div>
         </div>
