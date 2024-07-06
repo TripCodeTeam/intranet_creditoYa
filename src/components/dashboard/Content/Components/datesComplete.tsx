@@ -38,11 +38,15 @@ function DatesComplete({ userId, token }: { userId: string; token: string }) {
       <div className={styles.centerInfoUser}>
         <h5 className={styles.cubeInfo}>
           Prestaciones Activas:
-          <span className={styles.numberCantity}>{infoUser?.paid}</span>
+          <span className={styles.numberCantity}>{infoUser?.completed}</span>
         </h5>
         <h5 className={styles.cubeInfo}>
           Prestaciones Pendientes:
           <span className={styles.numberCantity}>{infoUser?.pending}</span>
+        </h5>
+        <h5 className={styles.cubeInfo}>
+          Total Prestaciones:
+          <span className={styles.numberCantity}>{infoUser?.total}</span>
         </h5>
       </div>
     </>

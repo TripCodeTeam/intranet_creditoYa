@@ -15,7 +15,7 @@
 .modal_content {
   background: white;
   padding: 20px;
-  border-radius: 4px;
+  border-radius: 16px;
   width: 80%;
   max-width: 900px;
   position: relative;
@@ -27,6 +27,16 @@
   position: absolute;
   top: 10px;
   right: 10px;
+  padding: 10px 15px;
+  outline: none;
+  border: 1px solid var(--red-300);
+  background: var(--red-200);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.close_button:hover {
+  border: 1px solid var(--red-400);
 }
 
 @media screen and (max-width: 700px) {

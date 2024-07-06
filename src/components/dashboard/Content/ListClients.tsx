@@ -1,7 +1,7 @@
 "use client";
 
 import { useGlobalContext } from "@/context/Session";
-import { scalarClient } from "@/types/session";
+import { ScalarClient } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CardUser from "./Components/cardUser";
@@ -15,7 +15,7 @@ function ListClients() {
 
   // console.log(dataSession)
 
-  const [dataUsers, setDataUsers] = useState<scalarClient[] | null>(null);
+  const [dataUsers, setDataUsers] = useState<ScalarClient[] | null>(null);
   const [option, setOption] = useState<string | null>(null);
   const [clientId, setClientId] = useState<string | null>(null);
 

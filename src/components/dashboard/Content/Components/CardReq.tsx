@@ -1,5 +1,5 @@
 import {
-  scalarClient,
+  ScalarClient,
   ScalarDocument,
   ScalarLoanApplication,
 } from "@/types/session";
@@ -8,8 +8,6 @@ import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
 import styles from "../styles/CardReq.module.css";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Status } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
 import Link from "next/link";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
@@ -22,44 +20,11 @@ function CardRequest({
   token: string;
 }) {
   const [avatarPerfil, setAvatarPerfil] = useState<string>("");
-  const [docsClient, setDocsClient] = useState<ScalarDocument | null>(null);
-  const [infoClient, setInfoClient] = useState<scalarClient | null>(null);
+  const [infoClient, setInfoClient] = useState<ScalarClient | null>(null);
 
   const router = useRouter();
 
-  const [reason, setReason] = useState<string | null>(null);
-
   const { dataSession } = useGlobalContext();
-
-  const handlerDecision = ({
-    accept,
-    reason,
-  }: {
-    accept: boolean;
-    reason: string | null;
-  }) => {
-    if (accept === true) {
-      const data: {
-        nameUser: string;
-        emailUser: string;
-        employeeId: string;
-        loanApplicationId: string;
-        state: Status;
-        reason: string | null;
-      } = {
-        nameUser: `${infoClient?.names} ${infoClient?.firstLastName} ${infoClient?.secondLastName}`,
-        emailUser: infoClient?.email!,
-        employeeId: dataSession?.id as string,
-        loanApplicationId: loan.id as string,
-        reason,
-        state: "Aprobado",
-      };
-      // socket.emit("changeState", data);
-      toast.success("Solicitud Aceptada");
-    } else if (accept === false) {
-      toast.error("Solicitud Rechazada");
-    }
-  };
 
   useEffect(() => {
     const getAvatar = async () => {
@@ -67,6 +32,8 @@ function CardRequest({
         const response = await axios.post("/api/clients/avatar", {
           userId: loan.userId,
         });
+
+        if (response.data.success)
         setAvatarPerfil(response.data.data);
       } catch (error) {
         console.log(error);
@@ -85,31 +52,12 @@ function CardRequest({
 
         const data = response.data.data;
         setInfoClient(data);
-        console.log(data);
+        // console.log(data);
       } catch (error) {}
-    };
-
-    const getDocs = async () => {
-      try {
-        const response = await axios.post(
-          "/api/clients/docs/id",
-          {
-            userId: loan.userId,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        console.log(response.data);
-
-        if (response.data.success) setDocsClient(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
     };
 
     getAvatar();
     getUserInfo();
-    getDocs();
   }, [loan.userId, token]);
 
   return (

@@ -73,7 +73,7 @@ class UserServices {
     let pending = 0;
 
     user.LoanApplication.forEach((loan) => {
-      if (loan.status === "Archivado") {
+      if (loan.status === "Aprobado") {
         completed++;
       } else if (loan.status === "Pendiente") {
         pending++;

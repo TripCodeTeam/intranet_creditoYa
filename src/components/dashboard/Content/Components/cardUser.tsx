@@ -1,4 +1,4 @@
-import { scalarClient } from "@/types/session";
+import { ScalarClient } from "@/types/session";
 import React, { useState } from "react";
 import styles from "../styles/userCard.module.css";
 import Avatar from "react-avatar";
@@ -13,7 +13,7 @@ function CardUser({
   token,
   changeOption,
 }: {
-  user: scalarClient;
+  user: ScalarClient;
   token: string;
   changeOption: ({
     option,
@@ -72,12 +72,6 @@ function CardUser({
           >
             <Tooltip message="Historial">
               <TbHistoryToggle size={20} className={styles.iconOption} />
-            </Tooltip>
-          </div>
-
-          <div className={styles.boxIconOption}>
-            <Tooltip message="Configuracion">
-              <TbAdjustmentsCog size={20} className={styles.iconOption} />
             </Tooltip>
           </div>
         </div>
