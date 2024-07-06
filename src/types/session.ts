@@ -9,7 +9,7 @@ export type SessionAuth = {
   token: string;
 };
 
-export type scalarClient = {
+export type ScalarClient = {
   id?: string;
   password: string;
   email: string;
@@ -33,7 +33,7 @@ export type scalarClient = {
 export type ScalarDocument = {
   id: string;
   userId: string;
-  typeDocument: TypesDocument;
+  typeDocument?: TypesDocument;
   documentFront: string | undefined;
   documentBack: string | undefined;
   number: string | undefined;

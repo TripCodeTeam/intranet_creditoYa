@@ -2,7 +2,7 @@
 
 import { prisma } from "@/prisma/db";
 import { LoanApplication } from "@prisma/client";
-import { ScalarLoanApplication, Status } from "@/types/session";
+import { ScalarDocument, ScalarLoanApplication, Status } from "@/types/session";
 
 // Clase para el servicio de LoanApplication
 class LoanApplicationService {
@@ -11,8 +11,6 @@ class LoanApplicationService {
     const { userId, ...loanApplicationDataWithoutUserId } = data;
     const loanApplicationData = {
       ...loanApplicationDataWithoutUserId,
-      court: new Date(data.court).toISOString(),
-      date_relationship: new Date(data.date_relationship).toISOString(),
       user: {
         connect: {
           id: data.userId,
@@ -48,14 +46,6 @@ class LoanApplicationService {
   // Método para obtener una solicitud de préstamo por el ID del usuario
   static async getByUserId(userId: string): Promise<LoanApplication | null> {
     return prisma.loanApplication.findFirst({ where: { userId } });
-  }
-
-  // Método para obtener una solicitud de préstamo por el numero de documento
-  static async getByNumberDocument(
-    numberDocument: string
-  ): Promise<LoanApplication | null> {
-    console.log(numberDocument);
-    return prisma.loanApplication.findFirst({ where: { numberDocument } });
   }
 
   // Método para obtener todas las solicitudes de préstamo por userId

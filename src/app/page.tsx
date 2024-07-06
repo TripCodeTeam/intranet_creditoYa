@@ -10,6 +10,7 @@ import { ScalarUser, SessionAuth } from "@/types/session";
 import { urlBase64ToUint8Array } from "@/handlers/Base64";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/Session";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
 
 const applicationServerKey = process.env.NEXT_PUBLIC_VAPID_KEY as string;
 
@@ -23,6 +24,7 @@ export default function Home() {
 
   const router = useRouter();
   const { dataSession, setDataSession } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [subscription, setSubscription] = useState({} as PushSubscription);
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function Home() {
             applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
           })
           .then(async (subscription) => {
-            console.log(subscription);
+            // console.log(subscription);
             setSubscription(subscription);
           })
       );
@@ -75,6 +77,7 @@ export default function Home() {
     if (response.data.success) {
       setMissingSession(false);
       setDataSession(data);
+      toast.success(`Bienvenido de nuevo ${data.name}`);
       setLoadingSession(true);
     }
 
@@ -85,58 +88,67 @@ export default function Home() {
     }
   };
 
-  return (
-    <main className={styles.containerInit}>
-      <form
-        className={!loadingSession ? styles.centerBox : styles.centerBoxLoading}
-        onSubmit={handleLogin}
-      >
-        {!loadingSession && (
-          <>
-            <div className={styles.boxImage}>
-              <Image
-                className={styles.logoIntranet}
-                src={logoIntranet}
-                alt="logo"
-                width={70}
-              />
-            </div>
-            <div className={styles.boxInputs}>
-              <input
-                className={styles.onlyInput}
-                onChange={handleChangeEmail}
-                type="email"
-                placeholder="Correo Electronico"
-              />
-              <input
-                className={styles.onlyInput}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                placeholder="Contraseña"
-              />
-            </div>
-            <div className={styles.boxBtnSend}>
-              <button
-                type="submit"
-                className={styles.btnSend}
-                onClick={handleLogin}
-              >
-                Ingresar
-              </button>
-            </div>
+  useEffect(() => {
+    if (!dataSession) {
+      setIsLoading(false);
+    }
 
-            {missingSession && "Ingresando ..."}
-          </>
-        )}
+    if (dataSession) {
+      router.push("/dashboard");
+    }
+  }, [dataSession]);
 
-        {loadingSession && (
-          <>
-            <div className={styles.listMessages}>
-              <p>Bienvenido {dataSession?.name}</p>
-            </div>
-          </>
-        )}
-      </form>
-    </main>
-  );
+  if (isLoading) <LoadingComponent />;
+
+  if (!isLoading && !dataSession)
+    return (
+      <main className={styles.containerInit}>
+        <form
+          className={
+            !loadingSession ? styles.centerBox : styles.centerBoxLoading
+          }
+          onSubmit={handleLogin}
+        >
+          {!loadingSession && (
+            <>
+              <div className={styles.boxImage}>
+                <Image
+                  className={styles.logoIntranet}
+                  src={logoIntranet}
+                  alt="logo"
+                  width={70}
+                />
+              </div>
+              <div className={styles.boxInputs}>
+                <input
+                  className={styles.onlyInput}
+                  onChange={handleChangeEmail}
+                  type="email"
+                  placeholder="Correo Electronico"
+                />
+                <input
+                  className={styles.onlyInput}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  placeholder="Contraseña"
+                />
+              </div>
+              <div className={styles.boxBtnSend}>
+                <button
+                  type="submit"
+                  className={styles.btnSend}
+                  onClick={handleLogin}
+                >
+                  Ingresar
+                </button>
+              </div>
+
+              {missingSession && (
+                <p className={styles.loadingText}>Ingresando ...</p>
+              )}
+            </>
+          )}
+        </form>
+      </main>
+    );
 }

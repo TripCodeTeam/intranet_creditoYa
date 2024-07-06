@@ -12,7 +12,7 @@
   padding: 15px 10px;
   border-radius: 16px;
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--white-200);
+  border: 1px solid var(--white-100);
   width: 280px;
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
@@ -65,9 +65,19 @@
   font-weight: 700;
   cursor: pointer;
   font-size: 20;
+  padding: 10px 15px;
+  border: 1px solid var(--green-100);
+  background: var(--white-50);
+  font-weight: 500;
+  margin-top: 1em;
 }
 
 .btnSend:hover {
   color: var(--green-600);
-  /* background: var(--white-200); */
+  border: 1px solid var(--green-200);
+}
+
+.loadingText {
+  text-align: center;
+  padding: 10px;
 }

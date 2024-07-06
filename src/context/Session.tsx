@@ -22,8 +22,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const infoSession = Cookies.get("SessionData");
     if (infoSession) {
       setSessionData(JSON.parse(infoSession));
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   const setDataSession = (userData: SessionAuth) => {

@@ -34,13 +34,13 @@ class UserServices {
 
     const userIntranet = await prisma.usersIntranet.findUnique({
       where: { email },
-    });
+    }).catch(error => console.log(error));
 
-    // Evitar logging en producción
-    if (process.env.NODE_ENV !== "production") {
-      console.log("class log userRes: ", userIntranet);
-      !userIntranet && console.log("imposible loguear user con class");
-    }
+    // // Evitar logging en producción
+    // if (process.env.NODE_ENV !== "production") {
+    //   // console.log("class log userRes: ", userIntranet);
+    //   // !userIntranet && console.log("imposible loguear user con class");
+    // }
 
     // Almacenar el hash de la contraseña en una variable local
     const hashedPassword = userIntranet ? userIntranet.password : "";
@@ -59,7 +59,6 @@ class UserServices {
   static async verifyData(userId: string): Promise<{
     total: number;
     completed: number;
-    paid: number;
     pending: number;
   }> {
     const user = await prisma.user.findUnique({
@@ -71,20 +70,17 @@ class UserServices {
 
     let total = user.LoanApplication.length;
     let completed = 0;
-    let paid = 0;
     let pending = 0;
 
     user.LoanApplication.forEach((loan) => {
-      if (loan.status === "Completado") {
+      if (loan.status === "Archivado") {
         completed++;
-      } else if (loan.status === "Pagado") {
-        paid++;
       } else if (loan.status === "Pendiente") {
         pending++;
       }
     });
 
-    return { total, completed, paid, pending };
+    return { total, completed, pending };
   }
 
   static async get(employeeId: string): Promise<UsersIntranet> {
