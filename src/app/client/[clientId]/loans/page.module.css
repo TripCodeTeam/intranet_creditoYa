@@ -1,0 +1,47 @@
+.mainLoan {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 3em;
+}
+
+.barBack {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1em;
+}
+
+.centerBarBack {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--white-100);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.centerBarBack:hover {
+  background: var(--white-200);
+  border-radius: 8px;
+}
+
+.boxIcon {
+  display: grid;
+  place-content: center;
+}
+
+.iconArrow {
+  color: var(--white-600);
+}
+
+.containerLoans {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.cardLoan {
+  padding: 5px;
+  background: var(--white-100);
+  flex-basis: 200px;
+  flex-grow: 1;
+}

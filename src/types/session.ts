@@ -65,7 +65,6 @@ export type ScalarLoanApplication = {
   cantity: string;
   status: Status;
   reasonReject?: string;
-  bankCurrentAccount: boolean;
   bankSavingAccount: boolean;
   bankNumberAccount: string;
   labor_card: string;
