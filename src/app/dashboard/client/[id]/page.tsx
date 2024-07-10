@@ -1,13 +1,13 @@
 "use client";
 
 import { useGlobalContext } from "@/context/Session";
-import { scalarClient } from "@/types/session";
+import { ScalarClient } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 function ProfileInfo({ params }: { params: { id: string } }) {
   const { dataSession } = useGlobalContext();
-  const [] = useState<scalarClient>();
+  const [] = useState<ScalarClient>();
 
   useEffect(() => {
     const getUser = async () => {
