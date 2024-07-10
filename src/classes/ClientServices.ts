@@ -1,13 +1,13 @@
 // Import statements
 import { prisma } from "@/prisma/db";
-import { scalarClient } from "@/types/session";
+import { ScalarClient } from "@/types/session";
 import { Document, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 // Class definition
 class ClientServices {
   // Create user method
-  static async create(data: scalarClient): Promise<User> {
+  static async create(data: ScalarClient): Promise<User> {
     const existEmail = await prisma.user.findUnique({
       where: { email: data.email },
     });
@@ -41,7 +41,7 @@ class ClientServices {
   // Update user method
   static async update(
     id: string,
-    data: Omit<scalarClient, "password">
+    data: Omit<ScalarClient, "password">
   ): Promise<User> {
     return await prisma.user.update({ where: { id }, data });
   }

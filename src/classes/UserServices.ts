@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma/db";
 import { ScalarUser } from "@/types/session";
-import { LoanApplication, UsersIntranet } from "@prisma/client";
+import { UsersIntranet } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 class UserServices {
@@ -32,9 +32,11 @@ class UserServices {
       console.log("class log: ", email, password);
     }
 
-    const userIntranet = await prisma.usersIntranet.findUnique({
-      where: { email },
-    }).catch(error => console.log(error));
+    const userIntranet = await prisma.usersIntranet
+      .findUnique({
+        where: { email },
+      })
+      .catch((error) => console.log(error));
 
     // // Evitar logging en producción
     // if (process.env.NODE_ENV !== "production") {
