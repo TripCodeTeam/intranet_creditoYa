@@ -1,16 +1,17 @@
 .mainMail {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   /* width: 100%; */
   /* padding: 0px 40px; */
 }
 
 .containerDrop {
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
 .containerDropNo {
-  margin-top: 2em;
+  margin-top: 10px;
 }
 
 .containerFilter {
@@ -55,4 +56,34 @@
 
 .btnProcess {
   padding: 10px 15px;
+}
+
+.containerMasiveMail {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--green-50);
+  cursor: pointer;
+}
+
+.containerMasiveMail:hover {
+  background: var(--white-100);
+}
+
+.partMassive {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.iconOpenTool {
+  display: grid;
+  place-content: center;
+}
+
+.boxIconExcel {
+  display: grid;
+  place-content: center;
 }

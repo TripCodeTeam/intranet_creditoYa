@@ -1,0 +1,27 @@
+.titleLink {
+  font-weight: 400;
+  color: var(--white-500);
+}
+
+.inputLink {
+  padding: 10px 15px;
+  border-radius: 8px;
+  outline: none;
+  border: 1px solid var(--white-400);
+}
+
+.boxBtnGenerate {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btnGenerate {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--green-300);
+  cursor: pointer;
+}
+
+.btnGenerate:hover {
+  border: 1px solid var(--green-500);
+}

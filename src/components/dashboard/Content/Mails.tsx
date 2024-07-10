@@ -14,7 +14,7 @@ function MailsComponents() {
   return (
     <>
       <div className={styles.mainMasive}>
-        <HeaderContent label={"Envia correos"} />
+        <HeaderContent label={"Herramientas"} />
         <MasiveEmails />
       </div>
     </>

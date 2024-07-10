@@ -7,10 +7,21 @@ import { toast } from "sonner";
 import { PiMicrosoftExcelLogoDuotone } from "react-icons/pi";
 import { useDropzone } from "react-dropzone";
 import { FiUpload } from "react-icons/fi";
+import {
+  TbCircleChevronDown,
+  TbCircleChevronRight,
+  TbQrcode,
+  TbUserPlus,
+} from "react-icons/tb";
+import QrGenerate from "./qr_generate";
 
 function MasiveEmails() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [jsonFile, setJsonFile] = useState<JsonExcelConvert[] | null>(null);
+
+  const [openMail, setOpenMails] = useState(false);
+  const [openMailQr, setOpenMailsQr] = useState(false);
+  const [openAddUser, setOpenAddUser] = useState(false);
 
   const processFile = async () => {
     if (selectedFile) {
@@ -77,46 +88,109 @@ function MasiveEmails() {
     <>
       <div className={styles.mainMail}>
         <div
-          {...getRootProps()}
-          className={
-            !selectedFile ? styles.containerDropNo : styles.containerDrop
-          }
+          className={styles.containerMasiveMail}
+          onClick={() => setOpenMails(!openMail)}
         >
-          <input {...getInputProps()} />
-
-          {selectedFile ? (
-            <>
-              <div className={styles.NameFile}>
-                <div className={styles.iconNameFile}>
-                  <PiMicrosoftExcelLogoDuotone size={44} />
-                </div>
-                <p>{selectedFile.name}</p>
-              </div>
-              <p className={styles.bytesFile}>
-                Tamaño: {selectedFile.size} bytes
-              </p>
-            </>
-          ) : (
-            <div className={styles.boxMessage}>
-              <div className={styles.boxIconFile}>
-                <FiUpload className={styles.iconLoadFile} size={30} />
-              </div>
-              <p>Arrastra y suelta el documento de Excel</p>
+          <div className={styles.partMassive}>
+            <div className={styles.boxIconExcel}>
+              <PiMicrosoftExcelLogoDuotone size={30} />
             </div>
-          )}
+            <div>
+              <h3>Contactos en Excel</h3>
+              <p>Saca informacion de contacto desde un archivo Excel</p>
+            </div>
+          </div>
+          <div className={styles.iconOpenTool}>
+            {openMail && <TbCircleChevronDown size={20} />}
+            {!openMail && <TbCircleChevronRight size={20} />}
+          </div>
         </div>
 
-        {!jsonFile && (
-          <div className={styles.boxBtnProc}>
-            <button
-              className={styles.btnProcess}
-              disabled={selectedFile ? false : true}
-              onClick={processFile}
+        {openMail && (
+          <>
+            <div
+              {...getRootProps()}
+              className={
+                !selectedFile ? styles.containerDropNo : styles.containerDrop
+              }
             >
-              Procesar
-            </button>
-          </div>
+              <input {...getInputProps()} />
+
+              {selectedFile ? (
+                <>
+                  <div className={styles.NameFile}>
+                    <div className={styles.iconNameFile}>
+                      <PiMicrosoftExcelLogoDuotone size={44} />
+                    </div>
+                    <p>{selectedFile.name}</p>
+                  </div>
+                  <p className={styles.bytesFile}>
+                    Tamaño: {selectedFile.size} bytes
+                  </p>
+                </>
+              ) : (
+                <div className={styles.boxMessage}>
+                  <div className={styles.boxIconFile}>
+                    <FiUpload className={styles.iconLoadFile} size={30} />
+                  </div>
+                  <p>Arrastra y suelta el documento de Excel</p>
+                </div>
+              )}
+            </div>
+
+            {!jsonFile && (
+              <div className={styles.boxBtnProc}>
+                <button
+                  className={styles.btnProcess}
+                  disabled={selectedFile ? false : true}
+                  onClick={processFile}
+                >
+                  Procesar
+                </button>
+              </div>
+            )}
+          </>
         )}
+
+        <div
+          className={styles.containerMasiveMail}
+          onClick={() => setOpenMailsQr(!openMailQr)}
+        >
+          <div className={styles.partMassive}>
+            <div className={styles.boxIconExcel}>
+              <TbQrcode size={30} />
+            </div>
+            <div>
+              <h3>Generar Codigo Qr</h3>
+              <p>Digita un link y genera un codigo QR</p>
+            </div>
+          </div>
+          <div className={styles.iconOpenTool}>
+            {openMailQr && <TbCircleChevronDown size={20} />}
+            {!openMailQr && <TbCircleChevronRight size={20} />}
+          </div>
+        </div>
+
+        {openMailQr && <QrGenerate />}
+
+        <div
+          className={styles.containerMasiveMail}
+          onClick={() => setOpenAddUser(!openAddUser)}
+        >
+          <div className={styles.partMassive}>
+            <div className={styles.boxIconExcel}>
+              <TbUserPlus size={30} />
+            </div>
+            <div>
+              <h3>Agregar usuarios a Intranet</h3>
+              <p>Agrega un integrante a la intranet y dale permisos</p>
+            </div>
+          </div>
+          <div className={styles.iconOpenTool}>
+            {openAddUser && <TbCircleChevronDown size={20} />}
+            {!openAddUser && <TbCircleChevronRight size={20} />}
+          </div>
+        </div>
       </div>
 
       {jsonFile && (
