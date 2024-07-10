@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
 import ImagesBox from "./ImagesBox";
-import { Editor } from "primereact/editor";
 import { JsonExcelConvert } from "@/types/ExcelFile";
 
 interface UserTypes {

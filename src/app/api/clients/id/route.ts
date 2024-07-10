@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const token = authorizationHeader.split(" ")[1];
-    console.log(token)
+    // console.log(token)
 
     const decodedToken = TokenService.verifyToken(
       token,

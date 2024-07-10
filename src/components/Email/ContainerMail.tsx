@@ -1,4 +1,4 @@
-import { scalarClient } from "@/types/session";
+import { ScalarClient } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import EditorComponent from "../Editor/Editor";
@@ -14,7 +14,7 @@ function ContainerMail({
   success: (complete: boolean) => void;
   token: string;
 }) {
-  const [clientData, setClientData] = useState<scalarClient | null>(null);
+  const [clientData, setClientData] = useState<ScalarClient | null>(null);
 
   const handleCompleteEmail = (complete: boolean) => {
     success(complete);
