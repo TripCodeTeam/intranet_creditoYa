@@ -29,12 +29,15 @@ function CardRequest({
   useEffect(() => {
     const getAvatar = async () => {
       try {
-        const response = await axios.post("/api/clients/avatar", {
-          userId: loan.userId,
-        });
+        const response = await axios.post(
+          "/api/clients/avatar",
+          {
+            userId: loan.userId,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
 
-        if (response.data.success)
-        setAvatarPerfil(response.data.data);
+        if (response.data.success) setAvatarPerfil(response.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -66,7 +69,7 @@ function CardRequest({
         <div className={styles.boxInfo}>
           <div className={styles.user}>
             <div className={styles.boxAvatarClient}>
-              <Avatar src={avatarPerfil} round={true} size="55" />
+              <Avatar src={avatarPerfil} className={styles.imgAvatar} round={true} size="55" />
             </div>
             <div className={styles.perfilInfo}>
               <h3>{`${infoClient?.names} ${infoClient?.firstLastName} ${infoClient?.secondLastName}`}</h3>

@@ -65,6 +65,10 @@
   place-content: center;
 }
 
+.imgAvatar {
+  object-fit: cover;
+}
+
 .perfilInfo {
   padding-top: 8px;
 }

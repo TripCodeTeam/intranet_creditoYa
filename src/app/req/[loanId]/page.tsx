@@ -10,13 +10,18 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { TbArrowLeft, TbPdf } from "react-icons/tb";
+import { TbArrowLeft, TbPdf, TbPencilCog } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
 import { useWebSocket } from "next-ws/client";
 import Modal from "@/components/modal/modal";
 import Loading from "@/app/dashboard/loading";
+import Document00 from "@/components/pdfs/pdfCard00";
+import Document04 from "@/components/pdfs/pdfCard04";
+import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
+
+import CurrencyInput from "react-currency-input-field";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
   const { dataSession } = useGlobalContext();
@@ -29,6 +34,46 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [openReject, setOpenReject] = useState<boolean>(false);
   const [isReject, setIsReject] = useState<string | null>(null);
+  const [linkSelect, setLinkSelect] = useState<number | null>(null);
+  const [openModelChange, setOpenModelChange] = useState<boolean>(false);
+
+  const [newValue, setNewValue] = useState<string | null>(null);
+  const [reasonNewCantity, setReasonNewCantity] = useState<string | null>(null);
+
+  const handleOpenViewPdf = (option: number) => {
+    setOpenModel(true);
+    setLinkSelect(option);
+  };
+
+  const handleSuccesChangeCantity = async () => {
+    try {
+      if (!newValue) throw new Error("Digita el valor a cambiar");
+      if (!reasonNewCantity) throw new Error("Digita la razon del cambio");
+
+      const response = await axios.post(
+        "/api/loans/change_cantity",
+        {
+          loanId: dataLoan?.id,
+          cantity: newValue,
+          reasonChangeCantity: reasonNewCantity,
+        },
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      console.log(response.data);
+
+      if (response.data.success == true) {
+        const data: ScalarLoanApplication = response.data.data;
+        setDataLoan(data);
+        toast.success("Cantidad Cambiada");
+        setOpenModelChange(false);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
 
   const ws = useWebSocket();
 
@@ -140,6 +185,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
     setOpenModel(!openModel);
   };
 
+  const handleChangeCantity = () => {
+    setOpenModelChange(!openModelChange);
+  };
+
   if (loadingData) {
     return <Loading />;
   }
@@ -184,11 +233,34 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             )}
           </div>
 
+          <h3 className={styles.titleDocs}>Cantidad Solicitada</h3>
+          <div className={styles.prevInfoClient}>
+            <div className={styles.boxCantity}>
+              <h1>{stringToPriceCOP(dataLoan?.cantity as string)}</h1>
+              {dataLoan?.status == "Pendiente" && (
+                <div
+                  className={styles.btnChangeCantity}
+                  onClick={handleChangeCantity}
+                >
+                  <div className={styles.boxIConPencil}>
+                    <TbPencilCog size={20} className={styles.iconPensil} />
+                  </div>
+                  <p>Editar Cantidad</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
           <div className={styles.prevInfoClient}>
             <div className={styles.infoClient}>
               <h5 className={styles.subTitleClient}>Nombre completo</h5>
               <h3>{`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}</h3>
+            </div>
+
+            <div className={styles.infoClient}>
+              <h5 className={styles.subTitleClient}>Numero de documento</h5>
+              <h3>{dataDocument?.number}</h3>
             </div>
 
             <div className={styles.infoClient}>
@@ -200,10 +272,43 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <h5 className={styles.subTitleClient}>Numero celular</h5>
               <h3>{dataClient?.phone}</h3>
             </div>
+          </div>
+
+          <h3 className={styles.titleDocs}>Status del prestamo</h3>
+          <div className={styles.prevInfoClient}>
+            <div className={styles.infoClient}>
+              <h5 className={styles.subTitleClient}>Status</h5>
+              <h2>{dataLoan?.status}</h2>
+            </div>
+
+            {dataLoan?.status == "Rechazado" && (
+              <div className={styles.infoClient}>
+                <h5 className={styles.subTitleClient}>Razon del rechazo</h5>
+                <h3>{dataLoan?.reasonReject}</h3>
+              </div>
+            )}
+          </div>
+
+          <h3 className={styles.titleDocs}>Informacion Financiera</h3>
+          <div className={styles.prevInfoClient}>
+            <div className={styles.infoClient}>
+              <h5 className={styles.subTitleClient}>Cantidad solicitada</h5>
+              <h3>{stringToPriceCOP(dataLoan?.cantity as string)}</h3>
+            </div>
 
             <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Whatsapp</h5>
-              <h3>{dataClient?.phone_whatsapp}</h3>
+              <h5 className={styles.subTitleClient}>Numero de cuenta</h5>
+              <h3>{dataLoan?.bankNumberAccount}</h3>
+            </div>
+
+            <div className={styles.infoClient}>
+              <h5 className={styles.subTitleClient}>Tipo de cuenta</h5>
+              <h3>{dataLoan?.bankSavingAccount && "Ahorros"}</h3>
+            </div>
+
+            <div className={styles.infoClient}>
+              <h5 className={styles.subTitleClient}>Entidad Bancaria</h5>
+              <h3>{dataLoan?.entity}</h3>
             </div>
           </div>
 
@@ -211,40 +316,40 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           <div className={styles.barDocs}>
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Primer Volante</p>
               <div className={styles.actionDocBox}>
-                <p>Primer Volante</p>
                 <button>Ver</button>
               </div>
             </div>
 
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Segundo Volante</p>
               <div className={styles.actionDocBox}>
-                <p>Segundo Volante</p>
                 <button>Ver</button>
               </div>
             </div>
 
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Tercer Volante</p>
               <div className={styles.actionDocBox}>
-                <p>Tercer Volante</p>
                 <button>Ver</button>
               </div>
             </div>
 
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Carta Laboral</p>
               <div className={styles.actionDocBox}>
-                <p>Carta Laboral</p>
                 <button>Ver</button>
               </div>
             </div>
@@ -254,41 +359,51 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           <div className={styles.barDocs}>
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Primer Documento</p>
               <div className={styles.actionDocBox}>
-                <p>Primer Volante</p>
-                <button>Ver</button>
+                <button onClick={() => handleOpenViewPdf(0)}>Ver</button>
               </div>
             </div>
 
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Segundo Documento</p>
               <div className={styles.actionDocBox}>
-                <p>Segundo Volante</p>
-                <button>Ver</button>
+                <button onClick={() => handleOpenViewPdf(1)}>Ver</button>
               </div>
             </div>
 
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Tercer Documento</p>
               <div className={styles.actionDocBox}>
-                <p>Tercer Volante</p>
-                <button>Ver</button>
+                <button onClick={() => handleOpenViewPdf(2)}>Ver</button>
               </div>
             </div>
 
             <div className={styles.docBox}>
               <div className={styles.barIconPdf}>
-                <TbPdf size={30} />
+                <TbPdf className={styles.iconPdf} size={30} />
               </div>
+              <p>Cuarto Documento</p>
               <div className={styles.actionDocBox}>
-                <p>Carta Laboral</p>
-                <button>Ver</button>
+                <button onClick={() => handleOpenViewPdf(3)}>Ver</button>
+              </div>
+            </div>
+
+            <div className={styles.docBox}>
+              <div className={styles.barIconPdf}>
+                <TbPdf className={styles.iconPdf} size={30} />
+              </div>
+              <p>Quinto Documento</p>
+              <div className={styles.actionDocBox}>
+                <button onClick={() => handleOpenViewPdf(4)}>Ver</button>
               </div>
             </div>
           </div>
@@ -323,7 +438,21 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         </main>
 
         <Modal isOpen={openModel} onClose={handleCloseModal}>
-          <p></p>
+          {linkSelect == 0 && (
+            <Document00
+              numberDocument={dataDocument?.number as string}
+              signature={dataLoan?.signature}
+              entity={dataLoan?.entity as string}
+              numberBank={dataLoan?.bankNumberAccount as string}
+            />
+          )}
+          {linkSelect == 4 && (
+            <Document04
+              name={`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}
+              numberDocument={dataDocument?.number as string}
+              signature={dataLoan?.signature}
+            />
+          )}
         </Modal>
 
         <Modal isOpen={openReject} onClose={handleCloseModalReject}>
@@ -338,6 +467,36 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <button
                 className={styles.btnRejectReady}
                 onClick={() => onDes({ newStatus: "Rechazado" })}
+              >
+                Listo
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        <Modal isOpen={openModelChange} onClose={handleChangeCantity}>
+          <div className={styles.intraRejectModal}>
+            <h3>Cantidad</h3>
+            <CurrencyInput
+              className={styles.inputPrice}
+              placeholder="Ingresa la cantidad"
+              defaultValue={0}
+              decimalsLimit={2}
+              onValueChange={(value, name, values) => {
+                setNewValue(value as string);
+              }}
+              prefix="$"
+            />
+            <h3>Razon</h3>
+            <p>Escribe una razon clara</p>
+            <textarea
+              className={styles.rejectTextArea}
+              onChange={(e) => setReasonNewCantity(e.target.value)}
+            ></textarea>
+            <div>
+              <button
+                className={styles.btnRejectReady}
+                onClick={handleSuccesChangeCantity}
               >
                 Listo
               </button>

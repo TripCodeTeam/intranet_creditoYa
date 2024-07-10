@@ -15,6 +15,7 @@ import {
   TbTransactionDollar,
   TbMobiledata,
   TbAdjustments,
+  TbTool,
 } from "react-icons/tb";
 
 import Image from "next/image";
@@ -130,7 +131,7 @@ function SideBar() {
                   onClick={() => handleChangeOption({ option: "Emails" })}
                 >
                   <div className={styles.subBtnOptionOpen}>
-                    <TbMailPlus
+                    <TbTool
                       className={
                         option == "Emails"
                           ? styles.iconOptionSelect
@@ -139,7 +140,7 @@ function SideBar() {
                       size={18}
                     />
                   </div>
-                  <p className={styles.messageBtn}>Crear Correos</p>
+                  <p className={styles.messageBtn}>Herramientas</p>
                 </div>
               </>
             )}
@@ -223,7 +224,7 @@ function SideBar() {
                         : styles.subBtnOption
                     }
                   >
-                    <TbMailPlus
+                    <TbTool
                       className={
                         option == "Emails"
                           ? styles.iconOptionSelect

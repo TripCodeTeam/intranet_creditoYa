@@ -92,6 +92,11 @@
   font-weight: 400;
 }
 
+.iconPdf {
+  color: var(--red-600);
+  filter: drop-shadow(0px 0px 10px var(--white-800));
+}
+
 .btnReject:hover {
   background: var(--red-300);
   color: var(--white-50);
@@ -142,13 +147,12 @@
   padding: 10px 15px;
   border-radius: 16px;
   box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--red-200);
+  border: 1px solid var(--red-300);
 }
 
 .actionDocBox {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   cursor: pointer;
 }
 
@@ -156,6 +160,10 @@
   padding: 5px 10px;
   border-radius: 8px;
   border: 1px solid var(--white-200);
+  font-weight: 500;
+  color: var(--white-500);
+  cursor: pointer;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .actionDocBox p {
@@ -219,6 +227,50 @@
 
 .btnRejectReady:hover {
   border: 1px solid var(--green-400);
+}
+
+.boxCantity {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.btnChangeCantity {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px 10px;
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btnChangeCantity:hover {
+  border: 1px solid var(--green-400);
+}
+
+.boxIConPencil {
+  display: grid;
+  place-content: center;
+}
+
+.iconPensil {
+  color: var(--green-800);
+}
+
+.btnChangeCantity p {
+  display: grid;
+  place-content: center;
+}
+
+.inputPrice {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  border: 1px solid var(--white-300);
+  border-radius: 6px;
 }
 
 @media screen and (max-width: 900px) {

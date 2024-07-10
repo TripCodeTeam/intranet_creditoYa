@@ -41,7 +41,7 @@ function LoansHistory({ params }: { params: { clientId: string } }) {
         <div className={styles.barBack}>
           <div
             className={styles.centerBarBack}
-            onClick={() => router.push(`client/${params.clientId}`)}
+            onClick={() => router.push(`/dashboard`)}
           >
             <div className={styles.boxIcon}>
               <TbArrowLeft size={20} className={styles.iconArrow} />

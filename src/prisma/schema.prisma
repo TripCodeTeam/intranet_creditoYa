@@ -50,6 +50,7 @@ model LoanApplication {
     second_flyer         String
     third_flyer          String
     reasonReject         String?
+    reasonChangeCantity  String?
     cantity              String
     bankSavingAccount    Boolean    @default(true)
     bankNumberAccount    String

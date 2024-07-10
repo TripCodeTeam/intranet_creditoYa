@@ -5,11 +5,12 @@ import styles from "./modal.module.css";
 
 interface modalProps {
   isOpen: boolean;
+  link?: string | null;
   onClose: () => void;
   children: ReactNode;
 }
 
-const Modal = ({ isOpen, onClose, children }: modalProps) => {
+const Modal = ({ isOpen, onClose, children, link }: modalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -18,7 +19,17 @@ const Modal = ({ isOpen, onClose, children }: modalProps) => {
         className={styles.modal_content}
         onClick={(e) => e.stopPropagation()}
       >
-        {children}
+        {!link ? children : null}
+
+        {link && (
+          <object
+            data={link}
+            type="application/pdf"
+            width="100%"
+            height="100%"
+          />
+        )}
+
         <button className={styles.close_button} onClick={onClose}>
           Cerrar
         </button>

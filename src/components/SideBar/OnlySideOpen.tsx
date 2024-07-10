@@ -13,6 +13,7 @@ import {
   TbUserSearch,
   TbX,
   TbMobiledata,
+  TbTool,
 } from "react-icons/tb";
 
 import Avatar from "react-avatar";
@@ -115,7 +116,7 @@ function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
               onClick={() => handleChangeOption({ option: "Emails" })}
             >
               <div className={styles.subBtnOptionOpen}>
-                <TbMailPlus
+                <TbTool
                   className={
                     option == "Emails"
                       ? styles.iconOptionSelect
@@ -124,7 +125,7 @@ function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
                   size={18}
                 />
               </div>
-              <p className={styles.messageBtn}>Crear Correos</p>
+              <p className={styles.messageBtn}>Herramientas</p>
             </div>
           </div>
         </div>
