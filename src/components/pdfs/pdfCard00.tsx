@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import skeletonPdf from "@/components/Jsons/AboutLoan.json";
-import { DocumentTypes00, DocumentTypes04 } from "@/types/PDFs";
+import { DocumentTypes00 } from "@/types/PDFs";
 import jsPDF from "jspdf";
 
 interface PdfViewProps {
@@ -51,7 +51,7 @@ function Document00({
     doc.text(jsonData.secondTitle, 10, y, { maxWidth: 190 });
     y += 10;
 
-    doc.setFontSize(13)
+    doc.setFontSize(13);
 
     doc.text(
       "Cuenta Ahorros " +
@@ -65,7 +65,7 @@ function Document00({
     );
     y += -265;
 
-    doc.setFontSize(10)
+    doc.setFontSize(10);
 
     doc.addPage();
 
@@ -133,6 +133,7 @@ function Document00({
     const pdfUrl = URL.createObjectURL(pdfBlob);
     setPdfUrl(pdfUrl);
   }, [jsonData]);
+
   return (
     <>
       {pdfUrl && (

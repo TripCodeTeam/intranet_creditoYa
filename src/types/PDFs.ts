@@ -26,6 +26,23 @@ export interface DocumentTypes00 {
   finalText: string;
 }
 
+/** Types of Document01 */
+
+export type Document01Type = {
+  firstParagraph: string;
+  firstText: string;
+  secondText: string;
+  secondParagraph: string;
+  inst01: string;
+  inst02: string;
+  inst03: string;
+  inst04: string;
+  inst05: string;
+  finalSecondParagraph: string;
+  threeParagraph: string;
+  fourParagraph: string;
+};
+
 /** Types of Document04 */
 
 interface NumeroPagare {

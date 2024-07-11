@@ -1,0 +1,36 @@
+.boxInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 1em;
+}
+
+.boxInfo h3 {
+  font-weight: 400;
+  color: var(--white-600);
+}
+
+.inputInfo {
+  padding: 10px;
+  border: 1px solid var(--white-300);
+  outline: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.boxBtnCreate {
+  margin-top: 1em;
+}
+
+.boxBtnCreate button {
+  background: var(--white-100);
+  padding: 10px 25px;
+  outline: none;
+  border-radius: 8px;
+  border: 1px solid var(--white-300);
+  cursor: pointer;
+}
+
+.boxBtnCreate button:hover {
+  border: 1px solid var(--white-600);
+}

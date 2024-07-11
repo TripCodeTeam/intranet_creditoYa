@@ -28,13 +28,6 @@ export async function POST(req: Request) {
     const addressee = formdata.getAll("addressee") as string | string[];
     const files = formdata.getAll("files") as File[];
 
-    const finalRes = {
-      subject,
-      content,
-      addressee,
-      files,
-    };
-
     console.log(files);
 
     const attachmentsFiles = await Promise.all(

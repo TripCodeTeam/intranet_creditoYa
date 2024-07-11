@@ -6,23 +6,23 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
 
-    // // Verificar la autenticación JWT
-    // const authorizationHeader = req.headers.get("Authorization");
+    // Verificar la autenticación JWT
+    const authorizationHeader = req.headers.get("Authorization");
 
-    // if (!authorizationHeader) {
-    //   throw new Error("Token de autorización no proporcionado");
-    // }
+    if (!authorizationHeader) {
+      throw new Error("Token de autorización no proporcionado");
+    }
 
-    // const token = authorizationHeader.split(" ")[1];
+    const token = authorizationHeader.split(" ")[1];
 
-    // const decodedToken = TokenService.verifyToken(
-    //   token,
-    //   process.env.JWT_SECRET as string
-    // );
+    const decodedToken = TokenService.verifyToken(
+      token,
+      process.env.JWT_SECRET as string
+    );
 
-    // if (!decodedToken) {
-    //   throw new Error("Token no válido");
-    // }
+    if (!decodedToken) {
+      throw new Error("Token no válido");
+    }
 
     const { name, lastNames, email, password, rol }: ScalarUser = await req.json();
 

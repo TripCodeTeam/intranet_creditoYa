@@ -5,6 +5,7 @@ import {
   ScalarClient,
   ScalarDocument,
   ScalarLoanApplication,
+  ScalarUser,
   Status,
 } from "@/types/session";
 import axios from "axios";
@@ -18,10 +19,12 @@ import { useWebSocket } from "next-ws/client";
 import Modal from "@/components/modal/modal";
 import Loading from "@/app/dashboard/loading";
 import Document00 from "@/components/pdfs/pdfCard00";
-import Document04 from "@/components/pdfs/pdfCard04";
+import Document03 from "@/components/pdfs/pdfCard02";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 
 import CurrencyInput from "react-currency-input-field";
+import { Document01 } from "@/components/pdfs/pdfCard01";
+import Document02 from "@/components/pdfs/pdfCard02";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
   const { dataSession } = useGlobalContext();
@@ -30,6 +33,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [dataLoan, setDataLoan] = useState<ScalarLoanApplication | null>(null);
   const [dataDocument, setDataDocument] = useState<ScalarDocument | null>(null);
   const [dataClient, setDataClient] = useState<ScalarClient | null>(null);
+  const [dataIntra, setDataIntra] = useState<ScalarUser | null>(null);
   const [openModel, setOpenModel] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [openReject, setOpenReject] = useState<boolean>(false);
@@ -92,12 +96,12 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
       if (response.data.success === true) {
         setDataLoan(response.data.data);
 
-        const data: ScalarLoanApplication = response.data.data;
+        const dataLoan: ScalarLoanApplication = response.data.data;
 
         const responseDocs = await axios.post(
           "/api/clients/docs/id",
           {
-            userId: data.userId,
+            userId: dataLoan.userId,
           },
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
@@ -121,6 +125,19 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             // console.log(data);
             setDataClient(data);
             setLoadingData(false);
+
+            const dataIntranet = await axios.post(
+              "/api/users/id",
+              {
+                employeeId: dataLoan.employeeId,
+              },
+              { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+            );
+
+            if (dataIntranet.data.success) {
+              const dataUserInt: ScalarUser = dataIntranet.data.data;
+              setDataIntra(dataUserInt);
+            }
           }
         }
       }
@@ -149,30 +166,45 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
     // console.log(response.data);
 
     if (response.data.success == true) {
-      const data: ScalarLoanApplication = response.data.data;
-
-      const responseReload = await axios.post(
-        "/api/loans/by/id",
+      const sendMail = await axios.post(
+        "/api/mail/change_status",
         {
-          loanId: params.loanId,
+          newStatus,
+          employeeName: `${dataIntra?.name} ${dataIntra?.lastNames}`,
+          loanId: loanApplicationId,
+          mail: dataClient?.email,
         },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      if (responseReload.data.success == true) {
-        const dataReload: ScalarLoanApplication = responseReload.data.data;
-        setDataLoan(dataReload);
+      console.log(sendMail.data);
 
-        ws?.send(
-          JSON.stringify({
-            type: "newApprove",
-            owner: dataLoan?.userId,
-            from: employeeId,
-          })
+      if (sendMail.data.success) {
+        const data: ScalarLoanApplication = response.data.data;
+
+        const responseReload = await axios.post(
+          "/api/loans/by/id",
+          {
+            loanId: params.loanId,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
 
-        if (data && reason == null) toast.success("Solicitud aprobada");
-        if (data && reason !== null) toast.success("Solicitud rechazado");
+        if (responseReload.data.success == true) {
+          const dataReload: ScalarLoanApplication = responseReload.data.data;
+          setDataLoan(dataReload);
+
+          ws?.send(
+            JSON.stringify({
+              type: "newApprove",
+              owner: dataLoan?.userId,
+              from: employeeId,
+            })
+          );
+
+          if (data && reason == null) toast.success("Solicitud aprobada");
+          if (data && reason !== null) toast.success("Solicitud rechazado");
+        }
       }
     }
   };
@@ -361,7 +393,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <div className={styles.barIconPdf}>
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
-              <p>Primer Documento</p>
+              <p>Autorizacion centrales de riesgo</p>
               <div className={styles.actionDocBox}>
                 <button onClick={() => handleOpenViewPdf(0)}>Ver</button>
               </div>
@@ -371,7 +403,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <div className={styles.barIconPdf}>
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
-              <p>Segundo Documento</p>
+              <p>Autorizacion cobro</p>
               <div className={styles.actionDocBox}>
                 <button onClick={() => handleOpenViewPdf(1)}>Ver</button>
               </div>
@@ -381,7 +413,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <div className={styles.barIconPdf}>
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
-              <p>Tercer Documento</p>
+              <p>Autorizacion descuento nomina</p>
               <div className={styles.actionDocBox}>
                 <button onClick={() => handleOpenViewPdf(2)}>Ver</button>
               </div>
@@ -391,19 +423,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <div className={styles.barIconPdf}>
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
-              <p>Cuarto Documento</p>
+              <p>Pagare</p>
               <div className={styles.actionDocBox}>
                 <button onClick={() => handleOpenViewPdf(3)}>Ver</button>
-              </div>
-            </div>
-
-            <div className={styles.docBox}>
-              <div className={styles.barIconPdf}>
-                <TbPdf className={styles.iconPdf} size={30} />
-              </div>
-              <p>Quinto Documento</p>
-              <div className={styles.actionDocBox}>
-                <button onClick={() => handleOpenViewPdf(4)}>Ver</button>
               </div>
             </div>
           </div>
@@ -446,8 +468,22 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               numberBank={dataLoan?.bankNumberAccount as string}
             />
           )}
-          {linkSelect == 4 && (
-            <Document04
+          {linkSelect == 1 && (
+            <Document01
+              name={`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}
+              numberDocument={dataDocument?.number as string}
+              signature={dataLoan?.signature as string}
+            />
+          )}
+          {linkSelect == 2 && (
+            <Document02
+              name={`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}
+              numberDocument={dataDocument?.number as string}
+              signature={dataLoan?.signature as string}
+            />
+          )}
+          {linkSelect == 3 && (
+            <Document03
               name={`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}
               numberDocument={dataDocument?.number as string}
               signature={dataLoan?.signature}

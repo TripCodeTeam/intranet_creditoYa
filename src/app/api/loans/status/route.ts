@@ -1,6 +1,7 @@
 import LoanApplicationService from "@/classes/LoanServices";
 import TokenService from "@/classes/TokenServices";
 import { Status } from "@/types/session";
+import axios from "axios";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -24,13 +25,17 @@ export async function POST(req: Request) {
     }
 
     const {
+      mail,
       newStatus,
       employeeId,
+      employeeName,
       loanApplicationId,
       reason,
     }: {
+      mail: string;
       newStatus: Status;
       employeeId: string;
+      employeeName: string;
       loanApplicationId: string;
       reason: string | null;
     } = await req.json();

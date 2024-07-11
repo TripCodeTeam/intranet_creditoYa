@@ -2,8 +2,6 @@
   /* flex: 1; */
   height: 100dvh;
   width: 100%;
-  scrollbar-color: var(--white-100);
-  overflow: scroll;
   padding: 0px 40px;
   display: flex;
   flex-direction: column;
@@ -66,4 +64,10 @@
   place-content: center;
   color: var(--green-800);
   font-weight: 700;
+}
+
+@media screen and (max-width: 900px) {
+  .mainMasive {
+    padding: 0px 20px;
+  }
 }

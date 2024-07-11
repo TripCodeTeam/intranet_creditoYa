@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <WebSocketProvider url="/api/ws">
           <GlobalProvider>
-            <Toaster richColors />
+            <Toaster richColors expand={true} />
             {children}
           </GlobalProvider>
         </WebSocketProvider>

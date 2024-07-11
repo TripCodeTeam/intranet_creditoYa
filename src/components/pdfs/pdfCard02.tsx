@@ -11,7 +11,7 @@ interface PdfViewProps {
   signature?: string;
 }
 
-function Document04({ name, numberDocument, signature }: PdfViewProps) {
+function Document02({ name, numberDocument, signature }: PdfViewProps) {
   const [jsonData, setJsonData] = useState<DocumentTypes04>(skeletonPdf);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
@@ -118,4 +118,4 @@ function Document04({ name, numberDocument, signature }: PdfViewProps) {
   );
 }
 
-export default Document04;
+export default Document02;

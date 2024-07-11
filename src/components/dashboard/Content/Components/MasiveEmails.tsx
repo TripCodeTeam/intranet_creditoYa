@@ -14,6 +14,7 @@ import {
   TbUserPlus,
 } from "react-icons/tb";
 import QrGenerate from "./qr_generate";
+import AddUserIntranet from "./add_user";
 
 function MasiveEmails() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -191,6 +192,8 @@ function MasiveEmails() {
             {!openAddUser && <TbCircleChevronRight size={20} />}
           </div>
         </div>
+
+        {openAddUser && <AddUserIntranet />}
       </div>
 
       {jsonFile && (
