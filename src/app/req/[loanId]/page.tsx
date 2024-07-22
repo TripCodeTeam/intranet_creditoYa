@@ -306,14 +306,15 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             <>
               <div className={styles.prevInfoClient}>
                 <div className={styles.boxCantity}>
-                  {dataLoan?.newCantityOpt == true && <p>Aceptado</p>}
-                  {dataLoan?.newCantityOpt == false && <p>Rechazado</p>}
+                  {dataLoan?.newCantityOpt ? <p>Aceptado</p> : <p>Rechazado</p>}
                 </div>
               </div>
             </>
           )}
 
-          {dataLoan?.newCantityOpt == null && <p>Esperando respuesta del cliente...</p>}
+          {dataLoan?.newCantityOpt == null && (
+            <p>Esperando respuesta del cliente...</p>
+          )}
 
           <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
           <div className={styles.prevInfoClient}>
