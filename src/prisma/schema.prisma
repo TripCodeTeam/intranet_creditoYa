@@ -52,6 +52,8 @@ model LoanApplication {
     reasonReject         String?
     reasonChangeCantity  String?
     cantity              String
+    newCantity           String?
+    newCantityOpt        Boolean?
     bankSavingAccount    Boolean    @default(true)
     bankNumberAccount    String
     entity               String

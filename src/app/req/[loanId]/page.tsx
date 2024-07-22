@@ -25,6 +25,7 @@ import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 import CurrencyInput from "react-currency-input-field";
 import { Document01 } from "@/components/pdfs/pdfCard01";
 import Document02 from "@/components/pdfs/pdfCard02";
+import { RefreshDataLoan } from "@/handlers/requests/allDataLoan";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
   const { dataSession } = useGlobalContext();
@@ -58,7 +59,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         "/api/loans/change_cantity",
         {
           loanId: dataLoan?.id,
-          cantity: newValue,
+          newCantity: newValue,
           reasonChangeCantity: reasonNewCantity,
         },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
@@ -69,6 +70,11 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
       if (response.data.success == true) {
         const data: ScalarLoanApplication = response.data.data;
         setDataLoan(data);
+        const updataDataLoan = await RefreshDataLoan(
+          dataLoan?.id as string,
+          dataSession?.token as string
+        );
+        setDataLoan(updataDataLoan);
         toast.success("Cantidad Cambiada");
         setOpenModelChange(false);
       }
@@ -269,19 +275,45 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           <div className={styles.prevInfoClient}>
             <div className={styles.boxCantity}>
               <h1>{stringToPriceCOP(dataLoan?.cantity as string)}</h1>
-              {dataLoan?.status == "Pendiente" && (
-                <div
-                  className={styles.btnChangeCantity}
-                  onClick={handleChangeCantity}
-                >
-                  <div className={styles.boxIConPencil}>
-                    <TbPencilCog size={20} className={styles.iconPensil} />
+              {dataLoan?.status == "Pendiente" &&
+                dataLoan?.newCantity == null && (
+                  <div
+                    className={styles.btnChangeCantity}
+                    onClick={handleChangeCantity}
+                  >
+                    <div className={styles.boxIConPencil}>
+                      <TbPencilCog size={20} className={styles.iconPensil} />
+                    </div>
+                    <p>Editar Cantidad</p>
                   </div>
-                  <p>Editar Cantidad</p>
-                </div>
-              )}
+                )}
             </div>
           </div>
+
+          {dataLoan?.status == "Pendiente" && dataLoan?.newCantity && (
+            <>
+              <h3 className={styles.titleDocs}>Cantidad Aceptada</h3>
+              <div className={styles.prevInfoClient}>
+                <div className={styles.boxCantity}>
+                  <h1>{stringToPriceCOP(dataLoan?.newCantity as string)}</h1>
+                </div>
+              </div>
+            </>
+          )}
+
+          <h3 className={styles.titleDocs}>Desicion del cliente</h3>
+          {dataLoan?.newCantityOpt && (
+            <>
+              <div className={styles.prevInfoClient}>
+                <div className={styles.boxCantity}>
+                  {dataLoan?.newCantityOpt == true && <p>Aceptado</p>}
+                  {dataLoan?.newCantityOpt == false && <p>Rechazado</p>}
+                </div>
+              </div>
+            </>
+          )}
+
+          {dataLoan?.newCantityOpt == null && <p>Esperando respuesta del cliente...</p>}
 
           <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
           <div className={styles.prevInfoClient}>
