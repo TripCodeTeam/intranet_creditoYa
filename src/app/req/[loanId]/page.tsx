@@ -302,11 +302,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           )}
 
           <h3 className={styles.titleDocs}>Desicion del cliente</h3>
-          {dataLoan?.newCantityOpt && (
+          {dataClient !== null && (
             <>
               <div className={styles.prevInfoClient}>
                 <div className={styles.boxCantity}>
-                  {dataLoan?.newCantityOpt ? <p>Aceptado</p> : <p>Rechazado</p>}
+                  <p>
+                    {dataLoan && dataLoan.newCantityOpt == true ? "Aceptado" : "Rechazado"}
+                  </p>
                 </div>
               </div>
             </>
