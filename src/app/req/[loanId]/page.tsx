@@ -301,21 +301,24 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             </>
           )}
 
-          <h3 className={styles.titleDocs}>Desicion del cliente</h3>
-          {dataClient !== null && (
+          {dataLoan?.newCantityOpt !== null && (
             <>
+              <h3 className={styles.titleDocs}>Desicion del cliente</h3>
               <div className={styles.prevInfoClient}>
                 <div className={styles.boxCantity}>
                   <p>
-                    {dataLoan && dataLoan.newCantityOpt == true ? "Aceptado" : "Rechazado"}
+                    {dataLoan?.newCantity && dataLoan.newCantityOpt == true
+                      ? "Aceptado"
+                      : "Rechazado"}
+
+                    {dataLoan?.newCantityOpt == null &&
+                      dataLoan?.newCantity && (
+                        <p>Esperando respuesta del cliente...</p>
+                      )}
                   </p>
                 </div>
               </div>
             </>
-          )}
-
-          {dataLoan?.newCantityOpt == null && (
-            <p>Esperando respuesta del cliente...</p>
           )}
 
           <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
