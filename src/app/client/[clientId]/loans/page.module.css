@@ -36,7 +36,10 @@
 
 .containerLoans {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2em;
+  border-radius: 16px;
 }
 
 .cardLoan {
@@ -44,4 +47,11 @@
   background: var(--white-100);
   flex-basis: 200px;
   flex-grow: 1;
+}
+
+@media screen and (max-width: 900px) {
+  .containerLoans {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }

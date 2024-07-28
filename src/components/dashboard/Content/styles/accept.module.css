@@ -11,7 +11,7 @@
 
 .btnAprove {
   padding: 10px;
-  background: var(--green-100);
+  background: var(--green-200);
   border-radius: 8px;
   cursor: pointer;
   color: var(--green-600);
@@ -19,18 +19,42 @@
 }
 
 .btnAprove:hover {
-  background: var(--green-200);
+  background: var(--green-300);
 }
 
 .btnReject {
   padding: 10px;
-  background: var(--red-100);
+  background: var(--red-200);
   border-radius: 8px;
   cursor: pointer;
-  color: var(--red-600);
+  color: var(--red-700);
   font-weight: 400;
 }
 
 .btnReject:hover {
-  background: var(--red-200);
+  background: var(--red-300);
+}
+
+.btnCantity {
+  padding: 10px;
+  background: var(--blue-200);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--blue-600);
+  font-weight: 400;
+}
+
+.btnCantity:hover {
+  background: var(--blue-300);
+}
+
+.titleNodata {
+  text-align: center;
+  font-weight: 300;
+  color: var(--white-400);
+  font-size: 30px;
+}
+
+.imgNoData {
+  filter: opacity(0.3);
 }

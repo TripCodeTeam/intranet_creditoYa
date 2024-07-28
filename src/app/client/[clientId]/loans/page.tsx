@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
 import { ScalarLoanApplication } from "@/types/session";
+import HistoryCard from "@/components/history/HistoryCard";
 
 function LoansHistory({ params }: { params: { clientId: string } }) {
   const router = useRouter();
@@ -52,16 +53,7 @@ function LoansHistory({ params }: { params: { clientId: string } }) {
 
         <div className={styles.containerLoans}>
           {loans &&
-            loans?.map((loan) => (
-              <div key={loan.id} className={styles.cardLoan}>
-                <h3>{loan.status}</h3>
-                <p>{loan.bankNumberAccount}</p>
-                <p>{loan.bankSavingAccount}</p>
-                <p>{loan.cantity}</p>
-                <p>{loan.employeeId}</p>
-                <p>{loan.entity}</p>
-              </div>
-            ))}
+            loans?.map((loan) => <HistoryCard key={loan.id} loan={loan} />)}
         </div>
       </main>
     </>

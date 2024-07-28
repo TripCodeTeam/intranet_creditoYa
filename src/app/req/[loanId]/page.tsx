@@ -69,14 +69,23 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
       if (response.data.success == true) {
         const data: ScalarLoanApplication = response.data.data;
-        setDataLoan(data);
-        const updataDataLoan = await RefreshDataLoan(
-          dataLoan?.id as string,
-          dataSession?.token as string
-        );
-        setDataLoan(updataDataLoan);
-        toast.success("Cantidad Cambiada");
-        setOpenModelChange(false);
+
+        const sendMail = await axios.post("/api/mail/change_cantity", {
+          completeName: `${dataClient?.firstLastName} ${dataClient?.secondLastName}`,
+          loanId: data.id,
+          mail: dataClient?.email,
+        });
+
+        if (sendMail.data.success == true) {
+          setDataLoan(data);
+          const updataDataLoan = await RefreshDataLoan(
+            dataLoan?.id as string,
+            dataSession?.token as string
+          );
+          setDataLoan(updataDataLoan);
+          toast.success("Cantidad Cambiada");
+          setOpenModelChange(false);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -140,7 +149,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               { headers: { Authorization: `Bearer ${dataSession?.token}` } }
             );
 
-            if (dataIntranet.data.success) {
+            console.log(dataIntranet);
+
+            if (dataIntranet.data.success == true) {
               const dataUserInt: ScalarUser = dataIntranet.data.data;
               setDataIntra(dataUserInt);
             }
@@ -171,7 +182,11 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
     // console.log(response.data);
 
-    if (response.data.success == true) {
+    if (
+      response.data.success == true &&
+      dataIntra?.name !== undefined &&
+      dataIntra.lastNames !== undefined
+    ) {
       const sendMail = await axios.post(
         "/api/mail/change_status",
         {
@@ -253,22 +268,24 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <p>Solicitud: {dataLoan?.id}</p>
             </div>
 
-            {dataLoan?.status === "Pendiente" && (
-              <div className={styles.listBtns}>
-                <p
-                  className={styles.btnAprove}
-                  onClick={() => onDes({ newStatus: "Aprobado" })}
-                >
-                  Aprobar
-                </p>
-                <p
-                  className={styles.btnReject}
-                  onClick={() => setOpenReject(true)}
-                >
-                  Rechazar
-                </p>
-              </div>
-            )}
+            {dataLoan?.status === "Pendiente" &&
+              !dataLoan.newCantity &&
+              !dataLoan.newCantityOpt && (
+                <div className={styles.listBtns}>
+                  <p
+                    className={styles.btnAprove}
+                    onClick={() => onDes({ newStatus: "Aprobado" })}
+                  >
+                    Aprobar
+                  </p>
+                  <p
+                    className={styles.btnReject}
+                    onClick={() => setOpenReject(true)}
+                  >
+                    Rechazar
+                  </p>
+                </div>
+              )}
           </div>
 
           <h3 className={styles.titleDocs}>Cantidad Solicitada</h3>

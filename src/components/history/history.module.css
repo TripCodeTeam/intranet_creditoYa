@@ -1,0 +1,111 @@
+.containerCard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /* background: var(--blue-50); */
+  border-bottom: 1px solid var(--white-200);
+  padding-bottom: 1em;
+  gap: 10px;
+  flex: 1;
+  margin-top: 1em;
+}
+
+.reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reasons h5 {
+  font-weight: 500;
+  color: var(--white-950);
+}
+
+.boxCantityReason {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--white-950);
+  padding: 5px;
+}
+
+.boxCard {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.boxCard h5 {
+  font-weight: 500;
+  color: var(--white-600);
+}
+
+.boxCard h2 {
+  font-weight: 400;
+  color: var(--white-950);
+}
+
+.boxCantityReason p {
+  font-weight: 500;
+}
+
+.boxCantityReason:hover {
+  background: var(--white-100);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--white-700);
+}
+
+.boxIconArrow {
+  display: grid;
+  place-content: center;
+}
+
+.containerReasons {
+  margin-top: 1em;
+}
+
+.headerClose {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.boxCloseIcon {
+  display: grid;
+  place-content: center;
+}
+
+.iconClose {
+  color: var(--white-600);
+}
+
+.iconClose:hover {
+  filter: drop-shadow(0px 0px 10px #000000);
+  cursor: pointer;
+}
+
+.cardReason {
+  padding: 10px;
+  background: var(--white-100);
+  border-radius: 8px;
+}
+
+.cardReason h5 {
+  font-weight: 500;
+  color: var(--white-600);
+}
+
+@media screen and (max-width: 900px) {
+  .reasons {
+    flex-basis: 200px;
+    flex-grow: 1;
+  }
+
+  .boxCard {
+    flex-basis: 200px;
+    flex-grow: 1;
+  }
+}

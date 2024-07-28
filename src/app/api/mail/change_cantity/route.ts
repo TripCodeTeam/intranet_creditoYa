@@ -1,8 +1,7 @@
-import { transporter } from "@/lib/NodeMailer";
 import TokenService from "@/classes/TokenServices";
-// import { EmailTemplate } from "@/components/mail/Template";
+import { ChangeCantityMail } from "@/handlers/templatesEmails/generates/GenerateChangeCantityMail";
+import { transporter } from "@/lib/NodeMailer";
 import { NextResponse } from "next/server";
-import { generateMailChangeStatus } from "@/handlers/templatesEmails/generates/GenerateChangeStatusMail";
 
 export async function POST(req: Request) {
   try {
@@ -24,39 +23,22 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const {
-      newStatus,
-      employeeName,
-      loanId,
-      mail,
-    }: {
-      mail: string;
-      newStatus: string;
-      employeeName: string;
-      loanId: string;
-    } = await req.json();
+    const { completeName, loanId, mail } = await req.json();
 
-    const content = generateMailChangeStatus({
-      newStatus,
-      employeeName,
-      loanId,
-    });
+    const content = ChangeCantityMail({ completeName, loanId });
 
     const data = await transporter.sendMail({
       from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
       to: mail,
-      subject: "El status de tu prestamo ha cambiado",
+      subject: "La cantidad requerida de tu prestamo ha cambiado",
       text: "¡Funciona!",
       html: content,
     });
 
-    // console.log(data);
-
     return NextResponse.json({ success: true, data });
   } catch (error) {
     if (error instanceof Error) {
-        return NextResponse.json({ success: false, error: error.message });
+      return NextResponse.json({ success: false, error: error.message });
     }
-
   }
 }

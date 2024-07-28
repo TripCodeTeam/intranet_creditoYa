@@ -6,6 +6,9 @@ import CardRequest from "./Components/CardReq";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
 import Loading from "@/app/dashboard/loading";
+import Image from "next/image";
+
+import noDataImg from "@/assets/out-bro.svg";
 
 function AcceptContent() {
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
@@ -30,11 +33,18 @@ function AcceptContent() {
     setStatus(status);
   };
 
+  const filteredLoans =
+    status != "Cantity"
+      ? liveLoans?.filter((loan) => loan.status === status) || []
+      : liveLoans?.filter((loan) => loan.newCantity && !loan.newCantityOpt) ||
+        [];
+
   return (
     <>
       <div className={styles.mainActives}>
         <HeaderContent label={"Prestaciones activas"} />
         {loading && <Loading />}
+
         {!loading && (
           <>
             <div className={styles.barTypeLoan}>
@@ -50,18 +60,37 @@ function AcceptContent() {
               >
                 Rechazados
               </p>
+              <p
+                className={styles.btnCantity}
+                onClick={() => handleChangeStatus("Cantity")}
+              >
+                Cambio de cantidad
+              </p>
             </div>
 
             <div className={styles.listLiveRequests}>
-              {liveLoans
-                ?.filter((loan) => loan.status === status)
-                .map((loan) => (
+              {filteredLoans.length === 0 ? (
+                <div className={styles.noData}>
+                  <div style={{ display: "grid", placeContent: "center" }}>
+                    <Image
+                      className={styles.imgNoData}
+                      src={noDataImg}
+                      alt={"No data"}
+                    />
+                  </div>
+                  <p className={styles.titleNodata}>
+                    No hay Solicitudes en este estado
+                  </p>
+                </div>
+              ) : (
+                filteredLoans.map((loan) => (
                   <CardRequest
                     loan={loan}
                     key={loan.id}
                     token={dataSession?.token as string}
                   />
-                ))}
+                ))
+              )}
             </div>
           </>
         )}
