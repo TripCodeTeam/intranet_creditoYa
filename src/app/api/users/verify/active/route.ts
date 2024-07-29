@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     const active = await UserServices.verifyAccount(userId, newPassword);
 
-    console.log(active);
+    // console.log(active);
 
     if (active) {
       return NextResponse.json({ success: true, data: active });

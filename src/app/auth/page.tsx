@@ -15,7 +15,7 @@ function AuthActiveAccount() {
   const [isVerify, setIsVerify] = useState<boolean>(false);
 
   const { dataSession } = useGlobalContext();
-  console.log(dataSession);
+  // console.log(dataSession);
   const router = useRouter();
 
   const handleVerifyAccount = async () => {
