@@ -5,6 +5,7 @@ export type SessionAuth = {
   email: string;
   phone: string;
   rol: RolIntranet;
+  isActive?: boolean;
   avatar: string;
   token: string;
 };
@@ -37,6 +38,7 @@ export type ScalarDocument = {
   documentFront: string | undefined;
   documentBack: string | undefined;
   number: string | undefined;
+  isActive: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -49,6 +51,7 @@ export type ScalarUser = {
   lastNames?: string;
   avatar?: string;
   rol?: RolIntranet;
+  isActive?: boolean;
   phone?: string;
   created_at?: Date;
   updated_at?: Date;

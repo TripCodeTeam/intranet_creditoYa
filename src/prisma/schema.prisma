@@ -36,6 +36,7 @@ model UsersIntranet {
     password   String
     phone      String   @unique @default("No definido")
     rol        String   @default("No definido")
+    isActive   Boolean  @default(false)
     avatar     String   @default("No definido")
     updated_at DateTime @default(now())
     created_at DateTime @default(now())

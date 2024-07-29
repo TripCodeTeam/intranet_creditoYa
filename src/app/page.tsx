@@ -75,16 +75,23 @@ export default function Home() {
     }
 
     if (response.data.success) {
-      setMissingSession(false);
-      setDataSession(data);
-      toast.success(`Bienvenido de nuevo ${data.name}`);
-      setLoadingSession(true);
-    }
-
-    if (response.data.success == true) {
-      setInterval(() => {
-        router.push("/dashboard");
-      }, 2000);
+      if (data.isActive == true) {
+        setMissingSession(false);
+        setDataSession(data);
+        toast.success(`Bienvenido de nuevo ${data.name}`);
+        setLoadingSession(true);
+        setInterval(() => {
+          router.push("/dashboard");
+        }, 2000);
+      } else if (data.isActive == false) {
+        setMissingSession(false);
+        setDataSession(data);
+        toast.warning("Activacion pendiente");
+        setLoadingSession(true);
+        setInterval(() => {
+          router.push("/auth");
+        }, 2000);
+      }
     }
   };
 
@@ -93,7 +100,7 @@ export default function Home() {
       setIsLoading(false);
     }
 
-    if (dataSession) {
+    if (dataSession && dataSession.isActive !== false) {
       router.push("/dashboard");
     }
   }, [dataSession]);

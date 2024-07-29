@@ -23,8 +23,11 @@ function AddUserIntranet() {
   const [email, setEmail] = useState<string | null>(null);
   const [rol, setRol] = useState<string | null>(null);
 
+  const [loadingCreate, setLoadingCreate] = useState<boolean>(false);
+
   const handlerCreateUser = async () => {
     try {
+      setLoadingCreate(true);
       const errors: string[] = [];
       if (!name) errors.push("Falta el nombre");
       if (!lastNames) errors.push("Falta el apellido");
@@ -33,25 +36,50 @@ function AddUserIntranet() {
 
       if (errors.length > 0) errors.forEach((error) => toast.error(error));
 
-      const password = generateSimpleRandomPassword(6);
-
       const response = await axios.post(
         "/api/users/create",
         {
           name,
           lastNames,
           email,
-          password,
           rol,
         },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      if (response.data.success) {
+      // console.log(response);
+
+      if (response.data.success == true) {
         const data: ScalarUser = response.data.data;
-        setName(null);
-        setLastNames(null);
-        setEmail(null);
+
+        const completeName = `${data.name} ${data.lastNames}`;
+
+        const noHashPasword = response.data.noHashPass;
+
+        const sendMail = await axios.post(
+          "/api/mail/active_account",
+          {
+            completeName,
+            mail: data.email,
+            password: noHashPasword,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
+
+        console.log(sendMail);
+
+        if (sendMail.data.success == true) {
+          toast.success(
+            "La activacion de cuenta fue enviada al usuaio al correo"
+          );
+          setName(null);
+          setLastNames(null);
+          setEmail(null);
+          setLoadingCreate(false);
+        }
+      } else if (response.data.success == false) {
+        toast.error(response.data.error);
+        setLoadingCreate(false);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -65,7 +93,7 @@ function AddUserIntranet() {
       <div className={styles.boxInfo}>
         <h3>Nombre</h3>
         <input
-          value={name as string}
+          value={(name as string) || ""}
           className={styles.inputInfo}
           type="text"
           onChange={(e) => setName(e.target.value)}
@@ -75,6 +103,7 @@ function AddUserIntranet() {
       <div className={styles.boxInfo}>
         <h3>Apellidos</h3>
         <input
+          value={lastNames || ""}
           className={styles.inputInfo}
           type="text"
           onChange={(e) => setLastNames(e.target.value)}
@@ -84,6 +113,7 @@ function AddUserIntranet() {
       <div className={styles.boxInfo}>
         <h3>Correo Electronico</h3>
         <input
+          value={email || ""}
           className={styles.inputInfo}
           type="text"
           onChange={(e) => setEmail(e.target.value)}
@@ -97,11 +127,14 @@ function AddUserIntranet() {
           isClearable={isClearable}
           onChange={(e) => setRol(e?.value as string)}
           options={rolOpt}
+          value={rolOpt.find((option) => option.value === rol) || rolOpt[0]}
         />
       </div>
 
       <div className={styles.boxBtnCreate}>
-        <button onClick={handlerCreateUser}>Crear</button>
+        <button onClick={handlerCreateUser}>
+          {loadingCreate ? "Creando ..." : "Crear"}
+        </button>
       </div>
     </>
   );

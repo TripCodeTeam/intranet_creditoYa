@@ -1,0 +1,49 @@
+.containerCenterActive {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+}
+
+.centerActive {
+  width: 300px;
+  padding: 10px;
+  background: var(--white-100);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.centerActive h3 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.centerActive input {
+  display: flex;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  flex: 1;
+  outline: none;
+  border: 1px solid var(--white-200);
+}
+
+.boxBtnActive {
+  display: grid;
+  place-content: center;
+  margin-top: 1em;
+}
+
+.boxBtnActive button {
+  padding: 5px 15px;
+  border-radius: 8px;
+  outline: none;
+  border: 1px solid var(--white-300);
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--white-500);
+}
+
+.boxBtnActive button:hover {
+  border: 1px solid var(--white-400);
+}

@@ -26,11 +26,27 @@ class UserServices {
     });
   }
 
+  static async verifyAccount(
+    userId: string,
+    newPassword: string
+  ): Promise<UsersIntranet> {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const user = prisma.usersIntranet.update({
+      where: { id: userId },
+      data: {
+        isActive: true,
+        password: hashedPassword,
+      },
+    });
+
+    return user;
+  }
+
   static async signin(email: string, password: string): Promise<UsersIntranet> {
-    // Evitar logging en producción
-    if (process.env.NODE_ENV !== "production") {
-      console.log("class log: ", email, password);
-    }
+    // // Evitar logging en producción
+    // if (process.env.NODE_ENV !== "production") {
+    //   console.log("class log: ", email, password);
+    // }
 
     const userIntranet = await prisma.usersIntranet
       .findUnique({
