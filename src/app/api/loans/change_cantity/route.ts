@@ -22,17 +22,20 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { loanId, newCantity, reasonChangeCantity } = await req.json();
+    const { loanId, newCantity, reasonChangeCantity, employeeId } =
+      await req.json();
 
     if (!loanId) throw new Error("loanId is required!");
     if (!newCantity) throw new Error("newCantity is required!");
     if (!reasonChangeCantity)
       throw new Error("reasonChangeCantity is required!");
+    if (!newCantity) throw new Error("employeeId is required!");
 
     const response = await LoanApplicationService.ChangeCantity(
       loanId,
       newCantity,
-      reasonChangeCantity
+      reasonChangeCantity,
+      employeeId
     );
 
     if (response) {

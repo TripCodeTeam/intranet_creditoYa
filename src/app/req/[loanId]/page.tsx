@@ -61,6 +61,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           loanId: dataLoan?.id,
           newCantity: newValue,
           reasonChangeCantity: reasonNewCantity,
+          employeeId: dataIntra?.id,
         },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );

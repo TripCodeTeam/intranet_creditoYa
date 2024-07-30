@@ -86,13 +86,15 @@ class LoanApplicationService {
   static async ChangeCantity(
     loanId: string,
     newCantity: string,
-    reasonChangeCantity: string
+    reasonChangeCantity: string,
+    employeeId: string
   ): Promise<LoanApplication> {
     return prisma.loanApplication.update({
       where: { id: loanId },
       data: {
         newCantity,
         reasonChangeCantity,
+        employeeId,
       },
     });
   }
