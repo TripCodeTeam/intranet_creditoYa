@@ -37,6 +37,7 @@ export type ScalarDocument = {
   typeDocument?: TypesDocument;
   documentFront: string | undefined;
   documentBack: string | undefined;
+  imageWithCC: string;
   number: string | undefined;
   isActive: string;
   createdAt: Date;

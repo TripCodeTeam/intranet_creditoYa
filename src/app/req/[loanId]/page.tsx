@@ -11,7 +11,12 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { TbArrowLeft, TbPdf, TbPencilCog } from "react-icons/tb";
+import {
+  TbArrowLeft,
+  TbPdf,
+  TbPencilCog,
+  TbRosetteDiscountCheck,
+} from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -19,7 +24,7 @@ import { useWebSocket } from "next-ws/client";
 import Modal from "@/components/modal/modal";
 import Loading from "@/app/dashboard/loading";
 import Document00 from "@/components/pdfs/pdfCard00";
-import Document03 from "@/components/pdfs/pdfCard02";
+import Document03 from "@/components/pdfs/pdfCard03";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 
 import CurrencyInput from "react-currency-input-field";
@@ -126,6 +131,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
         if (responseDocs.data.success === true) {
           const dataDocs = responseDocs.data.data;
+          // console.log(dataDocs);
           setDataDocument(dataDocs);
 
           const responseClient = await axios.post(
@@ -263,81 +269,125 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             </div>
           </div>
 
-          <div className={styles.boxTitleLoan}>
-            <div className={styles.centerBoxTitleLoan}>
-              <h1>Detalles del prestamo</h1>
-              <p>Solicitud: {dataLoan?.id}</p>
-            </div>
-
-            {dataLoan?.status === "Pendiente" &&
-              !dataLoan.newCantity &&
-              !dataLoan.newCantityOpt && (
-                <div className={styles.listBtns}>
-                  <p
-                    className={styles.btnAprove}
-                    onClick={() => onDes({ newStatus: "Aprobado" })}
-                  >
-                    Aprobar
-                  </p>
-                  <p
-                    className={styles.btnReject}
-                    onClick={() => setOpenReject(true)}
-                  >
-                    Rechazar
-                  </p>
+          <div className={styles.infoVerify}>
+            <div className={styles.boxVerify}>
+              <div className={styles.boxTitleLoan}>
+                <div className={styles.centerBoxTitleLoan}>
+                  <h1>Detalles del prestamo</h1>
+                  <p>Solicitud: {dataLoan?.id}</p>
                 </div>
-              )}
-          </div>
 
-          <h3 className={styles.titleDocs}>Cantidad Solicitada</h3>
-          <div className={styles.prevInfoClient}>
-            <div className={styles.boxCantity}>
-              <h1>{stringToPriceCOP(dataLoan?.cantity as string)}</h1>
-              {dataLoan?.status == "Pendiente" &&
-                dataLoan?.newCantity == null && (
-                  <div
-                    className={styles.btnChangeCantity}
-                    onClick={handleChangeCantity}
-                  >
-                    <div className={styles.boxIConPencil}>
-                      <TbPencilCog size={20} className={styles.iconPensil} />
+                {dataLoan?.status === "Pendiente" &&
+                  !dataLoan.newCantity &&
+                  !dataLoan.newCantityOpt && (
+                    <div className={styles.listBtns}>
+                      <p
+                        className={styles.btnAprove}
+                        onClick={() => onDes({ newStatus: "Aprobado" })}
+                      >
+                        Aprobar
+                      </p>
+                      <p
+                        className={styles.btnReject}
+                        onClick={() => setOpenReject(true)}
+                      >
+                        Rechazar
+                      </p>
                     </div>
-                    <p>Editar Cantidad</p>
+                  )}
+              </div>
+              <h3 className={styles.titleDocs}>Cantidad Solicitada</h3>
+              <div className={styles.prevInfoClient}>
+                <div className={styles.boxCantity}>
+                  <h1>{stringToPriceCOP(dataLoan?.cantity as string)}</h1>
+                  {dataLoan?.status == "Pendiente" &&
+                    dataLoan?.newCantity == null && (
+                      <div
+                        className={styles.btnChangeCantity}
+                        onClick={handleChangeCantity}
+                      >
+                        <div className={styles.boxIConPencil}>
+                          <TbPencilCog
+                            size={20}
+                            className={styles.iconPensil}
+                          />
+                        </div>
+                        <p>Editar Cantidad</p>
+                      </div>
+                    )}
+                </div>
+              </div>
+
+              {dataLoan?.newCantity && (
+                <>
+                  <h3 className={styles.titleDocs}>Cantidad Aprobada</h3>
+                  <div className={styles.prevInfoClient}>
+                    <div className={styles.boxCantity}>
+                      <h1>
+                        {stringToPriceCOP(dataLoan?.newCantity as string)}
+                      </h1>
+                    </div>
                   </div>
-                )}
+                </>
+              )}
+
+              {dataLoan?.newCantity && dataLoan?.newCantityOpt !== null && (
+                <>
+                  <h3 className={styles.titleDocs}>Desicion del cliente</h3>
+                  <div className={styles.prevInfoClient}>
+                    <div className={styles.boxCantity}>
+                      <p>
+                        {dataLoan?.newCantity && dataLoan.newCantityOpt == true
+                          ? "Aceptado"
+                          : "Rechazado"}
+
+                        {dataLoan?.newCantityOpt == null &&
+                          dataLoan?.newCantity && (
+                            <p>Esperando respuesta del cliente...</p>
+                          )}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {dataLoan?.newCantity && dataLoan?.newCantityOpt !== null && (
+                <>
+                  <h3 className={styles.titleDocs}>
+                    Razon del cambio de cantidad solicitada
+                  </h3>
+                  <div className={styles.prevInfoClient}>
+                    <div className={styles.boxCantity}>
+                      <p>{dataLoan.reasonChangeCantity}</p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className={styles.boxVerify}>
+              <div className={styles.boxImageDocVery}>
+                <div className={styles.titleVery}>
+                  <div className={styles.boxIconVerify}>
+                    <TbRosetteDiscountCheck
+                      size={20}
+                      className={styles.iconVerify}
+                    />
+                  </div>
+                  <h3>Verificacion de identidad</h3>
+                </div>
+                <div className={styles.centerBoxImage}>
+                  <Image
+                    src={dataDocument?.imageWithCC as string}
+                    className={styles.imgDocVery}
+                    width={300}
+                    height={400}
+                    alt="frontDoc"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-
-          {dataLoan?.status == "Pendiente" && dataLoan?.newCantity && (
-            <>
-              <h3 className={styles.titleDocs}>Cantidad Aceptada</h3>
-              <div className={styles.prevInfoClient}>
-                <div className={styles.boxCantity}>
-                  <h1>{stringToPriceCOP(dataLoan?.newCantity as string)}</h1>
-                </div>
-              </div>
-            </>
-          )}
-
-          {dataLoan?.newCantityOpt !== null && (
-            <>
-              <h3 className={styles.titleDocs}>Desicion del cliente</h3>
-              <div className={styles.prevInfoClient}>
-                <div className={styles.boxCantity}>
-                  <p>
-                    {dataLoan?.newCantity && dataLoan.newCantityOpt == true
-                      ? "Aceptado"
-                      : "Rechazado"}
-
-                    {dataLoan?.newCantityOpt == null &&
-                      dataLoan?.newCantity && (
-                        <p>Esperando respuesta del cliente...</p>
-                      )}
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
 
           <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
           <div className={styles.prevInfoClient}>

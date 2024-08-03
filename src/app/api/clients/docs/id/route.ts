@@ -28,6 +28,8 @@ export async function POST(req: Request) {
 
     const response = await ClientServices.getDocumentByUserId(userId);
 
+    // console.log(response)
+
     if (response) return NextResponse.json({ success: true, data: response });
   } catch (error) {
     if (error instanceof Error) {

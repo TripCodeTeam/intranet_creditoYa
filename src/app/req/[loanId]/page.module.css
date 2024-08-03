@@ -57,6 +57,16 @@
   justify-content: space-between;
 }
 
+.infoVerify {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.boxVerify {
+  flex-basis: 400px;
+  flex-grow: 1;
+}
+
 .listBtns {
   display: flex;
   flex-direction: row;
@@ -201,6 +211,35 @@
   transform: rotate(90deg);
 }
 
+.titleVery {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-bottom: 1em;
+}
+
+.titleVery h3 {
+  color: var(--green-800);
+  font-weight: 800;
+}
+
+.boxIconVerify {
+  display: grid;
+  place-content: center;
+}
+
+.iconVerify {
+  color: var(--green-600);
+}
+
+.imgDocVery {
+  width: 100%;
+  height: auto;
+  transform: rotate(-180deg);
+  /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1); */
+  object-fit: contain;
+}
+
 .intraRejectModal {
   margin-top: 1em;
   display: flex;
@@ -287,6 +326,12 @@
     width: 200px;
     height: 300px;
     transform: rotate(360deg);
+  }
+
+  .imgDocVery {
+    width: 240px;
+    height: auto;
+    transform: rotate(90deg);
   }
 
   .prevInfoClient {

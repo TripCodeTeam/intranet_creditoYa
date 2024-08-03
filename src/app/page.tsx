@@ -20,7 +20,6 @@ export default function Home() {
   const [missingSession, setMissingSession] = useState<boolean>(false);
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const [dataAuth, setDataAuth] = useState<ScalarUser | null>();
 
   const router = useRouter();
   const { dataSession, setDataSession } = useGlobalContext();
