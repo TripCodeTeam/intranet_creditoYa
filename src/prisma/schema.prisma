@@ -72,7 +72,7 @@ model Document {
     userId        String
     documentFront String   @default("void")
     documentBack  String   @default("void")
-    imageWithCC   String
+    imageWithCC   String   @default("void")
     number        String   @default("void")
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
