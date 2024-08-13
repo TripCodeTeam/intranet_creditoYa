@@ -41,10 +41,12 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [dataClient, setDataClient] = useState<ScalarClient | null>(null);
   const [dataIntra, setDataIntra] = useState<ScalarUser | null>(null);
   const [openModel, setOpenModel] = useState<boolean>(false);
+  const [openModelDocs, setOpenModelDocs] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [openReject, setOpenReject] = useState<boolean>(false);
   const [isReject, setIsReject] = useState<string | null>(null);
   const [linkSelect, setLinkSelect] = useState<number | null>(null);
+  const [docSelect, setDocSelect] = useState<string | null>(null);
   const [openModelChange, setOpenModelChange] = useState<boolean>(false);
 
   const [newValue, setNewValue] = useState<string | null>(null);
@@ -53,6 +55,11 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const handleOpenViewPdf = (option: number) => {
     setOpenModel(true);
     setLinkSelect(option);
+  };
+
+  const handleOpenDocs = (url: string) => {
+    setOpenModelDocs(true);
+    setDocSelect(url);
   };
 
   const handleSuccesChangeCantity = async () => {
@@ -71,16 +78,22 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response.data.success == true) {
         const data: ScalarLoanApplication = response.data.data;
 
-        const sendMail = await axios.post("/api/mail/change_cantity", {
-          completeName: `${dataClient?.firstLastName} ${dataClient?.secondLastName}`,
-          loanId: data.id,
-          mail: dataClient?.email,
-        });
+        const sendMail = await axios.post(
+          "/api/mail/change_cantity",
+          {
+            completeName: `${dataClient?.firstLastName} ${dataClient?.secondLastName}`,
+            loanId: data.id,
+            mail: dataClient?.email,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
+
+        // console.log(sendMail);
 
         if (sendMail.data.success == true) {
           setDataLoan(data);
@@ -171,69 +184,65 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   }, [dataSession?.token, params.loanId]);
 
   const onDes = async ({ newStatus }: { newStatus: Status }) => {
-    setOpenReject(false);
-    const loanApplicationId = dataLoan?.id as string;
-    const employeeId = dataSession?.id as string;
-    const reason = isReject;
+    try {
+      setOpenReject(false);
+      const loanApplicationId = dataLoan?.id as string;
+      const employeeId = dataSession?.id as string;
+      const reason = isReject;
 
-    const response = await axios.post(
-      "/api/loans/status",
-      {
-        newStatus,
-        employeeId,
-        loanApplicationId,
-        reason,
-      },
-      { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-    );
-
-    // console.log(response.data);
-
-    if (
-      response.data.success == true &&
-      dataIntra?.name !== undefined &&
-      dataIntra.lastNames !== undefined
-    ) {
-      const sendMail = await axios.post(
-        "/api/mail/change_status",
+      const response = await axios.post(
+        "/api/loans/status",
         {
           newStatus,
-          employeeName: `${dataIntra?.name} ${dataIntra?.lastNames}`,
-          loanId: loanApplicationId,
-          mail: dataClient?.email,
+          employeeId,
+          loanApplicationId,
+          reason,
         },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      console.log(sendMail.data);
-
-      if (sendMail.data.success) {
-        const data: ScalarLoanApplication = response.data.data;
-
-        const responseReload = await axios.post(
-          "/api/loans/by/id",
+      if (response.data.success === true) {
+        const sendMail = await axios.post(
+          "/api/mail/change_status",
           {
-            loanId: params.loanId,
+            newStatus,
+            employeeName: `${dataIntra?.name} ${dataIntra?.lastNames}`,
+            loanId: loanApplicationId,
+            mail: dataClient?.email,
           },
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
 
-        if (responseReload.data.success == true) {
-          const dataReload: ScalarLoanApplication = responseReload.data.data;
-          setDataLoan(dataReload);
+        if (sendMail.data.success) {
+          const data: ScalarLoanApplication = response.data.data;
 
-          ws?.send(
-            JSON.stringify({
-              type: "newApprove",
-              owner: dataLoan?.userId,
-              from: employeeId,
-            })
+          const responseReload = await axios.post(
+            "/api/loans/by/id",
+            {
+              loanId: params.loanId,
+            },
+            { headers: { Authorization: `Bearer ${dataSession?.token}` } }
           );
 
-          if (data && reason == null) toast.success("Solicitud aprobada");
-          if (data && reason !== null) toast.success("Solicitud rechazado");
+          if (responseReload.data.success === true) {
+            const dataReload: ScalarLoanApplication = responseReload.data.data;
+            setDataLoan(dataReload);
+
+            ws?.send(
+              JSON.stringify({
+                type: "newApprove",
+                owner: dataLoan?.userId,
+                from: employeeId,
+              })
+            );
+
+            if (data && reason == null) toast.success("Solicitud aprobada");
+            if (data && reason !== null) toast.success("Solicitud rechazada");
+          }
         }
       }
+    } catch (error) {
+      console.error("Error en la función onDes:", error);
     }
   };
 
@@ -243,6 +252,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
   const handleCloseModal = () => {
     setOpenModel(!openModel);
+  };
+
+  const handleCloseModalDocs = () => {
+    setOpenModelDocs(!openModelDocs);
   };
 
   const handleChangeCantity = () => {
@@ -269,33 +282,34 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             </div>
           </div>
 
+          <div className={styles.boxTitleLoan}>
+            <div className={styles.centerBoxTitleLoan}>
+              <h1>Detalles del prestamo</h1>
+              <p>Solicitud: {dataLoan?.id}</p>
+            </div>
+
+            {dataLoan?.status === "Pendiente" &&
+              !dataLoan.newCantity &&
+              !dataLoan.newCantityOpt && (
+                <div className={styles.listBtns}>
+                  <p
+                    className={styles.btnAprove}
+                    onClick={() => onDes({ newStatus: "Aprobado" })}
+                  >
+                    Aprobar
+                  </p>
+                  <p
+                    className={styles.btnReject}
+                    onClick={() => setOpenReject(true)}
+                  >
+                    Rechazar
+                  </p>
+                </div>
+              )}
+          </div>
+
           <div className={styles.infoVerify}>
             <div className={styles.boxVerify}>
-              <div className={styles.boxTitleLoan}>
-                <div className={styles.centerBoxTitleLoan}>
-                  <h1>Detalles del prestamo</h1>
-                  <p>Solicitud: {dataLoan?.id}</p>
-                </div>
-
-                {dataLoan?.status === "Pendiente" &&
-                  !dataLoan.newCantity &&
-                  !dataLoan.newCantityOpt && (
-                    <div className={styles.listBtns}>
-                      <p
-                        className={styles.btnAprove}
-                        onClick={() => onDes({ newStatus: "Aprobado" })}
-                      >
-                        Aprobar
-                      </p>
-                      <p
-                        className={styles.btnReject}
-                        onClick={() => setOpenReject(true)}
-                      >
-                        Rechazar
-                      </p>
-                    </div>
-                  )}
-              </div>
               <h3 className={styles.titleDocs}>Cantidad Solicitada</h3>
               <div className={styles.prevInfoClient}>
                 <div className={styles.boxCantity}>
@@ -363,9 +377,70 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                   </div>
                 </>
               )}
+
+              <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
+              <div className={styles.prevInfoClient}>
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Nombre completo</h5>
+                  <h3>{`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}</h3>
+                </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Numero de documento</h5>
+                  <h3>{dataDocument?.number}</h3>
+                </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Email</h5>
+                  <h3>{dataClient?.email}</h3>
+                </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Numero celular</h5>
+                  <h3>{dataClient?.phone}</h3>
+                </div>
+              </div>
+
+              <h3 className={styles.titleDocs}>Status del prestamo</h3>
+              <div className={styles.prevInfoClient}>
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Status</h5>
+                  <h2>{dataLoan?.status}</h2>
+                </div>
+
+                {dataLoan?.status == "Rechazado" && (
+                  <div className={styles.infoClient}>
+                    <h5 className={styles.subTitleClient}>Razon del rechazo</h5>
+                    <h3>{dataLoan?.reasonReject}</h3>
+                  </div>
+                )}
+              </div>
+
+              <h3 className={styles.titleDocs}>Informacion Financiera</h3>
+              <div className={styles.prevInfoClient}>
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Cantidad solicitada</h5>
+                  <h3>{stringToPriceCOP(dataLoan?.cantity as string)}</h3>
+                </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Numero de cuenta</h5>
+                  <h3>{dataLoan?.bankNumberAccount}</h3>
+                </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Tipo de cuenta</h5>
+                  <h3>{dataLoan?.bankSavingAccount && "Ahorros"}</h3>
+                </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Entidad Bancaria</h5>
+                  <h3>{dataLoan?.entity}</h3>
+                </div>
+              </div>
             </div>
 
-            <div className={styles.boxVerify}>
+            <div className={styles.boxVerifyPic}>
               <div className={styles.boxImageDocVery}>
                 <div className={styles.titleVery}>
                   <div className={styles.boxIconVerify}>
@@ -377,76 +452,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                   <h3>Verificacion de identidad</h3>
                 </div>
                 <div className={styles.centerBoxImage}>
-                  <Image
+                  <img
                     src={dataDocument?.imageWithCC as string}
                     className={styles.imgDocVery}
-                    width={300}
-                    height={400}
                     alt="frontDoc"
                   />
                 </div>
               </div>
-            </div>
-          </div>
-
-          <h3 className={styles.titleDocs}>Informacion del solicitante</h3>
-          <div className={styles.prevInfoClient}>
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Nombre completo</h5>
-              <h3>{`${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`}</h3>
-            </div>
-
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Numero de documento</h5>
-              <h3>{dataDocument?.number}</h3>
-            </div>
-
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Email</h5>
-              <h3>{dataClient?.email}</h3>
-            </div>
-
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Numero celular</h5>
-              <h3>{dataClient?.phone}</h3>
-            </div>
-          </div>
-
-          <h3 className={styles.titleDocs}>Status del prestamo</h3>
-          <div className={styles.prevInfoClient}>
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Status</h5>
-              <h2>{dataLoan?.status}</h2>
-            </div>
-
-            {dataLoan?.status == "Rechazado" && (
-              <div className={styles.infoClient}>
-                <h5 className={styles.subTitleClient}>Razon del rechazo</h5>
-                <h3>{dataLoan?.reasonReject}</h3>
-              </div>
-            )}
-          </div>
-
-          <h3 className={styles.titleDocs}>Informacion Financiera</h3>
-          <div className={styles.prevInfoClient}>
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Cantidad solicitada</h5>
-              <h3>{stringToPriceCOP(dataLoan?.cantity as string)}</h3>
-            </div>
-
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Numero de cuenta</h5>
-              <h3>{dataLoan?.bankNumberAccount}</h3>
-            </div>
-
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Tipo de cuenta</h5>
-              <h3>{dataLoan?.bankSavingAccount && "Ahorros"}</h3>
-            </div>
-
-            <div className={styles.infoClient}>
-              <h5 className={styles.subTitleClient}>Entidad Bancaria</h5>
-              <h3>{dataLoan?.entity}</h3>
             </div>
           </div>
 
@@ -458,7 +470,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               </div>
               <p>Primer Volante</p>
               <div className={styles.actionDocBox}>
-                <button>Ver</button>
+                <button
+                  onClick={() =>
+                    handleOpenDocs(dataLoan?.fisrt_flyer as string)
+                  }
+                >
+                  Ver
+                </button>
               </div>
             </div>
 
@@ -468,7 +486,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               </div>
               <p>Segundo Volante</p>
               <div className={styles.actionDocBox}>
-                <button>Ver</button>
+                <button
+                  onClick={() =>
+                    handleOpenDocs(dataLoan?.second_flyer as string)
+                  }
+                >
+                  Ver
+                </button>
               </div>
             </div>
 
@@ -478,7 +502,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               </div>
               <p>Tercer Volante</p>
               <div className={styles.actionDocBox}>
-                <button>Ver</button>
+                <button
+                  onClick={() =>
+                    handleOpenDocs(dataLoan?.third_flyer as string)
+                  }
+                >
+                  Ver
+                </button>
               </div>
             </div>
 
@@ -488,7 +518,11 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               </div>
               <p>Carta Laboral</p>
               <div className={styles.actionDocBox}>
-                <button>Ver</button>
+                <button
+                  onClick={() => handleOpenDocs(dataLoan?.labor_card as string)}
+                >
+                  Ver
+                </button>
               </div>
             </div>
           </div>
@@ -596,6 +630,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             />
           )}
         </Modal>
+
+        <Modal
+          isOpen={openModelDocs}
+          onClose={handleCloseModalDocs}
+          link={docSelect}
+          children={null}
+        />
 
         <Modal isOpen={openReject} onClose={handleCloseModalReject}>
           <div className={styles.intraRejectModal}>

@@ -15,6 +15,8 @@
   gap: 5px;
 }
 
+.centerBoxImage
+
 .boxIconDate,
 .dateLoan p {
   display: grid;
@@ -59,12 +61,23 @@
 
 .infoVerify {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap-reverse;
+  gap: 8px;
 }
 
 .boxVerify {
-  flex-basis: 400px;
-  flex-grow: 1;
+  flex-basis: content;
+}
+
+.boxVerifyPic {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.boxImageDocVery {
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .listBtns {
@@ -127,12 +140,6 @@
 .boxImageDoc h3 {
   font-weight: 400;
   color: var(--green-800);
-}
-
-.centerBoxImage {
-  display: grid;
-  place-content: center;
-  rotate: -90deg;
 }
 
 .titleDocs {
@@ -198,17 +205,13 @@
 }
 
 .centerBoxImage {
-  height: 330px;
   display: flex;
-  transform: rotate(-90deg);
-  justify-content: flex-end;
-  padding-right: 1em;
+  justify-content: flex-start;
 }
 
 .imgDoc {
   width: 300px;
   height: 400px;
-  transform: rotate(90deg);
 }
 
 .titleVery {
@@ -233,11 +236,8 @@
 }
 
 .imgDocVery {
-  width: 100%;
+  width: 300px;
   height: auto;
-  transform: rotate(-180deg);
-  /* box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1); */
-  object-fit: contain;
 }
 
 .intraRejectModal {
@@ -314,12 +314,8 @@
 
 @media screen and (max-width: 900px) {
   .centerBoxImage {
-    transform: none;
-    justify-content: none;
-    padding-right: 0;
-    display: grid;
-    place-content: center;
-    height: 220px;
+    display: flex;
+    justify-content: flex-start;
   }
 
   .imgDoc {
@@ -329,9 +325,15 @@
   }
 
   .imgDocVery {
-    width: 240px;
+    width: 300px;
     height: auto;
-    transform: rotate(90deg);
+  }
+
+  .boxVerifyPic {
+    margin-top: 2em;
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
   }
 
   .prevInfoClient {
