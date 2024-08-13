@@ -102,7 +102,7 @@ export default function Home() {
     if (dataSession && dataSession.isActive !== false) {
       router.push("/dashboard");
     }
-  }, [dataSession]);
+  }, [dataSession, router]);
 
   if (isLoading) <LoadingComponent />;
 

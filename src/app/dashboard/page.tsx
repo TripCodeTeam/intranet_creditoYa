@@ -46,7 +46,7 @@ function Dashboard() {
     if (dataSession) {
       setIsLoading(false);
     }
-  }, [dataSession]);
+  }, [dataSession, router]);
 
   if (isLoading) <LoadingComponent />;
 

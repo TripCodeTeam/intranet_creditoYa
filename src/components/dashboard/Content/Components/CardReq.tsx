@@ -1,6 +1,5 @@
 import {
   ScalarClient,
-  ScalarDocument,
   ScalarLoanApplication,
 } from "@/types/session";
 import axios from "axios";
@@ -8,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
 import styles from "../styles/CardReq.module.css";
 import { useRouter } from "next/navigation";
-import { useGlobalContext } from "@/context/Session";
 import Link from "next/link";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 
@@ -24,8 +22,6 @@ function CardRequest({
 
   const router = useRouter();
 
-  const { dataSession } = useGlobalContext();
-
   useEffect(() => {
     const getAvatar = async () => {
       try {
@@ -34,7 +30,7 @@ function CardRequest({
           {
             userId: loan.userId,
           },
-          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (response.data.success) setAvatarPerfil(response.data.data);
@@ -50,7 +46,7 @@ function CardRequest({
           {
             userId: loan.userId,
           },
-          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         const data = response.data.data;
@@ -69,7 +65,12 @@ function CardRequest({
         <div className={styles.boxInfo}>
           <div className={styles.user}>
             <div className={styles.boxAvatarClient}>
-              <Avatar src={avatarPerfil} className={styles.imgAvatar} round={true} size="55" />
+              <Avatar
+                src={avatarPerfil}
+                className={styles.imgAvatar}
+                round={true}
+                size="55"
+              />
             </div>
             <div className={styles.perfilInfo}>
               <h3>{`${infoClient?.names} ${infoClient?.firstLastName} ${infoClient?.secondLastName}`}</h3>

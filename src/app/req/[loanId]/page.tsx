@@ -452,7 +452,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                   <h3>Verificacion de identidad</h3>
                 </div>
                 <div className={styles.centerBoxImage}>
-                  <img
+                  <Image
+                    width={"300"}
+                    height={"400"}
                     src={dataDocument?.imageWithCC as string}
                     className={styles.imgDocVery}
                     alt="frontDoc"
@@ -635,8 +637,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           isOpen={openModelDocs}
           onClose={handleCloseModalDocs}
           link={docSelect}
-          children={null}
-        />
+        >
+          hola
+        </Modal>
 
         <Modal isOpen={openReject} onClose={handleCloseModalReject}>
           <div className={styles.intraRejectModal}>
