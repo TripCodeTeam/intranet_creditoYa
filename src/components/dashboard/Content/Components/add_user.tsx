@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
 import { ScalarUser } from "@/types/session";
-import { generateSimpleRandomPassword } from "@/handlers/passwordTemp";
 
 const rolOpt = [
   { value: null, label: "Selecciona un rol" },
@@ -47,7 +46,7 @@ function AddUserIntranet() {
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      // console.log(response);
+      console.log(response);
 
       if (response.data.success == true) {
         const data: ScalarUser = response.data.data;

@@ -40,8 +40,6 @@ export async function POST(req: Request) {
 
     const user = await UserServices.fastCreate(data);
 
-    // console.log(user);
-
     return NextResponse.json({
       success: true,
       data: user,
