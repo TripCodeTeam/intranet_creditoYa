@@ -68,7 +68,7 @@ export function SOCKET(
               data: dataEventAccept,
             })
           );
-        } else if (state == "Rechazado") {
+        } else if (state == "Aplazado") {
           receiver.send(
             JSON.stringify({
               type: "newEventReqLoans",
