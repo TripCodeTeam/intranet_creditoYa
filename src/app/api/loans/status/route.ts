@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       }
     }
 
-    if (newStatus == "Rechazado") {
+    if (newStatus == "Aplazado") {
       const resStateChange = await LoanApplicationService.changeStatus(
         loanApplicationId,
         newStatus

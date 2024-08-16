@@ -65,6 +65,7 @@ export type ScalarLoanApplication = {
   second_flyer: string;
   third_flyer: string;
   signature: string;
+  upSignatureId: string;
   cantity: string;
   status: Status;
   reasonReject?: string;

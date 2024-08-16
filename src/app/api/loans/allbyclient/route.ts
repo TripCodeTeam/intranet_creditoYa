@@ -1,6 +1,5 @@
 import LoanApplicationService from "@/classes/LoanServices";
 import TokenService from "@/classes/TokenServices";
-import { ScalarLoanApplication } from "@/types/session";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
