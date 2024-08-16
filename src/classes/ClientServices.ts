@@ -85,8 +85,7 @@ class ClientServices {
     // Comprueba si el usuario tiene documentos y si los campos son diferentes de "void"
     return user.Document.some(
       (document) =>
-        document.documentFront !== "No definido" &&
-        document.documentBack !== "No definido" &&
+        document.documentSides !== "No definido" &&
         document.number !== "No definido"
     );
   }
@@ -94,8 +93,7 @@ class ClientServices {
   // Update user document method
   static async updateDocument(
     userId: string,
-    documentFront: string,
-    documentBack: string,
+    documentSides: string,
     number: string
   ): Promise<User | null> {
     const user = await prisma.user.findUnique({
@@ -112,8 +110,7 @@ class ClientServices {
       prisma.document.update({
         where: { id: document.id },
         data: {
-          documentFront: documentFront,
-          documentBack: documentBack,
+          documentSides,
           number: number,
         },
       })
