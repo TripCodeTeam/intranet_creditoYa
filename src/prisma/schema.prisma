@@ -67,21 +67,22 @@ model LoanApplication {
 }
 
 model Document {
-    id            String   @id @default(uuid()) @map("_id")
-    user          User     @relation(fields: [userId], references: [id])
+    id            String        @id @default(uuid()) @map("_id")
+    user          User          @relation(fields: [userId], references: [id])
     userId        String
-    documentFront String   @default("void")
-    documentBack  String   @default("void")
-    imageWithCC   String   @default("void")
-    number        String   @default("void")
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
+    documentSides String        @default("No definido")
+    upId          String        @default("No definido")
+    imageWithCC   String        @default("No definido")
+    typeDocument  TypesDocument @default(CC)
+    number        String        @default("No definido")
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime      @updatedAt
 }
 
 enum StatusLoan {
     Pendiente
     Aprobado
-    Rechazado
+    Aplazado
     Borrador
     Archivado
 }

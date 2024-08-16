@@ -34,14 +34,13 @@ export type ScalarClient = {
 export type ScalarDocument = {
   id: string;
   userId: string;
-  typeDocument?: TypesDocument;
-  documentFront: string | undefined;
-  documentBack: string | undefined;
-  imageWithCC: string;
+  typeDocument: TypesDocument;
+  documentSides: string;
+  imageWithCC: string | undefined;
   number: string | undefined;
-  isActive: string;
   createdAt: Date;
   updatedAt: Date;
+  upId: string;
 };
 
 export type ScalarUser = {
@@ -84,7 +83,7 @@ export type ScalarLoanApplication = {
 export type Status =
   | "Pendiente"
   | "Aprobado"
-  | "Rechazado"
+  | "Aplazado"
   | "Borrador"
   | "Archivado";
 

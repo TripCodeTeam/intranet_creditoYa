@@ -228,16 +228,19 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             const dataReload: ScalarLoanApplication = responseReload.data.data;
             setDataLoan(dataReload);
 
-            ws?.send(
-              JSON.stringify({
-                type: "newApprove",
-                owner: dataLoan?.userId,
-                from: employeeId,
-              })
-            );
+            // ws?.send(
+            //   JSON.stringify({
+            //     type: "newApprove",
+            //     owner: dataLoan?.userId,
+            //     from: employeeId,
+            //   })
+            // );
+            
 
             if (data && reason == null) toast.success("Solicitud aprobada");
             if (data && reason !== null) toast.success("Solicitud rechazada");
+
+            if (isReject) setOpenReject(false)
           }
         }
       }
@@ -302,7 +305,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     className={styles.btnReject}
                     onClick={() => setOpenReject(true)}
                   >
-                    Rechazar
+                    Aplazar
                   </p>
                 </div>
               )}
@@ -408,7 +411,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                   <h2>{dataLoan?.status}</h2>
                 </div>
 
-                {dataLoan?.status == "Rechazado" && (
+                {dataLoan?.status == "Aplazado" && (
                   <div className={styles.infoClient}>
                     <h5 className={styles.subTitleClient}>Razon del rechazo</h5>
                     <h3>{dataLoan?.reasonReject}</h3>
@@ -574,27 +577,14 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
           <div className={styles.documentsBox}>
             <div className={styles.boxImageDoc}>
-              <h3>Documento lado frontal</h3>
+              <h3>Documento Escaneado</h3>
               <div className={styles.centerBoxImage}>
                 <Image
                   width={300}
                   height={400}
-                  src={`${dataDocument?.documentFront as string}`}
+                  src={`${dataDocument?.documentSides}`}
                   alt="frontDoc"
                   className={styles.imgDoc}
-                />
-              </div>
-            </div>
-
-            <div className={styles.boxImageDoc}>
-              <h3>Documento lado trasero</h3>
-              <div className={styles.centerBoxImage}>
-                <Image
-                  src={dataDocument?.documentBack as string}
-                  className={styles.imgDoc}
-                  width={300}
-                  height={400}
-                  alt="frontDoc"
                 />
               </div>
             </div>
@@ -652,7 +642,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             <div>
               <button
                 className={styles.btnRejectReady}
-                onClick={() => onDes({ newStatus: "Rechazado" })}
+                onClick={() => onDes({ newStatus: "Aplazado" })}
               >
                 Listo
               </button>
