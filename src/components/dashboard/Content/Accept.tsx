@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/accept.module.css";
 import HeaderContent from "./Components/HeaderContent";
-import { ScalarLoanApplication } from "@/types/session";
+import { ScalarClient, ScalarLoanApplication } from "@/types/session";
 import CardRequest from "./Components/CardReq";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
@@ -20,21 +20,45 @@ function AcceptContent() {
 
   useEffect(() => {
     const getAllLoans = async () => {
-      const response = await axios.post("/api/loans/all");
-      // console.log(response);
-      setLiveLoans(response.data.data);
-      setLoading(false);
+      try {
+        const response = await axios.post("/api/loans/all");
+        const loans = response.data.data;
+
+        // Obtener la información de los clientes
+        const loansWithClientInfo = await Promise.all(
+          loans.map(async (loan: ScalarLoanApplication) => {
+            const clientResponse = await axios.post(
+              "/api/clients/id",
+              {
+                userId: loan.userId,
+              },
+              { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+            );
+            if (clientResponse.data.success) {
+              const dataUser = clientResponse.data.data;
+              return { ...loan, clientInfo: dataUser };
+            }
+            return loan; // En caso de que la llamada falle, retorna el préstamo original
+          })
+        );
+
+        setLiveLoans(loansWithClientInfo);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error al obtener las solicitudes de préstamos:", error);
+        setLoading(false);
+      }
     };
 
     getAllLoans();
-  }, []);
+  }, [dataSession?.token]);
 
   const handleChangeStatus = (status: string) => {
     setStatus(status);
   };
 
   const filteredLoans =
-    status != "Cantity"
+    status !== "Cantity"
       ? liveLoans?.filter((loan) => loan.status === status) || []
       : liveLoans?.filter((loan) => loan.newCantity && !loan.newCantityOpt) ||
         [];
@@ -85,6 +109,7 @@ function AcceptContent() {
               ) : (
                 filteredLoans.map((loan) => (
                   <CardRequest
+                    user={loan.clientInfo as ScalarClient}
                     loan={loan}
                     key={loan.id}
                     token={dataSession?.token as string}

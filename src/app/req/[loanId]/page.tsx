@@ -270,7 +270,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     className={styles.btnAprove}
                     onClick={() => onDes({ newStatus: "Aprobado" })}
                   >
-                    Aprobar
+                    {!rejectStatus ? "Aprobar" : "Aprobando..."}
                   </p>
                   <p
                     className={styles.btnReject}

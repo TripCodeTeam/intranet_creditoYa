@@ -60,6 +60,7 @@ export type ScalarUser = {
 export type ScalarLoanApplication = {
   id?: string;
   userId: string;
+  clientInfo?: ScalarClient;
   employeeId?: string;
   fisrt_flyer: string;
   second_flyer: string;
