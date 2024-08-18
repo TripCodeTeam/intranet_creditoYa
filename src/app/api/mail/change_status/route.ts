@@ -45,18 +45,17 @@ export async function POST(req: Request) {
     const data = await transporter.sendMail({
       from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
       to: mail,
-      subject: "El status de tu prestamo ha cambiado",
+      subject: "El estado de tu prestamo ha cambiado",
       text: "¡Funciona!",
       html: content,
     });
 
-    // console.log(data);
+    console.log(data);
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
     if (error instanceof Error) {
-        return NextResponse.json({ success: false, error: error.message });
+      return NextResponse.json({ success: false, error: error.message });
     }
-
   }
 }

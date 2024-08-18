@@ -56,9 +56,9 @@ function AcceptContent() {
               </p>
               <p
                 className={styles.btnReject}
-                onClick={() => handleChangeStatus("Rechazado")}
+                onClick={() => handleChangeStatus("Aplazado")}
               >
-                Rechazados
+                Aplazados
               </p>
               <p
                 className={styles.btnCantity}

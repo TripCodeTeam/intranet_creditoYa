@@ -5,7 +5,6 @@ import {
   ScalarClient,
   ScalarDocument,
   ScalarLoanApplication,
-  ScalarUser,
   Status,
 } from "@/types/session";
 import axios from "axios";
@@ -20,7 +19,6 @@ import {
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
-import { useWebSocket } from "next-ws/client";
 import Modal from "@/components/modal/modal";
 import Loading from "@/app/dashboard/loading";
 import Document00 from "@/components/pdfs/pdfCard00";
@@ -39,7 +37,6 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [dataLoan, setDataLoan] = useState<ScalarLoanApplication | null>(null);
   const [dataDocument, setDataDocument] = useState<ScalarDocument | null>(null);
   const [dataClient, setDataClient] = useState<ScalarClient | null>(null);
-  const [dataIntra, setDataIntra] = useState<ScalarUser | null>(null);
   const [openModel, setOpenModel] = useState<boolean>(false);
   const [openModelDocs, setOpenModelDocs] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
@@ -48,9 +45,57 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [linkSelect, setLinkSelect] = useState<number | null>(null);
   const [docSelect, setDocSelect] = useState<string | null>(null);
   const [openModelChange, setOpenModelChange] = useState<boolean>(false);
-
   const [newValue, setNewValue] = useState<string | null>(null);
   const [reasonNewCantity, setReasonNewCantity] = useState<string | null>(null);
+
+  const [rejectStatus, setRejectStatus] = useState(false);
+
+  useEffect(() => {
+    const getLoanInfo = async () => {
+      const response = await axios.post(
+        "/api/loans/by/id",
+        {
+          loanId: params.loanId,
+        },
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      const userId: string = response.data.data?.userId;
+
+      if (response.data.success === true) {
+        setDataLoan(response.data.data);
+
+        const responseDocs = await axios.post(
+          "/api/clients/docs/id",
+          {
+            userId,
+          },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
+
+        if (responseDocs.data.success === true) {
+          const dataDocs = responseDocs.data.data;
+          setDataDocument(dataDocs);
+
+          const responseClient = await axios.post(
+            "/api/clients/id",
+            {
+              userId,
+            },
+            { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+          );
+
+          if (responseClient.data.success == true) {
+            const data: ScalarClient = responseClient.data.data;
+            setDataClient(data);
+            setLoadingData(false);
+          }
+        }
+      }
+    };
+
+    getLoanInfo();
+  }, [dataSession?.token, params.loanId]);
 
   const handleOpenViewPdf = (option: number) => {
     setOpenModel(true);
@@ -73,12 +118,12 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           loanId: dataLoan?.id,
           newCantity: newValue,
           reasonChangeCantity: reasonNewCantity,
-          employeeId: dataIntra?.id,
+          employeeId: dataSession?.id,
         },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      // console.log(response.data);
+      console.log(response.data);
 
       if (response.data.success == true) {
         const data: ScalarLoanApplication = response.data.data;
@@ -86,14 +131,14 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         const sendMail = await axios.post(
           "/api/mail/change_cantity",
           {
-            completeName: `${dataClient?.firstLastName} ${dataClient?.secondLastName}`,
+            completeName: `${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`,
             loanId: data.id,
             mail: dataClient?.email,
           },
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
 
-        // console.log(sendMail);
+        console.log(sendMail);
 
         if (sendMail.data.success == true) {
           setDataLoan(data);
@@ -101,6 +146,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             dataLoan?.id as string,
             dataSession?.token as string
           );
+          console.log(updataDataLoan);
           setDataLoan(updataDataLoan);
           toast.success("Cantidad Cambiada");
           setOpenModelChange(false);
@@ -113,79 +159,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
     }
   };
 
-  const ws = useWebSocket();
-
-  useEffect(() => {
-    const getLoanInfo = async () => {
-      const response = await axios.post(
-        "/api/loans/by/id",
-        {
-          loanId: params.loanId,
-        },
-        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-      );
-
-      // console.log(response);
-
-      if (response.data.success === true) {
-        setDataLoan(response.data.data);
-
-        const dataLoan: ScalarLoanApplication = response.data.data;
-
-        const responseDocs = await axios.post(
-          "/api/clients/docs/id",
-          {
-            userId: dataLoan.userId,
-          },
-          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-        );
-
-        // console.log(responseDocs);
-
-        if (responseDocs.data.success === true) {
-          const dataDocs = responseDocs.data.data;
-          // console.log(dataDocs);
-          setDataDocument(dataDocs);
-
-          const responseClient = await axios.post(
-            "/api/clients/id",
-            {
-              userId: response.data.data.userId,
-            },
-            { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-          );
-
-          if (responseClient.data.success == true) {
-            const data: ScalarClient = responseClient.data.data;
-            // console.log(data);
-            setDataClient(data);
-            setLoadingData(false);
-
-            const dataIntranet = await axios.post(
-              "/api/users/id",
-              {
-                employeeId: dataLoan.employeeId,
-              },
-              { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-            );
-
-            console.log(dataIntranet);
-
-            if (dataIntranet.data.success == true) {
-              const dataUserInt: ScalarUser = dataIntranet.data.data;
-              setDataIntra(dataUserInt);
-            }
-          }
-        }
-      }
-    };
-
-    getLoanInfo();
-  }, [dataSession?.token, params.loanId]);
-
   const onDes = async ({ newStatus }: { newStatus: Status }) => {
     try {
-      setOpenReject(false);
+      setRejectStatus(true);
       const loanApplicationId = dataLoan?.id as string;
       const employeeId = dataSession?.id as string;
       const reason = isReject;
@@ -201,17 +177,21 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
+      console.log(response);
+
       if (response.data.success === true) {
         const sendMail = await axios.post(
           "/api/mail/change_status",
           {
             newStatus,
-            employeeName: `${dataIntra?.name} ${dataIntra?.lastNames}`,
+            employeeName: `${dataSession?.name} ${dataSession?.lastNames}`,
             loanId: loanApplicationId,
             mail: dataClient?.email,
           },
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
+
+        console.log(sendMail);
 
         if (sendMail.data.success) {
           const data: ScalarLoanApplication = response.data.data;
@@ -228,19 +208,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             const dataReload: ScalarLoanApplication = responseReload.data.data;
             setDataLoan(dataReload);
 
-            // ws?.send(
-            //   JSON.stringify({
-            //     type: "newApprove",
-            //     owner: dataLoan?.userId,
-            //     from: employeeId,
-            //   })
-            // );
-            
-
             if (data && reason == null) toast.success("Solicitud aprobada");
-            if (data && reason !== null) toast.success("Solicitud rechazada");
-
-            if (isReject) setOpenReject(false)
+            if (data && reason !== null) toast.success("Solicitud aplazada");
+            setRejectStatus(false);
+            if (isReject) setOpenReject(false);
           }
         }
       }
@@ -474,14 +445,25 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Primer Volante</p>
-              <div className={styles.actionDocBox}>
-                <button
-                  onClick={() =>
-                    handleOpenDocs(dataLoan?.fisrt_flyer as string)
-                  }
-                >
-                  Ver
-                </button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.fisrt_flyer as string)
+                    }
+                  >
+                    Revisar
+                  </button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.fisrt_flyer as string)
+                    }
+                  >
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -490,14 +472,25 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Segundo Volante</p>
-              <div className={styles.actionDocBox}>
-                <button
-                  onClick={() =>
-                    handleOpenDocs(dataLoan?.second_flyer as string)
-                  }
-                >
-                  Ver
-                </button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.second_flyer as string)
+                    }
+                  >
+                    Revisar
+                  </button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.second_flyer as string)
+                    }
+                  >
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -506,14 +499,25 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Tercer Volante</p>
-              <div className={styles.actionDocBox}>
-                <button
-                  onClick={() =>
-                    handleOpenDocs(dataLoan?.third_flyer as string)
-                  }
-                >
-                  Ver
-                </button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.third_flyer as string)
+                    }
+                  >
+                    Revisar
+                  </button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.third_flyer as string)
+                    }
+                  >
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -522,12 +526,25 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Carta Laboral</p>
-              <div className={styles.actionDocBox}>
-                <button
-                  onClick={() => handleOpenDocs(dataLoan?.labor_card as string)}
-                >
-                  Ver
-                </button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.labor_card as string)
+                    }
+                  >
+                    Revisar
+                  </button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button
+                    onClick={() =>
+                      handleOpenDocs(dataLoan?.labor_card as string)
+                    }
+                  >
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -539,8 +556,15 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Autorizacion centrales de riesgo</p>
-              <div className={styles.actionDocBox}>
-                <button onClick={() => handleOpenViewPdf(0)}>Ver</button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(0)}>Revisar</button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(0)}>
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -549,8 +573,15 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Autorizacion cobro</p>
-              <div className={styles.actionDocBox}>
-                <button onClick={() => handleOpenViewPdf(1)}>Ver</button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(1)}>Revisar</button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(1)}>
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -559,8 +590,15 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Autorizacion descuento nomina</p>
-              <div className={styles.actionDocBox}>
-                <button onClick={() => handleOpenViewPdf(2)}>Ver</button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(2)}>Revisar</button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(2)}>
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -569,8 +607,15 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <TbPdf className={styles.iconPdf} size={30} />
               </div>
               <p>Pagare</p>
-              <div className={styles.actionDocBox}>
-                <button onClick={() => handleOpenViewPdf(3)}>Ver</button>
+              <div className={styles.actionDocument}>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(3)}>Revisar</button>
+                </div>
+                <div className={styles.actionDocBox}>
+                  <button onClick={() => handleOpenViewPdf(3)}>
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -578,14 +623,23 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           <div className={styles.documentsBox}>
             <div className={styles.boxImageDoc}>
               <h3>Documento Escaneado</h3>
-              <div className={styles.centerBoxImage}>
-                <Image
-                  width={300}
-                  height={400}
-                  src={`${dataDocument?.documentSides}`}
-                  alt="frontDoc"
-                  className={styles.imgDoc}
-                />
+              <div className={styles.docBox}>
+                <div className={styles.barIconPdf}>
+                  <TbPdf className={styles.iconPdf} size={30} />
+                </div>
+                <p>Documento de identidad</p>
+                <div className={styles.actionDocument}>
+                  <div className={styles.actionDocBox}>
+                    <button onClick={() => handleOpenViewPdf(3)}>
+                      Revisar
+                    </button>
+                  </div>
+                  <div className={styles.actionDocBox}>
+                    <button onClick={() => handleOpenViewPdf(3)}>
+                      Descargar
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -644,7 +698,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 className={styles.btnRejectReady}
                 onClick={() => onDes({ newStatus: "Aplazado" })}
               >
-                Listo
+                {!rejectStatus ? "Listo" : "Aplazando..."}
               </button>
             </div>
           </div>
@@ -658,7 +712,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               placeholder="Ingresa la cantidad"
               defaultValue={0}
               decimalsLimit={2}
-              onValueChange={(value, name, values) => {
+              onValueChange={(value) => {
                 setNewValue(value as string);
               }}
               prefix="$"
@@ -674,7 +728,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 className={styles.btnRejectReady}
                 onClick={handleSuccesChangeCantity}
               >
-                Listo
+                {!rejectStatus ? "Listo" : "Aplazando..."}
               </button>
             </div>
           </div>

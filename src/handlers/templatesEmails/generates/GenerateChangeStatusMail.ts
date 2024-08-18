@@ -41,7 +41,7 @@ export const generateMailChangeStatus = ({
         >${newStatus}
       </p>
       <p style="margin-bottom: 1em">
-        <strong style="font-weight: 500; color: #414141">Aprobado por: </strong
+        <strong style="font-weight: 500; color: #414141">Nombre del asesor: </strong
         >${employeeName}
       </p>
 
