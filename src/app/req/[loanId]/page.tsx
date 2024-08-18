@@ -24,6 +24,7 @@ import Loading from "@/app/dashboard/loading";
 import Document00 from "@/components/pdfs/pdfCard00";
 import Document03 from "@/components/pdfs/pdfCard03";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
+import { saveAs } from "file-saver";
 
 import CurrencyInput from "react-currency-input-field";
 import { Document01 } from "@/components/pdfs/pdfCard01";
@@ -47,6 +48,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
   const [openModelChange, setOpenModelChange] = useState<boolean>(false);
   const [newValue, setNewValue] = useState<string | null>(null);
   const [reasonNewCantity, setReasonNewCantity] = useState<string | null>(null);
+
+  const [openScanDocs, setOpenScanDocs] = useState(false);
+  const [linkScanDocs, setLinkScanDocs] = useState<string | null>(null);
 
   const [rejectStatus, setRejectStatus] = useState(false);
 
@@ -236,11 +240,39 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
     setOpenModelChange(!openModelChange);
   };
 
+  const handleOpenDocsScan = (url: string) => {
+    setOpenScanDocs(true);
+    setLinkScanDocs(url);
+  };
+
+  const handleDownload = async (fileUrl: string, nameFile: string) => {
+    try {
+      // Fetch the file and convert it to a Blob
+      const response = await fetch(fileUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok.");
+      }
+
+      const blob = await response.blob();
+
+      // Use file-saver to save the Blob
+      saveAs(blob, `${nameFile}.pdf`);
+    } catch (error) {
+      console.error("Error al descargar el archivo", error);
+    }
+  };
+
   if (loadingData) {
     return <Loading />;
   }
 
-  if (!loadingData) {
+  if (!loadingData && dataSession && dataSession.token) {
     return (
       <>
         <main className={styles.mainLoan}>
@@ -458,7 +490,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <div className={styles.actionDocBox}>
                   <button
                     onClick={() =>
-                      handleOpenDocs(dataLoan?.fisrt_flyer as string)
+                      handleDownload(
+                        dataLoan?.fisrt_flyer as string,
+                        "Primer volante de pago"
+                      )
                     }
                   >
                     Descargar
@@ -485,7 +520,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <div className={styles.actionDocBox}>
                   <button
                     onClick={() =>
-                      handleOpenDocs(dataLoan?.second_flyer as string)
+                      handleDownload(
+                        dataLoan?.second_flyer as string,
+                        "Segundo volante de pago"
+                      )
                     }
                   >
                     Descargar
@@ -512,7 +550,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <div className={styles.actionDocBox}>
                   <button
                     onClick={() =>
-                      handleOpenDocs(dataLoan?.third_flyer as string)
+                      handleDownload(
+                        dataLoan?.third_flyer as string,
+                        "Tercer volante de pago"
+                      )
                     }
                   >
                     Descargar
@@ -539,7 +580,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <div className={styles.actionDocBox}>
                   <button
                     onClick={() =>
-                      handleOpenDocs(dataLoan?.labor_card as string)
+                      handleDownload(
+                        dataLoan?.labor_card as string,
+                        "Carta laboral"
+                      )
                     }
                   >
                     Descargar
@@ -630,7 +674,13 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 <p>Documento de identidad</p>
                 <div className={styles.actionDocument}>
                   <div className={styles.actionDocBox}>
-                    <button onClick={() => handleOpenViewPdf(3)}>
+                    <button
+                      onClick={() =>
+                        handleOpenDocsScan(
+                          dataDocument?.documentSides as string
+                        )
+                      }
+                    >
                       Revisar
                     </button>
                   </div>
@@ -675,6 +725,17 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               signature={dataLoan?.signature}
             />
           )}
+        </Modal>
+
+        <Modal
+          isOpen={openScanDocs}
+          onClose={() => {
+            setOpenScanDocs(false);
+            setLinkScanDocs(null);
+          }}
+          link={linkScanDocs}
+        >
+          hola
         </Modal>
 
         <Modal
