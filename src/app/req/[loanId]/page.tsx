@@ -294,24 +294,22 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
               <p>Solicitud: {dataLoan?.id}</p>
             </div>
 
-            {dataLoan?.status === "Pendiente" &&
-              !dataLoan.newCantity &&
-              !dataLoan.newCantityOpt && (
-                <div className={styles.listBtns}>
-                  <p
-                    className={styles.btnAprove}
-                    onClick={() => onDes({ newStatus: "Aprobado" })}
-                  >
-                    {!rejectStatus ? "Aprobar" : "Aprobando..."}
-                  </p>
-                  <p
-                    className={styles.btnReject}
-                    onClick={() => setOpenReject(true)}
-                  >
-                    Aplazar
-                  </p>
-                </div>
-              )}
+            {dataLoan?.status === "Pendiente" && (
+              <div className={styles.listBtns}>
+                <p
+                  className={styles.btnAprove}
+                  onClick={() => onDes({ newStatus: "Aprobado" })}
+                >
+                  {!rejectStatus ? "Aprobar" : "Aprobando..."}
+                </p>
+                <p
+                  className={styles.btnReject}
+                  onClick={() => setOpenReject(true)}
+                >
+                  Aplazar
+                </p>
+              </div>
+            )}
           </div>
 
           <div className={styles.infoVerify}>
