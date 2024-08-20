@@ -1,0 +1,72 @@
+.componentUserProfile {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+.componentBoxDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 3em;
+}
+
+.boxDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.boxDetail h5 {
+  font-weight: 600;
+}
+
+.boxDetail input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--white-200);
+  border-radius: 8px;
+  outline: none;
+}
+
+.boxBtnSave {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.boxBtnSave button {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  outline: none;
+  background: var(--white-50);
+  cursor: pointer;
+  gap: 5px;
+  border: 1px solid var(--white-200);
+  border-radius: 8px;
+}
+
+.boxBtnSave button:hover {
+  border: 1px solid var(--white-400);
+}
+
+.boxIconCheck {
+  display: grid;
+  place-content: center;
+}
+
+.iconCheck {
+  color: var(--green-500);
+}
+
+.textBtnAct {
+  font-size: 16px;
+  display: grid;
+  place-content: center;
+}
+
+.avatar {
+  object-fit: contain;
+}

@@ -112,6 +112,32 @@ class UserServices {
 
     return user;
   }
+
+  static async updateProfile(
+    employeeId: string,
+    data: Partial<UsersIntranet>
+  ): Promise<UsersIntranet> {
+    const user = await prisma.usersIntranet.findUnique({
+      where: { id: employeeId },
+    });
+
+    if (!user) {
+      throw new Error("Usuario no encontrado");
+    }
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    const updatedUser = await prisma.usersIntranet.update({
+      where: { id: employeeId },
+      data: {
+        ...data,
+      },
+    });
+
+    return updatedUser;
+  }
 }
 
 export default UserServices;

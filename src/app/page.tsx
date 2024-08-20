@@ -10,7 +10,7 @@ import { ScalarUser, SessionAuth } from "@/types/session";
 import { urlBase64ToUint8Array } from "@/handlers/Base64";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/Session";
-import LoadingComponent from "@/components/Loading/LoadingComponent";
+import Loading from "./dashboard/loading";
 
 const applicationServerKey = process.env.NEXT_PUBLIC_VAPID_KEY as string;
 
@@ -104,7 +104,7 @@ export default function Home() {
     }
   }, [dataSession, router]);
 
-  if (isLoading) <LoadingComponent />;
+  if (isLoading) <Loading />;
 
   if (!isLoading && !dataSession)
     return (

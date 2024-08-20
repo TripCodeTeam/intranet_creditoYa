@@ -250,7 +250,7 @@ function SideBar() {
                   <Avatar
                     src={dataSession?.avatar}
                     className={styles.avatarUser}
-                    size="25px"
+                    size="30px"
                     round={true}
                   />
                 </div>
@@ -259,7 +259,9 @@ function SideBar() {
                     <p className={styles.messageBtn}>
                       {dataSession?.name} {dataSession?.lastNames.split(" ")[0]}
                     </p>
-                    <p className={styles.rolUser}>Empleado</p>
+                    <p className={styles.rolUser}>
+                      {dataSession?.rol == "admin" ? "Administrador" : "Asesor"}
+                    </p>
                   </div>
                 </div>
                 {/* <div className={styles.threePoints}>

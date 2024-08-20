@@ -10,7 +10,7 @@ import ResponsiveSideBar from "@/components/SideBar/ResponsiveSideBar";
 import OnlySideOpen from "@/components/SideBar/OnlySideOpen";
 import { useGlobalContext } from "@/context/Session";
 import { useRouter } from "next/navigation";
-import LoadingComponent from "@/components/Loading/LoadingComponent";
+import Loading from "./loading";
 
 function Dashboard() {
   const isMobile = useMediaQuery({ query: "(max-width: 700px)" });
@@ -48,7 +48,7 @@ function Dashboard() {
     }
   }, [dataSession, router]);
 
-  if (isLoading) <LoadingComponent />;
+  if (isLoading) <Loading />;
 
   if (dataSession) {
     return (

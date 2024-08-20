@@ -167,9 +167,9 @@
   place-content: center;
 }
 
-.avatarUser {
+/* .avatarUser {
   filter: drop-shadow(0px 0px 10px var(--white-500));
-}
+} */
 
 .threePoints {
   display: grid;
