@@ -77,7 +77,7 @@
 .boxImageDocVery {
   padding: 20px;
   border-radius: 16px;
-  background: var(--green-100);
+  /* background: var(--green-100); */
 }
 
 .imgDocVery {

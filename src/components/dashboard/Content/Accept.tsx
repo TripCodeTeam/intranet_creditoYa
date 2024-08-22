@@ -60,8 +60,7 @@ function AcceptContent() {
   const filteredLoans =
     status !== "Cantity"
       ? liveLoans?.filter((loan) => loan.status === status) || []
-      : liveLoans?.filter((loan) => loan.newCantity && !loan.newCantityOpt) ||
-        [];
+      : liveLoans?.filter((loan) => loan.newCantity && loan.newCantityOpt == null) || [];
 
   return (
     <>

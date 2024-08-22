@@ -30,6 +30,7 @@ import CurrencyInput from "react-currency-input-field";
 import { Document01 } from "@/components/pdfs/pdfCard01";
 import Document02 from "@/components/pdfs/pdfCard02";
 import { RefreshDataLoan } from "@/handlers/requests/allDataLoan";
+import { BankTypes, handleKeyToString } from "@/handlers/keyToBankString";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
   const { dataSession } = useGlobalContext();
@@ -165,6 +166,10 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
   const onDes = async ({ newStatus }: { newStatus: Status }) => {
     try {
+      if (dataLoan?.newCantity && dataLoan.newCantityOpt == null)
+        throw new Error(
+          "No puedes aprobar ni aplazar mientras se espera descision del cliente"
+        );
       setRejectStatus(true);
       const loanApplicationId = dataLoan?.id as string;
       const employeeId = dataSession?.id as string;
@@ -221,6 +226,9 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
       }
     } catch (error) {
       console.error("Error en la función onDes:", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -349,20 +357,20 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                 </>
               )}
 
-              {dataLoan?.newCantity && dataLoan?.newCantityOpt !== null && (
+              {dataLoan?.newCantity && (
                 <>
                   <h3 className={styles.titleDocs}>Desicion del cliente</h3>
                   <div className={styles.prevInfoClient}>
                     <div className={styles.boxCantity}>
                       <p>
-                        {dataLoan?.newCantity && dataLoan.newCantityOpt == true
-                          ? "Aceptado"
-                          : "Rechazado"}
-
-                        {dataLoan?.newCantityOpt == null &&
-                          dataLoan?.newCantity && (
-                            <p>Esperando respuesta del cliente...</p>
-                          )}
+                        {dataLoan.newCantity && dataLoan.newCantityOpt !== null
+                          ? dataLoan.newCantityOpt === true
+                            ? "Aceptado"
+                            : "Rechazado"
+                          : dataLoan?.newCantityOpt === null &&
+                            dataLoan?.newCantity
+                          ? "Esperando respuesta del cliente..."
+                          : null}
                       </p>
                     </div>
                   </div>
@@ -439,7 +447,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
                 <div className={styles.infoClient}>
                   <h5 className={styles.subTitleClient}>Entidad Bancaria</h5>
-                  <h3>{dataLoan?.entity}</h3>
+                  <h3>{handleKeyToString(dataLoan?.entity as BankTypes)}</h3>
                 </div>
               </div>
             </div>
