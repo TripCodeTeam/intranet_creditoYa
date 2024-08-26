@@ -3,18 +3,14 @@
 import { useDashboardContext } from "@/context/DashboardContext";
 import React, { useState } from "react";
 import styles from "./sidebar.module.css";
-
 import logoCreditoYa from "@/assets/only_object_logo.png";
 
 import {
-  TbMailPlus,
   TbMenu2,
   TbMoneybag,
   TbUserSearch,
   TbX,
-  TbTransactionDollar,
   TbMobiledata,
-  TbAdjustments,
   TbTool,
 } from "react-icons/tb";
 
@@ -22,6 +18,8 @@ import Image from "next/image";
 import Avatar from "react-avatar";
 import { useGlobalContext } from "@/context/Session";
 import { OptionDash } from "@/types/session";
+import { FiLogOut } from "react-icons/fi";
+import Cookies from "js-cookie";
 
 function SideBar() {
   const { option, setOption } = useDashboardContext();
@@ -30,8 +28,14 @@ function SideBar() {
   const { dataSession } = useGlobalContext();
 
   const handleChangeOption = ({ option }: { option: OptionDash }) => {
-    console.log(option);
+    // console.log(option);
     setOption(option);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("SessionData");
+    Cookies.remove("optionDash");
+    window.location.href = "/";
   };
 
   return (
@@ -273,17 +277,22 @@ function SideBar() {
 
           {!isOpen && (
             <>
-              <div
-                className={styles.containerSubBtnOpt}
-                onClick={() => handleChangeOption({ option: "User" })}
-              >
-                <div className={styles.subBtnOption}>
-                  <Avatar
-                    src={dataSession?.avatar}
-                    className={styles.avatarUser}
-                    size="25px"
-                    round={true}
-                  />
+              <div className={styles.barBtnsFinal}>
+                <div
+                  className={styles.containerSubBtnOpt}
+                  onClick={() => handleChangeOption({ option: "User" })}
+                >
+                  <div className={styles.subBtnOption}>
+                    <Avatar
+                      src={dataSession?.avatar}
+                      className={styles.avatarUser}
+                      size="25px"
+                      round={true}
+                    />
+                  </div>
+                </div>
+                <div className={styles.btnBoxExit} onClick={handleLogout}>
+                  <FiLogOut size={20} className={styles.iconExit} />
                 </div>
               </div>
             </>

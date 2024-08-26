@@ -11,7 +11,6 @@ interface sideProp {
 }
 
 function ResponsiveSideBar({ openSide }: sideProp) {
-  const { option, setOption } = useDashboardContext();
   return (
     <>
       <div className={styles.resHeader}>
@@ -25,9 +24,6 @@ function ResponsiveSideBar({ openSide }: sideProp) {
         <div className={styles.logoSUpraResHeader}>
           <Image className={styles.logo} src={logo} alt="logo" />
         </div>
-        {option == "Request" && <p>Solicitudes</p>}
-        {option == "Accepts" && <p>Prestamos</p>}
-        {option == "Clients" && <p>Clientes</p>}
       </div>
     </>
   );

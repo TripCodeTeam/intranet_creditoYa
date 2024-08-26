@@ -244,3 +244,45 @@
   justify-content: space-between;
   margin-bottom: 1em;
 }
+
+.barBtnsFinal {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.btnBoxExit {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.iconExit {
+  color: var(--red-500);
+}
+
+.btnBoxExit:hover {
+  background: var(--white-50);
+  border-radius: 8px;
+}
+
+.containerCellExit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btnCellExit {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--white-100);
+  border-radius: 8px;
+}
+
+.btnCellBoxIcon, .btnCellExit p {
+  display: grid;
+  place-content: center;
+}

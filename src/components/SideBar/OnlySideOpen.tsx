@@ -1,14 +1,13 @@
 "use client";
 
 import { useDashboardContext } from "@/context/DashboardContext";
-import React, { useState } from "react";
+import React from "react";
 import styles from "./sidebar.module.css";
 import Image from "next/image";
-
+import Cookies from "js-cookie";
 import logoCreditoYa from "@/assets/only_object_logo.png";
 
 import {
-  TbMailPlus,
   TbMoneybag,
   TbUserSearch,
   TbX,
@@ -19,16 +18,22 @@ import {
 import Avatar from "react-avatar";
 import { useGlobalContext } from "@/context/Session";
 import { OptionDash } from "@/types/session";
+import { FiLogOut } from "react-icons/fi";
 
 function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
   const { option, setOption } = useDashboardContext();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { dataSession } = useGlobalContext();
 
   const handleChangeOption = ({ option }: { option: OptionDash }) => {
-    // console.log(option);
     setOption(option);
+    chageSide(false);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("SessionData");
+    Cookies.remove("optionDash");
+    window.location.href = "/";
   };
 
   return (
@@ -45,7 +50,7 @@ function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
             </div>
           </div>
 
-          <div className={isOpen ? styles.btnOption : styles.btnOptionOpen}>
+          <div className={styles.btnOption}>
             <div
               className={
                 option == "Request"
@@ -131,36 +136,41 @@ function OnlySideOpen({ chageSide }: { chageSide: (status: boolean) => void }) {
         </div>
 
         <div className={styles.boxUser}>
-          {!isOpen && (
-            <>
-              <div
-                className={styles.btnOpenOpt}
-                onClick={() => handleChangeOption({ option: "User" })}
-              >
-                <div className={styles.subBtnOptionOpen}>
-                  <Avatar
-                    src={dataSession?.avatar}
-                    className={styles.avatarUser}
-                    size="25px"
-                    round={true}
-                  />
+          <div className={styles.containerCellExit}>
+            <div
+              className={styles.btnOpenOpt}
+              onClick={() => handleChangeOption({ option: "User" })}
+            >
+              <div className={styles.subBtnOptionOpen}>
+                <Avatar
+                  src={dataSession?.avatar}
+                  className={styles.avatarUser}
+                  size="25px"
+                  round={true}
+                />
+              </div>
+              <div className={styles.detailUser}>
+                <div className={styles.centerDetailUser}>
+                  <p className={styles.messageBtn}>
+                    {dataSession?.name} {dataSession?.lastNames.split(" ")[0]}
+                  </p>
+                  <p className={styles.rolUser}>
+                    {dataSession?.rol == "admin" ? "Administrador" : "Asesor"}
+                  </p>
                 </div>
-                <div className={styles.detailUser}>
-                  <div className={styles.centerDetailUser}>
-                    <p className={styles.messageBtn}>
-                      {dataSession?.name} {dataSession?.lastNames.split(" ")[0]}
-                    </p>
-                    <p className={styles.rolUser}>
-                      {dataSession?.rol == "admin" ? "Administrador" : "Asesor"}
-                    </p>
-                  </div>
-                </div>
-                {/* <div className={styles.threePoints}>
+              </div>
+              {/* <div className={styles.threePoints}>
                   <TbLineDashed className={styles.iconThreePoint} size={20} />
                 </div> */}
+            </div>
+
+            <div className={styles.btnCellExit} onClick={handleLogout}>
+              <p>Cerrar Session</p>
+              <div className={styles.btnCellBoxIcon}>
+                <FiLogOut size={20} className={styles.iconExit} />
               </div>
-            </>
-          )}
+            </div>
+          </div>
         </div>
       </div>
     </>
