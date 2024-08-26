@@ -79,15 +79,15 @@ export default function Home() {
         setDataSession(data);
         toast.success(`Bienvenido de nuevo ${data.name}`);
         setLoadingSession(true);
-        setInterval(() => {
+        setTimeout(() => {
           router.push("/dashboard");
         }, 2000);
       } else if (data.isActive == false) {
         setMissingSession(false);
         setDataSession(data);
-        toast.warning("Activacion pendiente");
+        toast.warning("Activación pendiente");
         setLoadingSession(true);
-        setInterval(() => {
+        setTimeout(() => {
           router.push("/auth");
         }, 2000);
       }

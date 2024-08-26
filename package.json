@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "bufferutil": "^4.0.8",
     "busboy": "^1.6.0",
+    "cloudinary": "^2.4.0",
     "dom-to-image": "^2.6.0",
     "file-saver": "^2.0.5",
     "fluent-ffmpeg": "^2.1.3",

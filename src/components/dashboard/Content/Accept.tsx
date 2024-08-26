@@ -60,7 +60,9 @@ function AcceptContent() {
   const filteredLoans =
     status !== "Cantity"
       ? liveLoans?.filter((loan) => loan.status === status) || []
-      : liveLoans?.filter((loan) => loan.newCantity && loan.newCantityOpt == null) || [];
+      : liveLoans?.filter(
+          (loan) => loan.newCantity && loan.newCantityOpt == null
+        ) || [];
 
   return (
     <>
@@ -72,22 +74,34 @@ function AcceptContent() {
           <>
             <div className={styles.barTypeLoan}>
               <p
-                className={styles.btnAprove}
+                className={
+                  status === "Aprobado"
+                    ? styles.btnAproveActive
+                    : styles.btnAprove
+                }
                 onClick={() => handleChangeStatus("Aprobado")}
               >
                 Aprobados
               </p>
               <p
-                className={styles.btnReject}
+                className={
+                  status === "Aplazado"
+                    ? styles.btnRejectActive
+                    : styles.btnReject
+                }
                 onClick={() => handleChangeStatus("Aplazado")}
               >
                 Aplazados
               </p>
               <p
-                className={styles.btnCantity}
+                className={
+                  status === "Cantity"
+                    ? styles.btnCantityActive
+                    : styles.btnCantity
+                }
                 onClick={() => handleChangeStatus("Cantity")}
               >
-                Cambio de cantidad
+                Cambio de Cantidad
               </p>
             </div>
 

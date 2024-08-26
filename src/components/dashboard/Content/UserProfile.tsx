@@ -14,7 +14,6 @@ function UserProfile() {
   const { dataSession, setDataSession } = useGlobalContext();
   const [dataUser, setDataUser] = useState<ScalarUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -42,9 +41,9 @@ function UserProfile() {
       );
 
       if (updateProfile.data.success == true) {
-        // const data: ScalarUser = updateProfile.data.data;
-        // // const { password, created_at, updated_at, ...authData } = data;
-
+        const data = updateProfile.data.data;
+        const token = dataSession?.token;
+        setDataSession({ ...data, token });
         toast.success("Datos actualizados");
       }
     } catch (error) {
@@ -62,16 +61,27 @@ function UserProfile() {
     if (fileInput && fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
 
-      setAvatarFile(file);
-
       // Opción para previsualizar la imagen antes de la subida
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         if (e.target?.result) {
-          setDataUser((prevData) => ({
-            ...(prevData as ScalarUser),
-            avatar: e.target ? (e.target.result as string) : "",
-          }));
+          const avatarFormData = new FormData();
+          avatarFormData.append("img", e.target.result as string);
+          avatarFormData.append("userId", dataSession?.id as string);
+
+          const uploadAvatar = await axios.post(
+            "/api/upload/avatar",
+            avatarFormData,
+            { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+          );
+
+          if (uploadAvatar.data.success == true) {
+            const urlAvatar = uploadAvatar.data.data;
+            setDataUser((prevData) => ({
+              ...(prevData as ScalarUser),
+              avatar: urlAvatar,
+            }));
+          }
         }
       };
       reader.readAsDataURL(file);
@@ -91,7 +101,7 @@ function UserProfile() {
 
         if (getUser.data.success == true) {
           const data: ScalarUser = getUser.data.data;
-          console.log(data);
+          // console.log(data);
 
           setDataUser((prevData) => ({
             ...(prevData as ScalarUser),
@@ -123,6 +133,7 @@ function UserProfile() {
               round={true}
               size="230"
               style={{ cursor: "pointer" }}
+              value={dataSession?.avatar || ""}
             />
             <input
               id="avatar-upload"

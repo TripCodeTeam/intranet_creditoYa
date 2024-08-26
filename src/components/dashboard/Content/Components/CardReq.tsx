@@ -1,9 +1,9 @@
+"use client"
+
 import { ScalarClient, ScalarLoanApplication } from "@/types/session";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Avatar from "react-avatar";
 import styles from "../styles/CardReq.module.css";
-import Link from "next/link";
 import { stringToPriceCOP } from "@/handlers/stringToPriceCOP";
 
 function CardRequest({
@@ -30,9 +30,9 @@ function CardRequest({
           <div className={styles.perfilInfo}>
             <h3>{`${user?.names} ${user?.firstLastName} ${user?.secondLastName}`}</h3>
 
-            <Link className={styles.linkPerfil} href={`/client/${loan.userId}`}>
-              Visitar perfil
-            </Link>
+            <h5 className={styles.linkPerfil}>
+              {user.email}
+            </h5>
           </div>
         </div>
       </div>
