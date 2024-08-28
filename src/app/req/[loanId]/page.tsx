@@ -15,6 +15,8 @@ import {
   TbPdf,
   TbPencilCog,
   TbRosetteDiscountCheck,
+  TbCircleCheck,
+  TbXboxX,
 } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -31,6 +33,7 @@ import { Document01 } from "@/components/pdfs/pdfCard01";
 import Document02 from "@/components/pdfs/pdfCard02";
 import { RefreshDataLoan } from "@/handlers/requests/allDataLoan";
 import { BankTypes, handleKeyToString } from "@/handlers/keyToBankString";
+// import { DeleteFileGcs } from "@/lib/storage";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
   const { dataSession } = useGlobalContext();
@@ -52,6 +55,8 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
 
   const [openScanDocs, setOpenScanDocs] = useState(false);
   const [linkScanDocs, setLinkScanDocs] = useState<string | null>(null);
+
+  const [isRejectDocument, setIsRejectDocument] = useState(false);
 
   const [rejectStatus, setRejectStatus] = useState(false);
 
@@ -276,6 +281,54 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
     }
   };
 
+  const handleRejectDocument = async ({
+    type,
+    upId,
+    userId,
+  }: {
+    type: string;
+    upId: string;
+    userId: string;
+  }) => {
+    try {
+      if (!type) throw new Error("type is required!");
+      if (!upId) throw new Error("url is required!");
+      if (!userId) throw new Error("userId is required!");
+
+      const deleteFile = await axios.post(
+        "/api/loans/delete_files",
+        {
+          upId,
+          userId,
+          type,
+          loanId: dataLoan?.id,
+          authToken: dataSession?.token,
+          mail: dataClient?.email,
+        },
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      // console.log(deleteFile);
+
+      if (deleteFile.data.success) {
+        const updateLoanData = await RefreshDataLoan(
+          dataLoan?.id as string,
+          dataSession?.token as string
+        );
+
+        if (updateLoanData) {
+          toast.success("Documento rechazado");
+          setIsRejectDocument(false);
+          setDataLoan(updateLoanData);
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+    }
+  };
+
   if (loadingData) {
     return <Loading />;
   }
@@ -476,11 +529,42 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             </div>
           </div>
 
-          <h3 className={styles.titleDocs}>Documentos Obligatorios</h3>
+          <div className={styles.requiredDocumentsAction}>
+            <h3 className={styles.titleDocsObli}>Documentos Obligatorios</h3>
+            <p
+              className={styles.btnRejectDocs}
+              onClick={() => setIsRejectDocument(!isRejectDocument)}
+            >
+              {isRejectDocument ? "Listo" : "Rechazar documentos"}
+            </p>
+          </div>
+
           <div className={styles.barDocs}>
             <div className={styles.docBox}>
-              <div className={styles.barIconPdf}>
-                <TbPdf className={styles.iconPdf} size={30} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className={styles.barIconPdf}>
+                  <TbPdf className={styles.iconPdf} size={30} />
+                </div>
+                <div style={{ display: "grid", placeContent: "center" }}>
+                  {dataLoan?.fisrt_flyer !== "No definido" &&
+                    dataLoan?.upid_first_flayer !== "No definido" && (
+                      <TbCircleCheck
+                        size={20}
+                        style={{ color: "var(--green-400)" }}
+                      />
+                    )}
+
+                  {dataLoan?.fisrt_flyer == "No definido" &&
+                    dataLoan?.upid_first_flayer == "No definido" && (
+                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
+                    )}
+                </div>
               </div>
               <p>Primer Volante</p>
               <div className={styles.actionDocument}>
@@ -493,6 +577,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     Revisar
                   </button>
                 </div>
+
                 <div className={styles.actionDocBox}>
                   <button
                     onClick={() =>
@@ -505,12 +590,52 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     Descargar
                   </button>
                 </div>
+
+                {isRejectDocument &&
+                  dataLoan?.fisrt_flyer !== "No definido" &&
+                  dataLoan?.upid_first_flayer !== "No definido" && (
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleRejectDocument({
+                            type: "paid_flyer_01",
+                            upId: dataLoan?.upid_first_flayer as string,
+                            userId: dataLoan?.userId as string,
+                          })
+                        }
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                  )}
               </div>
             </div>
 
             <div className={styles.docBox}>
-              <div className={styles.barIconPdf}>
-                <TbPdf className={styles.iconPdf} size={30} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className={styles.barIconPdf}>
+                  <TbPdf className={styles.iconPdf} size={30} />
+                </div>
+                <div style={{ display: "grid", placeContent: "center" }}>
+                  {dataLoan?.second_flyer !== "No definido" &&
+                    dataLoan?.upid_second_flyer !== "No definido" && (
+                      <TbCircleCheck
+                        size={20}
+                        style={{ color: "var(--green-400)" }}
+                      />
+                    )}
+
+                  {dataLoan?.second_flyer == "No definido" &&
+                    dataLoan?.upid_second_flyer == "No definido" && (
+                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
+                    )}
+                </div>
               </div>
               <p>Segundo Volante</p>
               <div className={styles.actionDocument}>
@@ -535,12 +660,52 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     Descargar
                   </button>
                 </div>
+
+                {isRejectDocument &&
+                  dataLoan?.second_flyer !== "No definido" &&
+                  dataLoan?.upid_second_flyer !== "No definido" && (
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleRejectDocument({
+                            type: "paid_flyer_02",
+                            upId: dataLoan?.upid_second_flyer as string,
+                            userId: dataLoan?.userId as string,
+                          })
+                        }
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                  )}
               </div>
             </div>
 
             <div className={styles.docBox}>
-              <div className={styles.barIconPdf}>
-                <TbPdf className={styles.iconPdf} size={30} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className={styles.barIconPdf}>
+                  <TbPdf className={styles.iconPdf} size={30} />
+                </div>
+                <div style={{ display: "grid", placeContent: "center" }}>
+                  {dataLoan?.third_flyer !== "No definido" &&
+                    dataLoan?.upid_third_flayer !== "No definido" && (
+                      <TbCircleCheck
+                        size={20}
+                        style={{ color: "var(--green-400)" }}
+                      />
+                    )}
+
+                  {dataLoan?.third_flyer == "No definido" &&
+                    dataLoan?.upid_third_flayer == "No definido" && (
+                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
+                    )}
+                </div>
               </div>
               <p>Tercer Volante</p>
               <div className={styles.actionDocument}>
@@ -565,12 +730,52 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     Descargar
                   </button>
                 </div>
+
+                {isRejectDocument &&
+                  dataLoan?.third_flyer !== "No definido" &&
+                  dataLoan?.upid_third_flayer !== "No definido" && (
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleRejectDocument({
+                            type: "paid_flyer_03",
+                            upId: dataLoan?.upid_third_flayer as string,
+                            userId: dataLoan?.userId as string,
+                          })
+                        }
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                  )}
               </div>
             </div>
 
             <div className={styles.docBox}>
-              <div className={styles.barIconPdf}>
-                <TbPdf className={styles.iconPdf} size={30} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className={styles.barIconPdf}>
+                  <TbPdf className={styles.iconPdf} size={30} />
+                </div>
+                <div style={{ display: "grid", placeContent: "center" }}>
+                  {dataLoan?.labor_card !== "No definido" &&
+                    dataLoan?.upid_labor_card !== "No definido" && (
+                      <TbCircleCheck
+                        size={20}
+                        style={{ color: "var(--green-400)" }}
+                      />
+                    )}
+
+                  {dataLoan?.labor_card == "No definido" &&
+                    dataLoan?.upid_labor_card == "No definido" && (
+                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
+                    )}
+                </div>
               </div>
               <p>Carta Laboral</p>
               <div className={styles.actionDocument}>
@@ -595,6 +800,23 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                     Descargar
                   </button>
                 </div>
+                {isRejectDocument &&
+                  dataLoan?.labor_card !== "No definido" &&
+                  dataLoan?.upid_labor_card !== "No definido" && (
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleRejectDocument({
+                            type: "labor_card",
+                            upId: dataLoan?.upid_labor_card as string,
+                            userId: dataLoan?.userId as string,
+                          })
+                        }
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                  )}
               </div>
             </div>
           </div>

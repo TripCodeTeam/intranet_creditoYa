@@ -156,6 +156,14 @@
   margin-bottom: 10px;
 }
 
+.titleDocsObli {
+  font-weight: 500;
+  margin-top: 1em;
+  margin-bottom: 10px;
+  display: grid;
+  place-content: center;
+}
+
 .barDocs {
   display: flex;
   flex-wrap: wrap;
@@ -332,9 +340,32 @@
   border: 1px solid var(--white-300);
   border-radius: 6px;
 }
-.boxImageDoc .documentsBox {
+
+titleDocs .boxImageDoc .documentsBox {
   display: flex;
   justify-content: flex-start;
+}
+
+.btnRejectDocs {
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  font-weight: 500;
+  background: var(--white-100);
+  border-radius: 8px;
+}
+
+.btnRejectDocs:hover {
+  color: var(--red-600);
+  cursor: pointer;
+}
+
+.requiredDocumentsAction {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  margin-top: 1em;
 }
 
 @media screen and (max-width: 900px) {

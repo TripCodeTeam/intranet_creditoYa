@@ -48,8 +48,11 @@ model LoanApplication {
     employeeId           String?    @default("Standby")
     user                 User       @relation(fields: [userId], references: [id])
     fisrt_flyer          String
+    upid_first_flayer    String
     second_flyer         String
+    upid_second_flyer    String
     third_flyer          String
+    upid_third_flayer    String
     reasonReject         String?
     reasonChangeCantity  String?
     cantity              String
@@ -59,8 +62,10 @@ model LoanApplication {
     bankNumberAccount    String
     entity               String
     labor_card           String
+    upid_labor_card      String
     terms_and_conditions Boolean
     signature            String
+    upSignatureId        String
     status               StatusLoan @default(Pendiente)
     created_at           DateTime   @default(now())
     updated_at           DateTime   @updatedAt

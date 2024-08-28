@@ -2,7 +2,7 @@
 
 import { prisma } from "@/prisma/db";
 import { LoanApplication } from "@prisma/client";
-import { ScalarDocument, ScalarLoanApplication, Status } from "@/types/session";
+import { ScalarLoanApplication, Status } from "@/types/session";
 
 // Clase para el servicio de LoanApplication
 class LoanApplicationService {
@@ -28,7 +28,7 @@ class LoanApplicationService {
   // Método para actualizar una solicitud de préstamo
   static async update(
     id: string,
-    data: ScalarLoanApplication
+    data: Partial<ScalarLoanApplication>
   ): Promise<LoanApplication> {
     return prisma.loanApplication.update({ where: { id }, data });
   }
