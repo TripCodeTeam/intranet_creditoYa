@@ -81,6 +81,7 @@ export type ScalarLoanApplication = {
   upid_labor_card: string;
   entity: string;
   terms_and_conditions: boolean;
+  clientInfo?: ScalarClient;
   created_at: Date;
   updated_at: Date;
 };
