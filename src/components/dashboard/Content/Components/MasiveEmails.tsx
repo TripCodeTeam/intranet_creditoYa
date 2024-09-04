@@ -1,5 +1,5 @@
 import FilterBox from "@/components/Email/FilterBox";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "../styles/masiveEmails.module.css";
 import { JsonExcelConvert } from "@/types/ExcelFile";
 import axios from "axios";
@@ -8,21 +8,118 @@ import { PiMicrosoftExcelLogoDuotone } from "react-icons/pi";
 import { useDropzone } from "react-dropzone";
 import { FiUpload } from "react-icons/fi";
 import {
+  TbBrandWhatsapp,
+  TbCircleCheck,
   TbCircleChevronDown,
   TbCircleChevronRight,
+  TbLoader,
   TbQrcode,
+  TbQrcodeOff,
   TbUserPlus,
 } from "react-icons/tb";
 import QrGenerate from "./qr_generate";
 import AddUserIntranet from "./add_user";
+import socket from "@/app/socket";
+import { generateSessionName } from "@/handlers/randomNamesSession";
+import QRCode from "react-qr-code";
+import { scalarWhatsappSession } from "@/types/session";
+import { useGlobalContext } from "@/context/Session";
 
 function MasiveEmails() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [jsonFile, setJsonFile] = useState<JsonExcelConvert[] | null>(null);
 
+  const { dataSession } = useGlobalContext();
+
   const [openMail, setOpenMails] = useState(false);
   const [openMailQr, setOpenMailsQr] = useState(false);
   const [openAddUser, setOpenAddUser] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isReadySession, setIsReadySession] = useState(false);
+  const [inProccess, setInProccess] = useState(false);
+
+  const [qr, setQr] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getCurrentSession = async () => {
+      setInProccess(true);
+      const response = await axios.post(
+        "api/whatsapp/get",
+        {},
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      if (response.data.success == true) {
+        const data: scalarWhatsappSession = response.data.data;
+        setInProccess(false);
+        setSessionId(data.id as string);
+        toast.success("Sessiones recuperada");
+      } else if (response.data.success == false) {
+        setInProccess(false);
+        toast.error(response.data.error);
+      }
+    };
+
+    getCurrentSession();
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("[whatsapp]qr_obtained", (data) => {
+      const qr = data.qr;
+      const message = data.message;
+      if (inProccess == true) setInProccess(false);
+
+      setQr(qr);
+    });
+
+    socket.on("[whatsapp]isReady", async (data) => {
+      const sessionId = data.id;
+      const message = data.message;
+
+      console.log(sessionId);
+      console.log(message);
+
+      const addSession = await axios.post(
+        "/api/whatsapp/create",
+        {
+          sessionId,
+        },
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      console.log(addSession.data);
+
+      if (addSession.data.success == true) {
+        setQr(null);
+        setInProccess(false);
+        setIsReadySession(true);
+        toast.error("Session guardada exitosamente");
+      } else if (addSession.data.success == false) {
+        setQr(null);
+        setInProccess(false);
+        setIsReadySession(true);
+        toast.error("Error al guardar session");
+      }
+    });
+
+    return () => {
+      socket?.off("[whatsapp]qr_obtained");
+    };
+  }, []);
+
+  const handlerCreateSession = () => {
+    try {
+      if (!socket) return;
+
+      setInProccess(true);
+      const sessionId = generateSessionName();
+      setSessionId(sessionId);
+
+      socket.emit("createSession", { id: sessionId });
+    } catch (error) {}
+  };
 
   const processFile = async () => {
     if (selectedFile) {
@@ -88,6 +185,109 @@ function MasiveEmails() {
   return (
     <>
       <div className={styles.mainMail}>
+        <div className={styles.barWhatsapp}>
+          <div
+            className={
+              isReadySession == true && sessionId !== null
+                ? styles.noNormalCenterBar
+                : styles.normalCenterBar
+            }
+          >
+            <div
+              className={
+                isReadySession == true && sessionId !== null
+                  ? styles.boxIconWhatsappOk
+                  : styles.boxIconWhatsapp
+              }
+            >
+              <TbBrandWhatsapp
+                className={styles.iconWhatsapp}
+                size={isReadySession == true && sessionId !== null ? 50 : 20}
+              />
+            </div>
+
+            <div className={styles.boxAlerts}>
+              {isReadySession == true && sessionId !== null && (
+                <>
+                  <div className={styles.boxInfoSession}>
+                    <h5>Session ID</h5>
+                    <h3>{sessionId}</h3>
+                  </div>
+                </>
+              )}
+
+              {isReadySession == false && (
+                <>
+                  <h3>Crear session de whatsapp</h3>
+                  <h5>
+                    Da Click en "Generar" y despues: abre la aplicacion de
+                    whatsapp y vincula el dispositivo con el qr generado
+                  </h5>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <p
+                      className={styles.btnGenerate}
+                      onClick={handlerCreateSession}
+                    >
+                      Generar
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div
+            className={
+              isReadySession == true && sessionId !== null
+                ? styles.noNoxActionConnect
+                : styles.boxActionConnect
+            }
+          >
+            {isReadySession == false && qr == null && (
+              <div className={styles.boxTextBtn}>
+                {inProccess == true && (
+                  <div className={styles.boxQrLoader}>
+                    <div className={styles.boxQrOff}>
+                      <TbLoader className={styles.iconLoader} size={50} />
+                    </div>
+                    <p>Generando Qr</p>
+                  </div>
+                )}
+
+                {inProccess == false && (
+                  <>
+                    <div className={styles.boxQrLoader}>
+                      <div className={styles.boxQrOff}>
+                        <TbQrcodeOff size={60} />
+                      </div>
+                      <p>Qr no disponible</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {qr !== null && isReadySession == false && (
+              <QRCode
+                size={120}
+                // style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={qr as string}
+                viewBox={`0 0 256 256`}
+              />
+            )}
+
+            {isReadySession == true && qr == null && (
+              <TbCircleCheck size={30} className={styles.iconCheck} />
+            )}
+          </div>
+        </div>
+
         <div
           className={styles.containerMasiveMail}
           onClick={() => setOpenMails(!openMail)}
@@ -150,6 +350,14 @@ function MasiveEmails() {
                 </button>
               </div>
             )}
+
+            {jsonFile && (
+              <>
+                <div className={styles.containerFilter}>
+                  <FilterBox JsonFile={jsonFile} />
+                </div>
+              </>
+            )}
           </>
         )}
 
@@ -195,14 +403,6 @@ function MasiveEmails() {
 
         {openAddUser && <AddUserIntranet />}
       </div>
-
-      {jsonFile && (
-        <>
-          <div className={styles.containerFilter}>
-            <FilterBox JsonFile={jsonFile} />
-          </div>
-        </>
-      )}
     </>
   );
 }

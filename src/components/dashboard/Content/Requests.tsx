@@ -6,12 +6,10 @@ import CardRequest from "./Components/CardReq";
 import HeaderContent from "./Components/HeaderContent";
 import { useGlobalContext } from "@/context/Session";
 import { TbRss } from "react-icons/tb";
-import { useWebSocket } from "next-ws/client";
 import { useMediaQuery } from "react-responsive";
 import Loading from "@/app/dashboard/loading";
 
 function RequestsContent() {
-  const ws = useWebSocket();
   const isMobile = useMediaQuery({ query: "(max-width: 700px)" });
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
     null
@@ -55,24 +53,6 @@ function RequestsContent() {
     getAllLoans();
   }, [dataSession?.token]);
 
-  // websocket connection
-
-  // const newLoan = useCallback(async (event: MessageEvent<Blob>) => {
-  //   console.log(event);
-
-  //   const resLoan = JSON.parse(String(event.data));
-  //   console.log(resLoan);
-
-  //   if (resLoan.type == "onNewLoan") {
-  //     const response = await axios.post("/api/loans/all");
-  //     setLiveLoans(response.data.data);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   ws?.addEventListener("message", newLoan);
-  //   return () => ws?.removeEventListener("message", newLoan);
-  // }, [newLoan, ws]);
 
   const pendingLoans = useMemo(() => {
     return liveLoans

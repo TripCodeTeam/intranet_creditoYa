@@ -14,6 +14,7 @@ model User {
     names                  String
     firstLastName          String
     secondLastName         String
+    currentCompanie        companiesUser     @default(no)
     avatar                 String            @default("No definido")
     phone                  String            @unique @default("No definido")
     residence_phone_number String            @default("No definido")
@@ -71,6 +72,13 @@ model LoanApplication {
     updated_at           DateTime   @updatedAt
 }
 
+model WhatsappSession {
+    id         String   @id @default(uuid()) @map("_id")
+    sessionId  String
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+}
+
 model Document {
     id            String        @id @default(uuid()) @map("_id")
     user          User          @relation(fields: [userId], references: [id])
@@ -101,4 +109,16 @@ enum TypesDocument {
     CC
     CE
     PASAPORTE
+}
+
+enum companiesUser {
+    incauca_sas
+    incauca_cosecha
+    providencia_sas
+    providencia_cosecha
+    con_alta
+    pichichi_sas
+    pichichi_coorte
+    valor_agregado
+    no
 }

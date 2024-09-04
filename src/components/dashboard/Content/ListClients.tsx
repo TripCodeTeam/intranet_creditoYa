@@ -71,14 +71,22 @@ function ListClients() {
 
         {option == null && (
           <div className={styles.containerListUsers}>
-            {dataUsers?.map((user) => (
-              <CardUser
-                changeOption={handleChangeOption}
-                user={user}
-                token={dataSession?.token as string}
-                key={user.id}
-              />
-            ))}
+            {dataUsers &&
+              dataUsers.length > 0 &&
+              dataUsers?.map((user) => (
+                <CardUser
+                  changeOption={handleChangeOption}
+                  user={user}
+                  token={dataSession?.token as string}
+                  key={user.id}
+                />
+              ))}
+
+            {dataUsers && dataUsers.length === 0 && (
+              <>
+                <p>Sin Usuarios</p>
+              </>
+            )}
           </div>
         )}
 

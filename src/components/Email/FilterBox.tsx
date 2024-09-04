@@ -10,17 +10,13 @@ import Modal from "../modal/modal";
 import VerifySend from "./verifySend";
 import EditorComponent from "../Editor/Editor";
 
-interface EditorEvent {
-  htmlValue: string;
-  textValue: string;
-  delta: any;
-  source: string;
-}
-
 function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [masiveEmails, setMasiveEmails] = useState<string[] | null>(null);
+  const [massivePhones, setMassivePhones] = useState<string[] | null>(null);
+  const [massiveNames, setMassiveNames] = useState<string[] | null>(null);
+
   const [masivePerfils, setMasivePerfils] = useState<JsonExcelConvert[] | null>(
     null
   );
@@ -31,13 +27,17 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     null
   );
   const [verfMailSend, setVerfMailSend] = useState<boolean>(false);
-
   const [sendMail, setSendMail] = useState<boolean>(false);
   const { dataSession } = useGlobalContext();
 
   useEffect(() => {
-    const emails = JsonFile.map((user) => user.email);
+    const names = JsonFile.map((user) => user.nombre);
+    const emails = JsonFile.map((user) => user.correo_electronico);
+    const phones = JsonFile.map((user) => user.telefono);
+
     setMasiveEmails(emails);
+    setMassiveNames(names);
+    setMassivePhones(phones);
     setMasivePerfils(JsonFile);
   }, [JsonFile]);
 
@@ -58,7 +58,7 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
       if (email) {
         const newJsonExcelConvert = {
           ...detail,
-          email: email,
+          correo_electronico: email,
         };
         return [...(prevEmails || []), newJsonExcelConvert];
       } else {
@@ -128,9 +128,19 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     setSendMail(complete);
   };
 
+  const handlerFilterPhones = () => {
+    try {
+    } catch (error) {
+      if (error) {
+      }
+    }
+  };
+
   console.log("Mails para enviar: ", mailSelects);
   console.log("Perfiles seleccionados: ", perfilsSelects);
   console.log("All Emails: ", masiveEmails);
+  console.log("All Names: ", massiveNames);
+  console.log("All Phones: ", massivePhones);
 
   return (
     <>
@@ -165,7 +175,7 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
                     onClick={() => handleDeleteSelect(user.id)}
                   />
                 </div>
-                <p className={styles.textAll}>{user.email}</p>
+                <p className={styles.textAll}>{user.correo_electronico}</p>
               </div>
             ))}
 
@@ -232,13 +242,29 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
       </div>
 
       <Modal isOpen={verfMailSend} onClose={handleSubmit}>
-        {masivePerfils != null && masiveEmails != null && (
-          <VerifySend perfils={masivePerfils} emails={masiveEmails} />
-        )}
+        {masivePerfils != null &&
+          masiveEmails != null &&
+          massiveNames !== null &&
+          massivePhones !== null && (
+            <VerifySend
+              perfils={masivePerfils}
+              emails={masiveEmails}
+              phones={massivePhones}
+              names={massiveNames}
+            />
+          )}
 
-        {perfilsSelects != null && mailSelects != null && (
-          <VerifySend perfils={perfilsSelects} emails={mailSelects} />
-        )}
+        {perfilsSelects != null &&
+          mailSelects != null &&
+          massiveNames !== null &&
+          massivePhones !== null && (
+            <VerifySend
+              perfils={perfilsSelects}
+              emails={mailSelects}
+              phones={massivePhones}
+              names={massiveNames}
+            />
+          )}
       </Modal>
     </>
   );

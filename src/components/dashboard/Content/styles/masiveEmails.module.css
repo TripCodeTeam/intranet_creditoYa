@@ -1,3 +1,12 @@
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .mainMail {
   display: flex;
   flex-direction: column;
@@ -68,6 +77,11 @@
   cursor: pointer;
 }
 
+.boxAlerts {
+  display: grid;
+  place-content: center;
+}
+
 .containerMasiveMail:hover {
   background: var(--white-100);
 }
@@ -86,4 +100,106 @@
 .boxIconExcel {
   display: grid;
   place-content: center;
+}
+
+.barWhatsapp {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 3em;
+  margin-top: 1em;
+  padding: 15px;
+  /* background: var(--white-100); */
+  border-radius: 16px;
+  gap: 30px;
+  border: 1px solid var(--green-200);
+}
+
+.boxActionConnect {
+  display: grid;
+  place-content: center;
+  width: 120px;
+  height: auto;
+}
+
+.noNoxActionConnect {
+  display: grid;
+  place-content: center;
+}
+
+.boxTextBtn {
+  display: flex;
+  position: relative;
+  bottom: 0;
+  justify-content: end;
+}
+
+.btnGenerate {
+  padding: 10px;
+  color: var(--green-800);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid var(--green-200);
+}
+
+.btnGenerate:hover {
+  background: var(--green-50);
+  border: 1px solid var(--green-400);
+}
+
+.boxIconWhatsapp {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.boxIconWhatsappOk {
+  display: grid;
+  place-content: center;
+}
+
+.iconWhatsapp {
+  color: var(--green-600);
+  filter: drop-shadow(0px 0px 10px var(--white-600));
+}
+
+.iconLoader {
+  color: var(--white-600);
+  animation: spin 1s linear infinite;
+}
+
+.boxQrLoader {
+  display: flex;
+  flex-direction: column;
+}
+
+.boxQrOff {
+  display: grid;
+  place-content: center;
+}
+
+.noNormalCenterBar {
+  display: flex;
+  flex-direction: row;
+}
+
+.boxInfoSession {
+  display: grid;
+  place-content: center;
+}
+
+.iconCheck {
+  color: var(--green-400);
+}
+
+/* .normalCenterBar {
+  display: flex;
+  flex-direction: row;
+} */
+
+@media screen and (max-width: 900px) {
+  .boxActionConnect {
+    flex: 1;
+  }
 }

@@ -17,6 +17,7 @@ export type ScalarClient = {
   names: string;
   firstLastName: string;
   secondLastName: string;
+  currentCompanie?: companiesUser;
   avatar?: string;
   phone?: string;
   residence_phone_number?: string;
@@ -113,3 +114,21 @@ export interface DashboardContextType {
   option: OptionDash;
   setOption: (option: OptionDash) => void;
 }
+
+export type scalarWhatsappSession = {
+  id?: string;
+  sessionId: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type companiesUser =
+  | "incauca_sas"
+  | "incauca_cosecha"
+  | "providencia_sas"
+  | "providencia_cosecha"
+  | "con_alta"
+  | "pichichi_sas"
+  | "pichichi_coorte"
+  | "valor_agregado"
+  | "no";

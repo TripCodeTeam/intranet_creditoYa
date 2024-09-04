@@ -1,15 +1,13 @@
-import React, { useCallback, useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import HeaderContent from "./Components/HeaderContent";
 import styles from "./styles/mails.module.css";
-import { TbFileTypeXls, TbUsersGroup } from "react-icons/tb";
 import MasiveEmails from "./Components/MasiveEmails";
+import socket from "@/app/socket";
 
 function MailsComponents() {
   const [option, setOption] = useState<string | null>("excel");
-
-  const handleSelect = ({ option }: { option: string }) => {
-    setOption(option);
-  };
 
   return (
     <>

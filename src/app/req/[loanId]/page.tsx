@@ -464,6 +464,16 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                   <h5 className={styles.subTitleClient}>Numero celular</h5>
                   <h3>{dataClient?.phone}</h3>
                 </div>
+
+                <div className={styles.infoClient}>
+                  <h5 className={styles.subTitleClient}>Empresa</h5>
+                  {dataClient?.currentCompanie == "no" && (
+                    <h3>No pertenece a ninguna empresa aliada</h3>
+                  )}
+                  {dataClient?.currentCompanie !== "no" && (
+                    <h3>{dataClient?.currentCompanie}</h3>
+                  )}
+                </div>
               </div>
 
               <h3 className={styles.titleDocs}>Status del prestamo</h3>
