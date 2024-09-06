@@ -17,9 +17,11 @@ function VerifySend({
 }) {
   useEffect(() => {
     if (!socket) return;
+
     socket.on("[whatsapp]sendVerifyPhones", (data) =>
       console.log(data.message)
     );
+
     socket.emit("connected", "Conect to verify component");
   });
 

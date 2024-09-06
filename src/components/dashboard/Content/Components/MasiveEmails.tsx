@@ -56,7 +56,7 @@ function MasiveEmails() {
         toast.success("Sessiones recuperada");
       } else if (response.data.success == false) {
         setInProccess(false);
-        toast.error(response.data.error);
+        // toast.error(response.data.error);
       }
     };
 

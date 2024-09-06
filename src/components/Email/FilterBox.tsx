@@ -128,14 +128,6 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     setSendMail(complete);
   };
 
-  const handlerFilterPhones = () => {
-    try {
-    } catch (error) {
-      if (error) {
-      }
-    }
-  };
-
   console.log("Mails para enviar: ", mailSelects);
   console.log("Perfiles seleccionados: ", perfilsSelects);
   console.log("All Emails: ", masiveEmails);
