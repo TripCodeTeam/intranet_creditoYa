@@ -7,6 +7,29 @@
   }
 }
 
+.backButton {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.centerBackBtn {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 5px 10px;
+}
+
+.centerBackBtn:hover {
+  background: var(--white-100);
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.boxIconBack {
+  display: grid;
+  place-content: center;
+}
+
 .mainMail {
   display: flex;
   flex-direction: column;
@@ -54,7 +77,42 @@
 }
 
 .NameFile {
-  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.centerNameFile {
+  display: flex;
+  flex-direction: row;
+}
+
+.btnRemoveFile {
+  display: flex;
+  flex-direction: row;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btnRemoveFile:hover {
+  background: var(--white-100);
+}
+
+.btnRemoveFile p {
+  display: grid;
+  place-content: center;
+  font-weight: 500;
+  color: var(--white-700);
+}
+
+.boxIconTrash {
+  display: grid;
+  place-content: center;
+}
+
+.iconTrash {
+  color: var(--red-400);
 }
 
 .boxBtnProc {

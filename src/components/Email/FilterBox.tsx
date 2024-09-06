@@ -137,7 +137,7 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   return (
     <>
       <div className={styles.editorContainer}>
-        <EditorComponent success={successSendMail} email={masiveEmails} />
+        <EditorComponent send={false} success={successSendMail} email={masiveEmails} />
       </div>
 
       <div className={styles.mailDestinity}>

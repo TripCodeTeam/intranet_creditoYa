@@ -15,6 +15,7 @@ function VerifySend({
   phones: JsonExcelConvert[] | string[];
   names: JsonExcelConvert[] | string[];
 }) {
+
   useEffect(() => {
     if (!socket) return;
 

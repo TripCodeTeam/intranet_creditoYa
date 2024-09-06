@@ -44,44 +44,43 @@
 }
 
 .boxInput {
-  flex-grow: 1;
+  display: flex;
+  width: 100%;
 }
 
 .boxInput input {
   padding: 10px;
-  /* width: 100%; */
+  flex: 1;
   font-size: 16px;
   border: 1px solid;
   outline: none;
   border-radius: 8px;
-  width: 100%;
 }
 
 .maxCardPerson {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 90%;
-  margin-left: 5%;
+  margin-bottom: 1em;
 }
 
 .centerCardPerson {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 5px 10px;
 }
 
 .cardPerson {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 100px 100px 280px 100px;
   gap: 10px;
-  justify-content: space-between;
-  padding: 10px;
+  /* padding: 10px; */
   width: 90%;
 }
 
 .centerCardPerson:hover {
-  background: #f1f1f1;
+  background: var(--white-100);
 }
 
 .subBoxDetail {
@@ -97,10 +96,6 @@
 
 .subBoxDetail p {
   margin: 0;
-}
-
-.boxOpts {
-  width: 10%;
 }
 
 .masiveFilterBox {

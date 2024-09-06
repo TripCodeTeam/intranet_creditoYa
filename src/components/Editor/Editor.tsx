@@ -14,9 +14,11 @@ interface UserTypes {
 function EditorComponent({
   success,
   email,
+  send,
 }: {
   success: (complete: boolean) => void;
   email: string | string[] | JsonExcelConvert[] | null;
+  send: boolean;
 }) {
   const { dataSession } = useGlobalContext();
   const [images, setImages] = useState<File[] | null>(null);
@@ -120,9 +122,11 @@ function EditorComponent({
           <ImagesBox transfer={agreeImages} />
         </div>
 
-        <div className={styles.boxBtnSend}>
-          <p onClick={handleSendMail}>Enviar</p>
-        </div>
+        {send == true && (
+          <div className={styles.boxBtnSend}>
+            <p onClick={handleSendMail}>Enviar</p>
+          </div>
+        )}
       </div>
     </>
   );

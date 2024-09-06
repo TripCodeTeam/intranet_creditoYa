@@ -16,6 +16,9 @@ import {
   TbQrcode,
   TbQrcodeOff,
   TbUserPlus,
+  TbArrowNarrowLeft,
+  TbTrash,
+  TbMessageBolt,
 } from "react-icons/tb";
 import QrGenerate from "./qr_generate";
 import AddUserIntranet from "./add_user";
@@ -24,6 +27,7 @@ import { generateSessionName } from "@/handlers/randomNamesSession";
 import QRCode from "react-qr-code";
 import { scalarWhatsappSession } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
+import InDevelop from "@/components/warns/InDevelop";
 
 function MasiveEmails() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -40,6 +44,18 @@ function MasiveEmails() {
 
   const [qr, setQr] = useState<string | null>(null);
 
+  const handlerOpenMasiveMail = () => {
+    try {
+      if (isReadySession === false)
+        throw new Error("Primero crea una session de whatsapp");
+      setOpenMails(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
+
   useEffect(() => {
     const getCurrentSession = async () => {
       setInProccess(true);
@@ -53,6 +69,7 @@ function MasiveEmails() {
         const data: scalarWhatsappSession = response.data.data;
         setInProccess(false);
         setSessionId(data.id as string);
+        setIsReadySession(true);
         toast.success("Sessiones recuperada");
       } else if (response.data.success == false) {
         setInProccess(false);
@@ -121,6 +138,17 @@ function MasiveEmails() {
     } catch (error) {}
   };
 
+  const handleRemoveFile = () => {
+    try {
+      setSelectedFile(null);
+      setJsonFile(null);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
+
   const processFile = async () => {
     if (selectedFile) {
       const reader = new FileReader();
@@ -185,130 +213,20 @@ function MasiveEmails() {
   return (
     <>
       <div className={styles.mainMail}>
-        <div className={styles.barWhatsapp}>
-          <div
-            className={
-              isReadySession == true && sessionId !== null
-                ? styles.noNormalCenterBar
-                : styles.normalCenterBar
-            }
-          >
-            <div
-              className={
-                isReadySession == true && sessionId !== null
-                  ? styles.boxIconWhatsappOk
-                  : styles.boxIconWhatsapp
-              }
-            >
-              <TbBrandWhatsapp
-                className={styles.iconWhatsapp}
-                size={isReadySession == true && sessionId !== null ? 50 : 20}
-              />
-            </div>
-
-            <div className={styles.boxAlerts}>
-              {isReadySession == true && sessionId !== null && (
-                <>
-                  <div className={styles.boxInfoSession}>
-                    <h5>Session ID</h5>
-                    <h3>{sessionId}</h3>
-                  </div>
-                </>
-              )}
-
-              {isReadySession == false && (
-                <>
-                  <h3>Crear session de whatsapp</h3>
-                  <h5>
-                    Da Click en "Generar" y despues: abre la aplicacion de
-                    whatsapp y vincula el dispositivo con el qr generado
-                  </h5>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      marginTop: "10px",
-                    }}
-                  >
-                    <p
-                      className={styles.btnGenerate}
-                      onClick={handlerCreateSession}
-                    >
-                      Generar
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div
-            className={
-              isReadySession == true && sessionId !== null
-                ? styles.noNoxActionConnect
-                : styles.boxActionConnect
-            }
-          >
-            {isReadySession == false && qr == null && (
-              <div className={styles.boxTextBtn}>
-                {inProccess == true && (
-                  <div className={styles.boxQrLoader}>
-                    <div className={styles.boxQrOff}>
-                      <TbLoader className={styles.iconLoader} size={50} />
-                    </div>
-                    <p>Generando Qr</p>
-                  </div>
-                )}
-
-                {inProccess == false && (
-                  <>
-                    <div className={styles.boxQrLoader}>
-                      <div className={styles.boxQrOff}>
-                        <TbQrcodeOff size={60} />
-                      </div>
-                      <p>Qr no disponible</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-
-            {qr !== null && isReadySession == false && (
-              <QRCode
-                size={120}
-                // style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={qr as string}
-                viewBox={`0 0 256 256`}
-              />
-            )}
-
-            {isReadySession == true && qr == null && (
-              <TbCircleCheck size={30} className={styles.iconCheck} />
-            )}
-          </div>
-        </div>
-
-        <div
-          className={styles.containerMasiveMail}
-          onClick={() => setOpenMails(!openMail)}
-        >
-          <div className={styles.partMassive}>
-            <div className={styles.boxIconExcel}>
-              <PiMicrosoftExcelLogoDuotone size={30} />
-            </div>
-            <div>
-              <h3>Contactos en Excel</h3>
-              <p>Saca informacion de contacto desde un archivo Excel</p>
-            </div>
-          </div>
-          <div className={styles.iconOpenTool}>
-            {openMail && <TbCircleChevronDown size={20} />}
-            {!openMail && <TbCircleChevronRight size={20} />}
-          </div>
-        </div>
-
-        {openMail && (
+        {openMail === true && (
           <>
+            <div
+              onClick={() => setOpenMails(false)}
+              className={styles.backButton}
+            >
+              <div className={styles.centerBackBtn}>
+                <div className={styles.boxIconBack}>
+                  <TbArrowNarrowLeft />
+                </div>
+                <p>Atras</p>
+              </div>
+            </div>
+
             <div
               {...getRootProps()}
               className={
@@ -320,14 +238,28 @@ function MasiveEmails() {
               {selectedFile ? (
                 <>
                   <div className={styles.NameFile}>
-                    <div className={styles.iconNameFile}>
-                      <PiMicrosoftExcelLogoDuotone size={44} />
+                    <div className={styles.centerNameFile}>
+                      <div className={styles.iconNameFile}>
+                        <PiMicrosoftExcelLogoDuotone size={50} />
+                      </div>
+
+                      <div>
+                        <h2>{selectedFile.name}</h2>
+                        <h5 className={styles.bytesFile}>
+                          Tamaño: {selectedFile.size} bytes
+                        </h5>
+                      </div>
                     </div>
-                    <p>{selectedFile.name}</p>
+                    <div
+                      className={styles.btnRemoveFile}
+                      onClick={handleRemoveFile}
+                    >
+                      <div className={styles.boxIconTrash}>
+                        <TbTrash className={styles.iconTrash} size={25} />
+                      </div>
+                      <p>Borrar</p>
+                    </div>
                   </div>
-                  <p className={styles.bytesFile}>
-                    Tamaño: {selectedFile.size} bytes
-                  </p>
                 </>
               ) : (
                 <div className={styles.boxMessage}>
@@ -361,47 +293,183 @@ function MasiveEmails() {
           </>
         )}
 
-        <div
-          className={styles.containerMasiveMail}
-          onClick={() => setOpenMailsQr(!openMailQr)}
-        >
-          <div className={styles.partMassive}>
-            <div className={styles.boxIconExcel}>
-              <TbQrcode size={30} />
-            </div>
-            <div>
-              <h3>Generar Codigo Qr</h3>
-              <p>Digita un link y genera un codigo QR</p>
-            </div>
-          </div>
-          <div className={styles.iconOpenTool}>
-            {openMailQr && <TbCircleChevronDown size={20} />}
-            {!openMailQr && <TbCircleChevronRight size={20} />}
-          </div>
-        </div>
+        {openMail === false && (
+          <>
+            <InDevelop
+              reason={"Estado de herramienta de envio de mensajes masivos"}
+              status="In Progress"
+            />
 
-        {openMailQr && <QrGenerate />}
+            <div className={styles.barWhatsapp}>
+              <div
+                className={
+                  isReadySession == true && sessionId !== null
+                    ? styles.noNormalCenterBar
+                    : styles.normalCenterBar
+                }
+              >
+                <div
+                  className={
+                    isReadySession == true && sessionId !== null
+                      ? styles.boxIconWhatsappOk
+                      : styles.boxIconWhatsapp
+                  }
+                >
+                  <TbBrandWhatsapp
+                    className={styles.iconWhatsapp}
+                    size={
+                      isReadySession == true && sessionId !== null ? 50 : 20
+                    }
+                  />
+                </div>
 
-        <div
-          className={styles.containerMasiveMail}
-          onClick={() => setOpenAddUser(!openAddUser)}
-        >
-          <div className={styles.partMassive}>
-            <div className={styles.boxIconExcel}>
-              <TbUserPlus size={30} />
-            </div>
-            <div>
-              <h3>Agregar usuarios a Intranet</h3>
-              <p>Agrega un integrante a la intranet y dale permisos</p>
-            </div>
-          </div>
-          <div className={styles.iconOpenTool}>
-            {openAddUser && <TbCircleChevronDown size={20} />}
-            {!openAddUser && <TbCircleChevronRight size={20} />}
-          </div>
-        </div>
+                <div className={styles.boxAlerts}>
+                  {isReadySession == true && sessionId !== null && (
+                    <>
+                      <div className={styles.boxInfoSession}>
+                        <h5>Session ID</h5>
+                        <h3>{sessionId}</h3>
+                      </div>
+                    </>
+                  )}
 
-        {openAddUser && <AddUserIntranet />}
+                  {isReadySession == false && (
+                    <>
+                      <h3>Crear session de whatsapp</h3>
+                      <h5>
+                        Da Click en "Generar" y despues: abre la aplicacion de
+                        whatsapp y vincula el dispositivo con el qr generado
+                      </h5>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <p
+                          className={styles.btnGenerate}
+                          onClick={handlerCreateSession}
+                        >
+                          Generar
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div
+                className={
+                  isReadySession == true && sessionId !== null
+                    ? styles.noNoxActionConnect
+                    : styles.boxActionConnect
+                }
+              >
+                {isReadySession == false && qr == null && (
+                  <div className={styles.boxTextBtn}>
+                    {inProccess == true && (
+                      <div className={styles.boxQrLoader}>
+                        <div className={styles.boxQrOff}>
+                          <TbLoader className={styles.iconLoader} size={50} />
+                        </div>
+                        <p>Generando Qr</p>
+                      </div>
+                    )}
+
+                    {inProccess == false && (
+                      <>
+                        <div className={styles.boxQrLoader}>
+                          <div className={styles.boxQrOff}>
+                            <TbQrcodeOff size={60} />
+                          </div>
+                          <p>Qr no disponible</p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {qr !== null && isReadySession == false && (
+                  <QRCode
+                    size={120}
+                    // style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    value={qr as string}
+                    viewBox={`0 0 256 256`}
+                  />
+                )}
+
+                {isReadySession == true && qr == null && (
+                  <TbCircleCheck size={30} className={styles.iconCheck} />
+                )}
+              </div>
+            </div>
+
+            <div
+              className={styles.containerMasiveMail}
+              onClick={handlerOpenMasiveMail}
+            >
+              <div className={styles.partMassive}>
+                <div className={styles.boxIconExcel}>
+                  <TbMessageBolt size={30} />
+                </div>
+                <div>
+                  <h3>Envio masivo de mensajes</h3>
+                  <p>
+                    Saca informacion de contacto desde un libro Excel y envia un
+                    mensaje masivo por correo y WhatsApp
+                  </p>
+                </div>
+              </div>
+              <div className={styles.iconOpenTool}>
+                {openMail && <TbCircleChevronDown size={20} />}
+                {!openMail && <TbCircleChevronRight size={20} />}
+              </div>
+            </div>
+
+            <div
+              className={styles.containerMasiveMail}
+              onClick={() => setOpenMailsQr(!openMailQr)}
+            >
+              <div className={styles.partMassive}>
+                <div className={styles.boxIconExcel}>
+                  <TbQrcode size={30} />
+                </div>
+                <div>
+                  <h3>Generar Codigo Qr</h3>
+                  <p>Digita un link y genera un codigo QR</p>
+                </div>
+              </div>
+              <div className={styles.iconOpenTool}>
+                {openMailQr && <TbCircleChevronDown size={20} />}
+                {!openMailQr && <TbCircleChevronRight size={20} />}
+              </div>
+            </div>
+
+            {openMailQr && <QrGenerate />}
+
+            <div
+              className={styles.containerMasiveMail}
+              onClick={() => setOpenAddUser(!openAddUser)}
+            >
+              <div className={styles.partMassive}>
+                <div className={styles.boxIconExcel}>
+                  <TbUserPlus size={30} />
+                </div>
+                <div>
+                  <h3>Agregar usuarios a Intranet</h3>
+                  <p>Agrega un integrante a la intranet y dale permisos</p>
+                </div>
+              </div>
+              <div className={styles.iconOpenTool}>
+                {openAddUser && <TbCircleChevronDown size={20} />}
+                {!openAddUser && <TbCircleChevronRight size={20} />}
+              </div>
+            </div>
+
+            {openAddUser && <AddUserIntranet />}
+          </>
+        )}
       </div>
     </>
   );
