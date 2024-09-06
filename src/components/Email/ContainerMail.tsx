@@ -51,6 +51,7 @@ function ContainerMail({
         </div>
       </div>
       <EditorComponent
+        send={true}
         success={handleCompleteEmail}
         email={clientData?.email as string}
       />
