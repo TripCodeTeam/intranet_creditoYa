@@ -21,38 +21,52 @@ function RequestsContent() {
     const getAllLoans = async () => {
       try {
         const response = await axios.post("/api/loans/all");
-        if (response.data.success == true) {
+
+        if (response.data.success) {
           const loans = response.data.data;
 
-          // Obtener la información de los clientes
           const loansWithClientInfo = await Promise.all(
             loans.map(async (loan: ScalarLoanApplication) => {
-              const clientResponse = await axios.post(
-                "/api/clients/id",
-                {
-                  userId: loan.userId,
-                },
-                { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-              );
-              if (clientResponse.data.success == true) {
-                const dataUser = clientResponse.data.data;
-                return { ...loan, clientInfo: dataUser };
+              try {
+                const clientResponse = await axios.post(
+                  "/api/clients/id",
+                  { userId: loan.userId },
+                  { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+                );
+
+                if (clientResponse.data.success) {
+                  return { ...loan, clientInfo: clientResponse.data.data };
+                } else {
+                  console.error(
+                    `Error fetching client info for userId ${loan.userId}:`,
+                    clientResponse.data.error
+                  );
+                }
+              } catch (clientError) {
+                console.error(
+                  `Error during client info fetch for userId ${loan.userId}:`,
+                  clientError
+                );
               }
               return loan;
             })
           );
 
           setLiveLoans(loansWithClientInfo);
-          setLoading(false);
+        } else {
+          console.error("Error fetching loans:", response.data.error);
         }
       } catch (error) {
-        console.error("Error al obtener las solicitudes de préstamos:", error);
+        console.error("Error fetching loans:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    getAllLoans();
+    if (dataSession?.token) {
+      getAllLoans();
+    }
   }, [dataSession?.token]);
-
 
   const pendingLoans = useMemo(() => {
     return liveLoans
