@@ -25,6 +25,8 @@ export async function POST(req: Request) {
 
     const getSession = await SessionService.getSession();
 
+    console.log(getSession)
+
     if (getSession.length === 0) throw new Error("No hay sessiones guardadas");
 
     if (getSession)

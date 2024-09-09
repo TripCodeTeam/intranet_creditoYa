@@ -1,3 +1,5 @@
+"use client";
+
 import FilterBox from "@/components/Email/FilterBox";
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "../styles/masiveEmails.module.css";
@@ -42,12 +44,14 @@ function MasiveEmails() {
   const [isReadySession, setIsReadySession] = useState(false);
   const [inProccess, setInProccess] = useState(false);
 
+  const [loadingSaveRemote, setLoadingSaveRemote] = useState(false);
+
   const [qr, setQr] = useState<string | null>(null);
 
   const handlerOpenMasiveMail = () => {
     try {
-      if (isReadySession === false)
-        throw new Error("Primero crea una session de whatsapp");
+      // if (isReadySession === false)
+      //   throw new Error("Primero crea una session de whatsapp");
       setOpenMails(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -57,28 +61,55 @@ function MasiveEmails() {
   };
 
   useEffect(() => {
-    const getCurrentSession = async () => {
-      setInProccess(true);
-      const response = await axios.post(
-        "api/whatsapp/get",
-        {},
-        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-      );
+    if (!socket || !dataSession?.token) return;
 
-      if (response.data.success == true) {
-        const data: scalarWhatsappSession = response.data.data;
+    const handleSessionRetrieved = (response: any) => {
+      if (response.success) {
+        const data: scalarWhatsappSession = response.data;
         setInProccess(false);
-        setSessionId(data.id as string);
+        setSessionId(data.sessionId as string);
         setIsReadySession(true);
-        toast.success("Sessiones recuperada");
-      } else if (response.data.success == false) {
+      } else {
         setInProccess(false);
-        // toast.error(response.data.error);
+        toast.error(response.error || "Error al recuperar la sesión");
       }
     };
 
-    getCurrentSession();
-  }, []);
+    const getSession = async () => {
+      try {
+        if (!socket) return;
+
+        const sessionData = await axios.post(
+          "/api/whatsapp/get",
+          {},
+          {
+            headers: { Authorization: `Bearer ${dataSession?.token}` },
+          }
+        );
+
+        if (sessionData.data.success) {
+          const sData: scalarWhatsappSession = sessionData.data.data;
+          socket.emit("getSession", { sessionId: sData.sessionId });
+
+          // Vincular el listener al evento de recuperación de sesión
+          socket.on("[whatsapp]session_retrieved", handleSessionRetrieved);
+        } else {
+          setInProccess(false);
+          toast.error("Error al recuperar la sesión desde el servidor");
+        }
+      } catch (error) {
+        setInProccess(false);
+        toast.error("Error al intentar obtener la sesión");
+      }
+    };
+
+    getSession();
+
+    // Limpiar listeners al desmontar el componente o al cambiar `socket`
+    return () => {
+      socket?.off("[whatsapp]session_retrieved", handleSessionRetrieved);
+    };
+  }, [socket, dataSession?.token]);
 
   useEffect(() => {
     if (!socket) return;
@@ -86,43 +117,60 @@ function MasiveEmails() {
     socket.on("[whatsapp]qr_obtained", (data) => {
       const qr = data.qr;
       const message = data.message;
-      if (inProccess == true) setInProccess(false);
 
+      if (inProccess == true) setInProccess(false);
       setQr(qr);
     });
 
-    socket.on("[whatsapp]isReady", async (data) => {
-      const sessionId = data.id;
-      const message = data.message;
+    socket.on(
+      "[whatsapp]isReady",
+      async (data: { id: string; message: string }) => {
+        const sessionId = data.id;
+        const message = data.message;
 
-      console.log(sessionId);
-      console.log(message);
+        console.log(sessionId);
+        console.log(message);
 
-      const addSession = await axios.post(
-        "/api/whatsapp/create",
-        {
-          sessionId,
-        },
-        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-      );
+        const addSession = await axios.post(
+          "/api/whatsapp/create",
+          {
+            data: {
+              sessionId,
+            },
+          },
+          {
+            headers: { Authorization: `Bearer ${dataSession?.token}` },
+          }
+        );
 
-      console.log(addSession.data);
+        console.log(addSession.data);
 
-      if (addSession.data.success == true) {
-        setQr(null);
-        setInProccess(false);
-        setIsReadySession(true);
-        toast.error("Session guardada exitosamente");
-      } else if (addSession.data.success == false) {
-        setQr(null);
-        setInProccess(false);
-        setIsReadySession(true);
-        toast.error("Error al guardar session");
+        if (addSession.data.success == true) {
+          setQr(null);
+          setInProccess(false);
+          setIsReadySession(true);
+          toast.success("Session guardada exitosamente");
+        } else if (addSession.data.success == false) {
+          setQr(null);
+          setInProccess(false);
+          setIsReadySession(true);
+          toast.error("Error al guardar session");
+        }
       }
+    );
+
+    socket.on("[whatsapp]remote_session_saved", (data) => {
+      console.log(data.isRemoteAuth);
+      setLoadingSaveRemote(data.isRemoteAuth);
+      if (data.isRemoteAuth == true)
+        toast.success("Configuracion de reconexion completada");
     });
 
     return () => {
       socket?.off("[whatsapp]qr_obtained");
+      socket?.off("[whatsapp]isReady");
+      socket?.off("[whatsapp]remote_session_saved")
+      ;
     };
   }, []);
 
@@ -135,7 +183,11 @@ function MasiveEmails() {
       setSessionId(sessionId);
 
       socket.emit("createSession", { id: sessionId });
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
   };
 
   const handleRemoveFile = () => {

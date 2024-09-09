@@ -3,8 +3,10 @@ import React, { useEffect } from "react";
 import styles from "./styles/verify.module.css";
 import { TbX } from "react-icons/tb";
 import socket from "@/app/socket";
+import { toast } from "sonner";
 
 function VerifySend({
+  sessionId,
   perfils,
   emails,
   phones,
@@ -14,17 +16,21 @@ function VerifySend({
   emails: JsonExcelConvert[] | string[];
   phones: JsonExcelConvert[] | string[];
   names: JsonExcelConvert[] | string[];
+  sessionId: string;
 }) {
-
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("[whatsapp]sendVerifyPhones", (data) =>
-      console.log(data.message)
-    );
+    socket.on("[whatsapp]sendVerifyPhones", (data) => {
+      toast.success(data.message);
+    });
 
     socket.emit("connected", "Conect to verify component");
-  });
+
+    return () => {
+      socket?.off("[whatsapp]sendVerifyPhones");
+    };
+  }, []);
 
   const handleSendMessages = () => {
     if (!socket) {
@@ -35,7 +41,7 @@ function VerifySend({
     console.log(phones);
 
     const data = {
-      sessionId: "66d18ee4faa0b2dd2e096b73",
+      sessionId,
       phones,
     };
 

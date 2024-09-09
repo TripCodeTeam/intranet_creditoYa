@@ -9,6 +9,7 @@ import { useGlobalContext } from "@/context/Session";
 import Modal from "../modal/modal";
 import VerifySend from "./verifySend";
 import EditorComponent from "../Editor/Editor";
+import axios from "axios";
 
 function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +17,7 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   const [masiveEmails, setMasiveEmails] = useState<string[] | null>(null);
   const [massivePhones, setMassivePhones] = useState<string[] | null>(null);
   const [massiveNames, setMassiveNames] = useState<string[] | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   const [masivePerfils, setMasivePerfils] = useState<JsonExcelConvert[] | null>(
     null
@@ -33,12 +35,28 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   useEffect(() => {
     const names = JsonFile.map((user) => user.nombre);
     const emails = JsonFile.map((user) => user.correo_electronico);
-    const phones = JsonFile.map((user) => user.telefono);
+    const phones = JsonFile.map((user) => String(user.telefono));
 
     setMasiveEmails(emails);
     setMassiveNames(names);
     setMassivePhones(phones);
     setMasivePerfils(JsonFile);
+
+    const getSessionId = async () => {
+      const response = await axios.post(
+        "/api/whatsapp/get",
+        {},
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+
+      if (response.data.success == true) {
+        const data = response.data.data;
+        console.log(data.sessionId);
+        setSessionId(data.sessionId);
+      }
+    };
+
+    getSessionId();
   }, [JsonFile]);
 
   const findEmailInDetail = (detail: JsonExcelConvert) => {
@@ -137,7 +155,11 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   return (
     <>
       <div className={styles.editorContainer}>
-        <EditorComponent send={false} success={successSendMail} email={masiveEmails} />
+        <EditorComponent
+          send={false}
+          success={successSendMail}
+          email={masiveEmails}
+        />
       </div>
 
       <div className={styles.mailDestinity}>
@@ -243,6 +265,7 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
               emails={masiveEmails}
               phones={massivePhones}
               names={massiveNames}
+              sessionId={sessionId as string}
             />
           )}
 
@@ -255,6 +278,7 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
               emails={mailSelects}
               phones={massivePhones}
               names={massiveNames}
+              sessionId={sessionId as string}
             />
           )}
       </Modal>

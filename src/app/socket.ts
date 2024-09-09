@@ -5,7 +5,8 @@ import { io, Socket } from "socket.io-client";
 let socket: Socket | undefined;
 
 if (typeof window !== "undefined") {
-  socket = io(process.env.WS_Route as string, {
+
+  socket = io("http://localhost:3000", {
     withCredentials: true,
     transports: ["websocket"], // Usar solo WebSocket
   });
