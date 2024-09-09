@@ -22,8 +22,11 @@ function RequestsContent() {
       try {
         const response = await axios.post("/api/loans/all");
 
+        console.log(response)
+
         if (response.data.success) {
           const loans = response.data.data;
+          console.log(loans)
 
           const loansWithClientInfo = await Promise.all(
             loans.map(async (loan: ScalarLoanApplication) => {
@@ -33,6 +36,8 @@ function RequestsContent() {
                   { userId: loan.userId },
                   { headers: { Authorization: `Bearer ${dataSession?.token}` } }
                 );
+
+                console.log(clientResponse)
 
                 if (clientResponse.data.success) {
                   return { ...loan, clientInfo: clientResponse.data.data };
