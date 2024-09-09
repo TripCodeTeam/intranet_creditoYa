@@ -50,8 +50,8 @@ function MasiveEmails() {
 
   const handlerOpenMasiveMail = () => {
     try {
-      // if (isReadySession === false)
-      //   throw new Error("Primero crea una session de whatsapp");
+      if (isReadySession === false)
+        throw new Error("Primero crea una session de whatsapp");
       setOpenMails(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -169,8 +169,7 @@ function MasiveEmails() {
     return () => {
       socket?.off("[whatsapp]qr_obtained");
       socket?.off("[whatsapp]isReady");
-      socket?.off("[whatsapp]remote_session_saved")
-      ;
+      socket?.off("[whatsapp]remote_session_saved");
     };
   }, []);
 
