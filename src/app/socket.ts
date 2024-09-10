@@ -5,8 +5,7 @@ import { io, Socket } from "socket.io-client";
 let socket: Socket | undefined;
 
 if (typeof window !== "undefined") {
-
-  socket = io("http://localhost:3000", {
+  socket = io(process.env.NEXT_PUBLIC_WS_Route as string, {
     withCredentials: true,
     transports: ["websocket"], // Usar solo WebSocket
   });

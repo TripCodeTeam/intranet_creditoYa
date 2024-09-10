@@ -50,8 +50,8 @@ function MasiveEmails() {
 
   const handlerOpenMasiveMail = () => {
     try {
-      if (isReadySession === false)
-        throw new Error("Primero crea una session de whatsapp");
+      // if (isReadySession === false)
+      //   throw new Error("Primero crea una session de whatsapp");
       setOpenMails(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -62,18 +62,6 @@ function MasiveEmails() {
 
   useEffect(() => {
     if (!socket || !dataSession?.token) return;
-
-    const handleSessionRetrieved = (response: any) => {
-      if (response.success) {
-        const data: scalarWhatsappSession = response.data;
-        setInProccess(false);
-        setSessionId(data.sessionId as string);
-        setIsReadySession(true);
-      } else {
-        setInProccess(false);
-        toast.error(response.error || "Error al recuperar la sesión");
-      }
-    };
 
     const getSession = async () => {
       try {
@@ -87,12 +75,11 @@ function MasiveEmails() {
           }
         );
 
+        console.log(sessionData);
+
         if (sessionData.data.success) {
           const sData: scalarWhatsappSession = sessionData.data.data;
           socket.emit("getSession", { sessionId: sData.sessionId });
-
-          // Vincular el listener al evento de recuperación de sesión
-          socket.on("[whatsapp]session_retrieved", handleSessionRetrieved);
         } else {
           setInProccess(false);
           toast.error("Error al recuperar la sesión desde el servidor");
@@ -104,11 +91,6 @@ function MasiveEmails() {
     };
 
     getSession();
-
-    // Limpiar listeners al desmontar el componente o al cambiar `socket`
-    return () => {
-      socket?.off("[whatsapp]session_retrieved", handleSessionRetrieved);
-    };
   }, [socket, dataSession?.token]);
 
   useEffect(() => {
@@ -143,12 +125,13 @@ function MasiveEmails() {
           }
         );
 
-        console.log(addSession.data);
+        // console.log(addSession.data);
 
         if (addSession.data.success == true) {
           setQr(null);
           setInProccess(false);
           setIsReadySession(true);
+          setSessionId(addSession.data.sessionId);
           toast.success("Session guardada exitosamente");
         } else if (addSession.data.success == false) {
           setQr(null);
@@ -179,6 +162,7 @@ function MasiveEmails() {
 
       setInProccess(true);
       const sessionId = generateSessionName();
+      console.log(sessionId);
       setSessionId(sessionId);
 
       socket.emit("createSession", { id: sessionId });
