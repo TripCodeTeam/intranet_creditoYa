@@ -39,8 +39,12 @@ function AllReports({
         {issues?.length === 0 && <p>No hay reportes</p>}
         {issues &&
           issues.length > 0 &&
-          issues.map((issue) => (
-            <IssueCard issue={issue} openIssue={() => openIssue(issue)} />
+          issues.map((issue, index) => (
+            <IssueCard
+              key={index}
+              issue={issue}
+              openIssue={() => openIssue(issue)}
+            />
           ))}
       </div>
     </>

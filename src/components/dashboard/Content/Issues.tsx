@@ -87,7 +87,7 @@ function Issues() {
             { headers: { Authorization: `Bearer ${dataSession?.token}` } }
           );
 
-          console.log(addImage.data)
+          console.log(addImage.data);
 
           if (addImage.data.success == true) {
             imagesLoad.push(addImage.data.data);
@@ -299,8 +299,9 @@ function Issues() {
                 <h4>Imagenes</h4>
                 {onlyIssueData.images?.length === 0 && <h5>Sin imagenes</h5>}
                 <div>
-                  {onlyIssueData.images?.map((image) => (
+                  {onlyIssueData.images?.map((image, index) => (
                     <Image
+                      key={index}
                       width={200}
                       height={200}
                       src={image}
