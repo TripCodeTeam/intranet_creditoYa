@@ -48,18 +48,6 @@ function MasiveEmails() {
 
   const [qr, setQr] = useState<string | null>(null);
 
-  const handlerOpenMasiveMail = () => {
-    try {
-      // if (isReadySession === false)
-      //   throw new Error("Primero crea una session de whatsapp");
-      setOpenMails(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    }
-  };
-
   useEffect(() => {
     if (!socket || !dataSession?.token) return;
 
@@ -155,6 +143,18 @@ function MasiveEmails() {
       socket?.off("[whatsapp]remote_session_saved");
     };
   }, []);
+
+  const handlerOpenMasiveMail = () => {
+    try {
+      // if (isReadySession === false)
+      //   throw new Error("Primero crea una session de whatsapp");
+      setOpenMails(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
 
   const handlerCreateSession = () => {
     try {

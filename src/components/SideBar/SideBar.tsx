@@ -12,6 +12,7 @@ import {
   TbX,
   TbMobiledata,
   TbTool,
+  TbProgressX,
 } from "react-icons/tb";
 
 import Image from "next/image";
@@ -146,6 +147,27 @@ function SideBar() {
                   </div>
                   <p className={styles.messageBtn}>Herramientas</p>
                 </div>
+
+                <div
+                  className={
+                    option == "Issues"
+                      ? styles.btnOpenOptSelect
+                      : styles.btnOpenOpt
+                  }
+                  onClick={() => handleChangeOption({ option: "Issues" })}
+                >
+                  <div className={styles.subBtnOptionOpen}>
+                    <TbProgressX
+                      className={
+                        option == "Issues"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={18}
+                    />
+                  </div>
+                  <p className={styles.messageBtn}>FeedBacks</p>
+                </div>
               </>
             )}
 
@@ -238,6 +260,28 @@ function SideBar() {
                     />
                   </div>
                 </div>
+
+                <div
+                  className={styles.containerSubBtnOpt}
+                  onClick={() => handleChangeOption({ option: "Issues" })}
+                >
+                  <div
+                    className={
+                      option == "Issues"
+                        ? styles.subBtnOptionSelect
+                        : styles.subBtnOption
+                    }
+                  >
+                    <TbProgressX
+                      className={
+                        option == "Issues"
+                          ? styles.iconOptionSelect
+                          : styles.iconOption
+                      }
+                      size={25}
+                    />
+                  </div>
+                </div>
               </>
             )}
           </div>
@@ -268,9 +312,13 @@ function SideBar() {
                     </p>
                   </div>
                 </div>
-                {/* <div className={styles.threePoints}>
-                  <TbLineDashed className={styles.iconThreePoint} size={20} />
-                </div> */}
+              </div>
+
+              <div className={styles.btnCellExit} onClick={handleLogout}>
+                <p>Cerrar Session</p>
+                <div className={styles.btnCellBoxIcon}>
+                  <FiLogOut size={20} className={styles.iconExit} />
+                </div>
               </div>
             </>
           )}

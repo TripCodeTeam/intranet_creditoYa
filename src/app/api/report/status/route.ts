@@ -1,7 +1,12 @@
-import LoanApplicationService from "@/classes/LoanServices";
-import { ScalarLoanApplication } from "@/types/session";
-import { NextResponse } from "next/server";
+import IssuesService from "@/classes/IssuesService";
 import TokenService from "@/classes/TokenServices";
+import { NextResponse } from "next/server";
+
+interface reqReport {
+  title: string;
+  description: string;
+  images: string[];
+}
 
 export async function POST(req: Request) {
   try {
@@ -23,10 +28,16 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const data: ScalarLoanApplication = await req.json();
-    const response = await LoanApplicationService.create(data);
+    const { reportId, status } = await req.json();
 
-    return NextResponse.json({ success: true, data: response });
+    if (!reportId) throw new Error("reportId is required!");
+    if (!status) throw new Error("status is required!");
+
+    const newReport = await IssuesService.changeStatus(reportId, status);
+
+    if (newReport === null) throw new Error("Error al crear reporte");
+
+    return NextResponse.json({ success: true, data: newReport });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

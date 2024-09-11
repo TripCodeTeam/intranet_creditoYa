@@ -8,6 +8,7 @@ import ListClients from "./Content/ListClients";
 import MailsComponents from "./Content/Mails";
 import AcceptContent from "./Content/Accept";
 import UserProfile from "./Content/UserProfile";
+import Issues from "./Content/Issues";
 
 function ContentOptions() {
   const { option } = useDashboardContext();
@@ -20,6 +21,7 @@ function ContentOptions() {
         {option == "Clients" && <ListClients />}
         {option == "Emails" && <MailsComponents />}
         {option == "User" && <UserProfile />}
+        {option == "Issues" && <Issues />}
       </div>
     </>
   );

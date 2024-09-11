@@ -539,297 +539,314 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             </div>
           </div>
 
-          <div className={styles.requiredDocumentsAction}>
-            <h3 className={styles.titleDocsObli}>Documentos Obligatorios</h3>
-            <p
-              className={styles.btnRejectDocs}
-              onClick={() => setIsRejectDocument(!isRejectDocument)}
-            >
-              {isRejectDocument ? "Listo" : "Rechazar documentos"}
-            </p>
-          </div>
-
-          <div className={styles.barDocs}>
-            <div className={styles.docBox}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div className={styles.barIconPdf}>
-                  <TbPdf className={styles.iconPdf} size={30} />
-                </div>
-                <div style={{ display: "grid", placeContent: "center" }}>
-                  {dataLoan?.fisrt_flyer !== "No definido" &&
-                    dataLoan?.upid_first_flayer !== "No definido" && (
-                      <TbCircleCheck
-                        size={20}
-                        style={{ color: "var(--green-400)" }}
-                      />
-                    )}
-
-                  {dataLoan?.fisrt_flyer == "No definido" &&
-                    dataLoan?.upid_first_flayer == "No definido" && (
-                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
-                    )}
-                </div>
+          {dataClient?.currentCompanie !== "valor_agregado" && (
+            <>
+              <div className={styles.requiredDocumentsAction}>
+                <h3 className={styles.titleDocsObli}>
+                  Documentos Obligatorios
+                </h3>
+                <p
+                  className={styles.btnRejectDocs}
+                  onClick={() => setIsRejectDocument(!isRejectDocument)}
+                >
+                  {isRejectDocument ? "Listo" : "Rechazar documentos"}
+                </p>
               </div>
-              <p>Primer Volante</p>
-              <div className={styles.actionDocument}>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleOpenDocs(dataLoan?.fisrt_flyer as string)
-                    }
+              <div className={styles.barDocs}>
+                <div className={styles.docBox}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    Revisar
-                  </button>
-                </div>
+                    <div className={styles.barIconPdf}>
+                      <TbPdf className={styles.iconPdf} size={30} />
+                    </div>
+                    <div style={{ display: "grid", placeContent: "center" }}>
+                      {dataLoan?.fisrt_flyer !== "No definido" &&
+                        dataLoan?.upid_first_flayer !== "No definido" && (
+                          <TbCircleCheck
+                            size={20}
+                            style={{ color: "var(--green-400)" }}
+                          />
+                        )}
 
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        dataLoan?.fisrt_flyer as string,
-                        "Primer volante de pago"
-                      )
-                    }
-                  >
-                    Descargar
-                  </button>
-                </div>
-
-                {isRejectDocument &&
-                  dataLoan?.fisrt_flyer !== "No definido" &&
-                  dataLoan?.upid_first_flayer !== "No definido" && (
+                      {dataLoan?.fisrt_flyer == "No definido" &&
+                        dataLoan?.upid_first_flayer == "No definido" && (
+                          <TbXboxX
+                            size={20}
+                            style={{ color: "var(--red-600)" }}
+                          />
+                        )}
+                    </div>
+                  </div>
+                  <p>Primer Volante</p>
+                  <div className={styles.actionDocument}>
                     <div className={styles.actionDocBox}>
                       <button
                         onClick={() =>
-                          handleRejectDocument({
-                            type: "paid_flyer_01",
-                            upId: dataLoan?.upid_first_flayer as string,
-                            userId: dataLoan?.userId as string,
-                          })
+                          handleOpenDocs(dataLoan?.fisrt_flyer as string)
                         }
                       >
-                        Rechazar
+                        Revisar
                       </button>
                     </div>
-                  )}
-              </div>
-            </div>
 
-            <div className={styles.docBox}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div className={styles.barIconPdf}>
-                  <TbPdf className={styles.iconPdf} size={30} />
-                </div>
-                <div style={{ display: "grid", placeContent: "center" }}>
-                  {dataLoan?.second_flyer !== "No definido" &&
-                    dataLoan?.upid_second_flyer !== "No definido" && (
-                      <TbCircleCheck
-                        size={20}
-                        style={{ color: "var(--green-400)" }}
-                      />
-                    )}
-
-                  {dataLoan?.second_flyer == "No definido" &&
-                    dataLoan?.upid_second_flyer == "No definido" && (
-                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
-                    )}
-                </div>
-              </div>
-              <p>Segundo Volante</p>
-              <div className={styles.actionDocument}>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleOpenDocs(dataLoan?.second_flyer as string)
-                    }
-                  >
-                    Revisar
-                  </button>
-                </div>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        dataLoan?.second_flyer as string,
-                        "Segundo volante de pago"
-                      )
-                    }
-                  >
-                    Descargar
-                  </button>
-                </div>
-
-                {isRejectDocument &&
-                  dataLoan?.second_flyer !== "No definido" &&
-                  dataLoan?.upid_second_flyer !== "No definido" && (
                     <div className={styles.actionDocBox}>
                       <button
                         onClick={() =>
-                          handleRejectDocument({
-                            type: "paid_flyer_02",
-                            upId: dataLoan?.upid_second_flyer as string,
-                            userId: dataLoan?.userId as string,
-                          })
+                          handleDownload(
+                            dataLoan?.fisrt_flyer as string,
+                            "Primer volante de pago"
+                          )
                         }
                       >
-                        Rechazar
+                        Descargar
                       </button>
                     </div>
-                  )}
-              </div>
-            </div>
 
-            <div className={styles.docBox}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div className={styles.barIconPdf}>
-                  <TbPdf className={styles.iconPdf} size={30} />
+                    {isRejectDocument &&
+                      dataLoan?.fisrt_flyer !== "No definido" &&
+                      dataLoan?.upid_first_flayer !== "No definido" && (
+                        <div className={styles.actionDocBox}>
+                          <button
+                            onClick={() =>
+                              handleRejectDocument({
+                                type: "paid_flyer_01",
+                                upId: dataLoan?.upid_first_flayer as string,
+                                userId: dataLoan?.userId as string,
+                              })
+                            }
+                          >
+                            Rechazar
+                          </button>
+                        </div>
+                      )}
+                  </div>
                 </div>
-                <div style={{ display: "grid", placeContent: "center" }}>
-                  {dataLoan?.third_flyer !== "No definido" &&
-                    dataLoan?.upid_third_flayer !== "No definido" && (
-                      <TbCircleCheck
-                        size={20}
-                        style={{ color: "var(--green-400)" }}
-                      />
-                    )}
 
-                  {dataLoan?.third_flyer == "No definido" &&
-                    dataLoan?.upid_third_flayer == "No definido" && (
-                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
-                    )}
-                </div>
-              </div>
-              <p>Tercer Volante</p>
-              <div className={styles.actionDocument}>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleOpenDocs(dataLoan?.third_flyer as string)
-                    }
+                <div className={styles.docBox}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    Revisar
-                  </button>
-                </div>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        dataLoan?.third_flyer as string,
-                        "Tercer volante de pago"
-                      )
-                    }
-                  >
-                    Descargar
-                  </button>
-                </div>
+                    <div className={styles.barIconPdf}>
+                      <TbPdf className={styles.iconPdf} size={30} />
+                    </div>
+                    <div style={{ display: "grid", placeContent: "center" }}>
+                      {dataLoan?.second_flyer !== "No definido" &&
+                        dataLoan?.upid_second_flyer !== "No definido" && (
+                          <TbCircleCheck
+                            size={20}
+                            style={{ color: "var(--green-400)" }}
+                          />
+                        )}
 
-                {isRejectDocument &&
-                  dataLoan?.third_flyer !== "No definido" &&
-                  dataLoan?.upid_third_flayer !== "No definido" && (
+                      {dataLoan?.second_flyer == "No definido" &&
+                        dataLoan?.upid_second_flyer == "No definido" && (
+                          <TbXboxX
+                            size={20}
+                            style={{ color: "var(--red-600)" }}
+                          />
+                        )}
+                    </div>
+                  </div>
+                  <p>Segundo Volante</p>
+                  <div className={styles.actionDocument}>
                     <div className={styles.actionDocBox}>
                       <button
                         onClick={() =>
-                          handleRejectDocument({
-                            type: "paid_flyer_03",
-                            upId: dataLoan?.upid_third_flayer as string,
-                            userId: dataLoan?.userId as string,
-                          })
+                          handleOpenDocs(dataLoan?.second_flyer as string)
                         }
                       >
-                        Rechazar
+                        Revisar
                       </button>
                     </div>
-                  )}
-              </div>
-            </div>
-
-            <div className={styles.docBox}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div className={styles.barIconPdf}>
-                  <TbPdf className={styles.iconPdf} size={30} />
-                </div>
-                <div style={{ display: "grid", placeContent: "center" }}>
-                  {dataLoan?.labor_card !== "No definido" &&
-                    dataLoan?.upid_labor_card !== "No definido" && (
-                      <TbCircleCheck
-                        size={20}
-                        style={{ color: "var(--green-400)" }}
-                      />
-                    )}
-
-                  {dataLoan?.labor_card == "No definido" &&
-                    dataLoan?.upid_labor_card == "No definido" && (
-                      <TbXboxX size={20} style={{ color: "var(--red-600)" }} />
-                    )}
-                </div>
-              </div>
-              <p>Carta Laboral</p>
-              <div className={styles.actionDocument}>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleOpenDocs(dataLoan?.labor_card as string)
-                    }
-                  >
-                    Revisar
-                  </button>
-                </div>
-                <div className={styles.actionDocBox}>
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        dataLoan?.labor_card as string,
-                        "Carta laboral"
-                      )
-                    }
-                  >
-                    Descargar
-                  </button>
-                </div>
-                {isRejectDocument &&
-                  dataLoan?.labor_card !== "No definido" &&
-                  dataLoan?.upid_labor_card !== "No definido" && (
                     <div className={styles.actionDocBox}>
                       <button
                         onClick={() =>
-                          handleRejectDocument({
-                            type: "labor_card",
-                            upId: dataLoan?.upid_labor_card as string,
-                            userId: dataLoan?.userId as string,
-                          })
+                          handleDownload(
+                            dataLoan?.second_flyer as string,
+                            "Segundo volante de pago"
+                          )
                         }
                       >
-                        Rechazar
+                        Descargar
                       </button>
                     </div>
-                  )}
+
+                    {isRejectDocument &&
+                      dataLoan?.second_flyer !== "No definido" &&
+                      dataLoan?.upid_second_flyer !== "No definido" && (
+                        <div className={styles.actionDocBox}>
+                          <button
+                            onClick={() =>
+                              handleRejectDocument({
+                                type: "paid_flyer_02",
+                                upId: dataLoan?.upid_second_flyer as string,
+                                userId: dataLoan?.userId as string,
+                              })
+                            }
+                          >
+                            Rechazar
+                          </button>
+                        </div>
+                      )}
+                  </div>
+                </div>
+
+                <div className={styles.docBox}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div className={styles.barIconPdf}>
+                      <TbPdf className={styles.iconPdf} size={30} />
+                    </div>
+                    <div style={{ display: "grid", placeContent: "center" }}>
+                      {dataLoan?.third_flyer !== "No definido" &&
+                        dataLoan?.upid_third_flayer !== "No definido" && (
+                          <TbCircleCheck
+                            size={20}
+                            style={{ color: "var(--green-400)" }}
+                          />
+                        )}
+
+                      {dataLoan?.third_flyer == "No definido" &&
+                        dataLoan?.upid_third_flayer == "No definido" && (
+                          <TbXboxX
+                            size={20}
+                            style={{ color: "var(--red-600)" }}
+                          />
+                        )}
+                    </div>
+                  </div>
+                  <p>Tercer Volante</p>
+                  <div className={styles.actionDocument}>
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleOpenDocs(dataLoan?.third_flyer as string)
+                        }
+                      >
+                        Revisar
+                      </button>
+                    </div>
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleDownload(
+                            dataLoan?.third_flyer as string,
+                            "Tercer volante de pago"
+                          )
+                        }
+                      >
+                        Descargar
+                      </button>
+                    </div>
+
+                    {isRejectDocument &&
+                      dataLoan?.third_flyer !== "No definido" &&
+                      dataLoan?.upid_third_flayer !== "No definido" && (
+                        <div className={styles.actionDocBox}>
+                          <button
+                            onClick={() =>
+                              handleRejectDocument({
+                                type: "paid_flyer_03",
+                                upId: dataLoan?.upid_third_flayer as string,
+                                userId: dataLoan?.userId as string,
+                              })
+                            }
+                          >
+                            Rechazar
+                          </button>
+                        </div>
+                      )}
+                  </div>
+                </div>
+
+                <div className={styles.docBox}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div className={styles.barIconPdf}>
+                      <TbPdf className={styles.iconPdf} size={30} />
+                    </div>
+                    <div style={{ display: "grid", placeContent: "center" }}>
+                      {dataLoan?.labor_card !== "No definido" &&
+                        dataLoan?.upid_labor_card !== "No definido" && (
+                          <TbCircleCheck
+                            size={20}
+                            style={{ color: "var(--green-400)" }}
+                          />
+                        )}
+
+                      {dataLoan?.labor_card == "No definido" &&
+                        dataLoan?.upid_labor_card == "No definido" && (
+                          <TbXboxX
+                            size={20}
+                            style={{ color: "var(--red-600)" }}
+                          />
+                        )}
+                    </div>
+                  </div>
+                  <p>Carta Laboral</p>
+                  <div className={styles.actionDocument}>
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleOpenDocs(dataLoan?.labor_card as string)
+                        }
+                      >
+                        Revisar
+                      </button>
+                    </div>
+                    <div className={styles.actionDocBox}>
+                      <button
+                        onClick={() =>
+                          handleDownload(
+                            dataLoan?.labor_card as string,
+                            "Carta laboral"
+                          )
+                        }
+                      >
+                        Descargar
+                      </button>
+                    </div>
+                    {isRejectDocument &&
+                      dataLoan?.labor_card !== "No definido" &&
+                      dataLoan?.upid_labor_card !== "No definido" && (
+                        <div className={styles.actionDocBox}>
+                          <button
+                            onClick={() =>
+                              handleRejectDocument({
+                                type: "labor_card",
+                                upId: dataLoan?.upid_labor_card as string,
+                                userId: dataLoan?.userId as string,
+                              })
+                            }
+                          >
+                            Rechazar
+                          </button>
+                        </div>
+                      )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
 
           <h3 className={styles.titleDocs}>Otros Documentos</h3>
           <div className={styles.barDocs}>

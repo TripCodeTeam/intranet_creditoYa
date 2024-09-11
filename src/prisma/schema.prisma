@@ -79,6 +79,17 @@ model WhatsappSession {
     updated_at DateTime @updatedAt
 }
 
+model ReportIssue {
+    id          String       @id @default(uuid()) @map("_id")
+    title       String
+    description String
+    images      String[]
+    app         appReport
+    status      StatusIssues @default(activo)
+    created_at  DateTime     @default(now())
+    update_at   DateTime     @updatedAt
+}
+
 model Document {
     id            String        @id @default(uuid()) @map("_id")
     user          User          @relation(fields: [userId], references: [id])
@@ -121,4 +132,15 @@ enum companiesUser {
     pichichi_coorte
     valor_agregado
     no
+}
+
+enum StatusIssues {
+    activo
+    pendiente
+    corregido
+}
+
+enum appReport {
+    intranet
+    clients
 }

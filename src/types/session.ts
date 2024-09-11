@@ -87,6 +87,17 @@ export type ScalarLoanApplication = {
   updated_at: Date;
 };
 
+export type ScalarIssues = {
+  id?: string;
+  title: string;
+  description: string;
+  images?: string[];
+  app: appReport;
+  status?: statusIssue;
+  created_at?: Date;
+  updated_at?: Date;
+};
+
 export type Status =
   | "Pendiente"
   | "Aprobado"
@@ -102,13 +113,23 @@ export type HouseType = "Familiar" | "Propia" | "Arrendada";
 
 export type TypeRol = "Customer_services" | "Manager" | "Loan_manager";
 
+export type statusIssue = "activo" | "pendiente" | "corregido";
+
+export type appReport = "intranet" | "clients";
+
 export interface GlobalContextType {
   dataSession: SessionAuth | null;
   isLoading: boolean;
   setDataSession: (option: SessionAuth) => void;
 }
 
-export type OptionDash = "Request" | "Accepts" | "Clients" | "Emails" | "User";
+export type OptionDash =
+  | "Request"
+  | "Accepts"
+  | "Clients"
+  | "Emails"
+  | "User"
+  | "Issues";
 
 export interface DashboardContextType {
   option: OptionDash;

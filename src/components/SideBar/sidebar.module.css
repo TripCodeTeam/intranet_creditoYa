@@ -160,6 +160,9 @@
 
 .boxUser {
   padding-bottom: 3em;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .detailUser {
@@ -282,7 +285,8 @@
   border-radius: 8px;
 }
 
-.btnCellBoxIcon, .btnCellExit p {
+.btnCellBoxIcon,
+.btnCellExit p {
   display: grid;
   place-content: center;
 }
