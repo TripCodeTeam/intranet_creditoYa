@@ -63,11 +63,13 @@ function MasiveEmails() {
           }
         );
 
-        console.log(sessionData);
+        // console.log(sessionData);
 
-        if (sessionData.data.success) {
+        if (sessionData.data.success == true) {
           const sData: scalarWhatsappSession = sessionData.data.data;
-          socket.emit("getSession", { sessionId: sData.sessionId });
+          setSessionId(sData.sessionId)
+          setIsReadySession(true)
+          setInProccess(false)
         } else {
           setInProccess(false);
           toast.error("Error al recuperar la sesión desde el servidor");
@@ -119,7 +121,7 @@ function MasiveEmails() {
           setQr(null);
           setInProccess(false);
           setIsReadySession(true);
-          setSessionId(addSession.data.sessionId);
+          setSessionId(sessionId);
           toast.success("Session guardada exitosamente");
         } else if (addSession.data.success == false) {
           setQr(null);
