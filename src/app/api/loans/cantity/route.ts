@@ -1,6 +1,5 @@
 import LoanApplicationService from "@/classes/LoanServices";
 import TokenService from "@/classes/TokenServices";
-// import TokenService from "@/classes/TokenServices";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -17,33 +16,33 @@ export async function POST(req: Request) {
     const decodedToken = TokenService.verifyToken(
       token,
       process.env.JWT_SECRET as string
-    ); // Reemplaza "tu-clave-secreta" con tu clave secreta
+    );
 
     if (!decodedToken) {
       throw new Error("Token no válido");
     }
 
-    const { page, pageSize, searchTerm, orderBy, filterByAmount } =
-      await req.json();
+    const { page, pageSize } = await req.json();
 
-    const response = await LoanApplicationService.getAll(
+    const response = await LoanApplicationService.getLoansWithDefinedNewCantity(
       page || 1,
-      pageSize || 5,
-      searchTerm || null,
-      orderBy || "asc",
-      filterByAmount || false
+      pageSize || 5
     );
 
+    console.log(response);
+
     if (!response) {
-      throw new Error("Error in obtaining requests");
+      throw new Error("Error in obtaining pending loans");
     }
 
-    return NextResponse.json({ success: true, data: response });
+    return NextResponse.json({
+      success: true,
+      data: response.data,
+      total: response.total,
+    });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });
     }
   }
 }
-
-LoanApplicationService.getAll();

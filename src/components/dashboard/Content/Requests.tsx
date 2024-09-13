@@ -1,113 +1,70 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+// RequestsContent.tsx
+import React, { useState, useEffect } from "react";
 import styles from "./styles/Request.module.css";
-import { ScalarClient, ScalarLoanApplication } from "@/types/session";
+import { ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
-import CardRequest from "./Components/CardReq";
+import LoansList from "./Components/listCardsLoans";
 import HeaderContent from "./Components/HeaderContent";
 import { useGlobalContext } from "@/context/Session";
-import { TbRss } from "react-icons/tb";
 import { useMediaQuery } from "react-responsive";
 import Loading from "@/app/dashboard/loading";
 
 function RequestsContent() {
   const isMobile = useMediaQuery({ query: "(max-width: 700px)" });
-  const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
-    null
-  );
+  const [pendingLoans, setPendingLoans] = useState<
+    ScalarLoanApplication[] | null
+  >(null);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const { dataSession } = useGlobalContext();
 
   useEffect(() => {
-    const getAllLoans = async () => {
+    const getPendingLoans = async () => {
+      setLoading(true);
       try {
-        const response = await axios.post("/api/loans/all");
-
-        console.log(response)
+        const response = await axios.post(
+          "/api/loans/pendings",
+          { page },
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+        );
 
         if (response.data.success) {
-          const loans = response.data.data;
-          // console.log(loans)
-
-          const loansWithClientInfo = await Promise.all(
-            loans.map(async (loan: ScalarLoanApplication) => {
-              try {
-                const clientResponse = await axios.post(
-                  "/api/clients/id",
-                  { userId: loan.userId },
-                  { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-                );
-
-                // console.log(clientResponse)
-
-                if (clientResponse.data.success) {
-                  return { ...loan, clientInfo: clientResponse.data.data };
-                } else {
-                  console.error(
-                    `Error fetching client info for userId ${loan.userId}:`,
-                    clientResponse.data.error
-                  );
-                }
-              } catch (clientError) {
-                console.error(
-                  `Error during client info fetch for userId ${loan.userId}:`,
-                  clientError
-                );
-              }
-              return loan;
-            })
-          );
-
-          setLiveLoans(loansWithClientInfo);
+          const data = response.data.data;
+          setPendingLoans(data);
+          setTotal(response.data.total);
         } else {
-          console.error("Error fetching loans:", response.data.error);
+          console.error("Error fetching pending loans:", response.data.error);
         }
       } catch (error) {
-        console.error("Error fetching loans:", error);
+        console.error("Error fetching pending loans:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (dataSession?.token) {
-      getAllLoans();
-    }
-  }, [dataSession?.token]);
-
-  const pendingLoans = useMemo(() => {
-    return liveLoans
-      ? liveLoans.filter((loan) => loan.status === "Pendiente" && loan.id)
-      : [];
-  }, [liveLoans]);
+    getPendingLoans();
+  }, [page, dataSession?.token]);
 
   return (
     <div className={styles.containerLoads}>
-      {!isMobile && <HeaderContent label="Solicitudes de prestamos" />}
-
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className={styles.listLiveRequests}>
-          {pendingLoans.length > 0 ? (
-            pendingLoans.map((loan) => (
-              <CardRequest
-                user={loan.clientInfo as ScalarClient}
-                loan={loan}
-                token={dataSession?.token as string}
-                key={loan.id}
-              />
-            ))
-          ) : (
-            <div className={styles.containerVoidReqss}>
-              <div className={styles.centerContainerVoidReqss}>
-                <div className={styles.boxRssIcon}>
-                  <TbRss className={styles.iconRss} size={20} />
-                </div>
-                <p>Solicitudes en tiempo real</p>
-              </div>
-            </div>
-          )}
-        </div>
+      {!isMobile && (
+        <HeaderContent label="Solicitudes de préstamos Pendientes" />
       )}
+
+      <div>
+        {loading ? (
+          <Loading />
+        ) : (
+          <LoansList
+            pendingLoans={pendingLoans}
+            token={dataSession?.token as string}
+            page={page}
+            setPage={setPage}
+            total={total}
+          />
+        )}
+      </div>
     </div>
   );
 }

@@ -86,6 +86,36 @@
   filter: drop-shadow(0px 0px 10px #383838);
 }
 
+.pagination {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.pagination button {
+  outline: none;
+  padding: 5px 10px;
+  background: var(--white-100);
+  border: 1px solid var(--white-300);
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.centerBtnSkip {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.boxIconSkipPage {
+  display: grid;
+  place-content: center;
+}
+
 @media screen and (max-width: 700px) {
   .mainContainer {
     padding: 0px 10px;

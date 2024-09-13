@@ -6,34 +6,38 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import CardUser from "./Components/cardUser";
 import styles from "./styles/listClients.module.css";
-import { TbArrowLeft } from "react-icons/tb";
+import { TbArrowLeft, TbArrowRight } from "react-icons/tb";
 import HeaderContent from "./Components/HeaderContent";
 import ContainerMail from "@/components/Email/ContainerMail";
 
 function ListClients() {
   const { dataSession } = useGlobalContext();
 
-  // console.log(dataSession)
-
   const [dataUsers, setDataUsers] = useState<ScalarClient[] | null>(null);
   const [option, setOption] = useState<string | null>(null);
   const [clientId, setClientId] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize] = useState<number>(8);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
     const getAllUsers = async () => {
       const response = await axios.post(
         "/api/clients/all",
-        {},
+        { page, pageSize },
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      // console.log(response.data);
-      const data = response.data.data;
+      const { data, totalCount } = response.data;
       setDataUsers(data);
+
+      // Calculate total pages based on totalCount and pageSize
+      const calculatedTotalPages = Math.ceil(totalCount / pageSize);
+      setTotalPages(calculatedTotalPages);
     };
 
     getAllUsers();
-  }, [dataSession?.token]);
+  }, [dataSession?.token, page]);
 
   const handleChangeOption = ({
     option,
@@ -47,13 +51,19 @@ function ListClients() {
   };
 
   const handleSuccessSendEmail = (complete: boolean) => {
-    if (complete == true) setOption(null);
+    if (complete) setOption(null);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
 
   return (
     <>
       <div className={styles.mainContainer}>
-        <HeaderContent label="Gestion de usuarios" />
+        <HeaderContent label="Gestión de usuarios" />
 
         {option !== null && (
           <div className={styles.btnBack}>
@@ -64,28 +74,24 @@ function ListClients() {
               <div className={styles.boxIconBtnBack}>
                 <TbArrowLeft size={20} />
               </div>
-              <p>Atras</p>
+              <p>Atrás</p>
             </div>
           </div>
         )}
 
         {option == null && (
           <div className={styles.containerListUsers}>
-            {dataUsers &&
-              dataUsers.length > 0 &&
-              dataUsers?.map((user) => (
+            {dataUsers && dataUsers.length > 0 ? (
+              dataUsers.map((user) => (
                 <CardUser
                   changeOption={handleChangeOption}
                   user={user}
                   token={dataSession?.token as string}
                   key={user.id}
                 />
-              ))}
-
-            {dataUsers && dataUsers.length === 0 && (
-              <>
-                <p>Sin Usuarios</p>
-              </>
+              ))
+            ) : (
+              <p>Sin Usuarios</p>
             )}
           </div>
         )}
@@ -97,6 +103,33 @@ function ListClients() {
             token={dataSession?.token as string}
           />
         )}
+
+        {/* Controles de paginación */}
+        <div className={styles.pagination}>
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          >
+            <div className={styles.centerBtnSkip}>
+              <div className={styles.boxIconSkipPage}>
+                <TbArrowLeft size={20} />
+              </div>
+              <p>Anterior</p>
+            </div>
+          </button>
+          {/* <span>{`Página ${page} de ${totalPages}`}</span> */}
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages}
+          >
+            <div className={styles.centerBtnSkip}>
+              <p>Siguiente</p>
+              <div className={styles.boxIconSkipPage}>
+                <TbArrowRight size={20} />
+              </div>
+            </div>
+          </button>
+        </div>
       </div>
     </>
   );

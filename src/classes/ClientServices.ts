@@ -34,8 +34,20 @@ class ClientServices {
     return prisma.user.findUnique({ where: { id } });
   }
 
-  static async all(): Promise<User[]> {
-    return prisma.user.findMany();
+  // Paginated method to get users
+  static async all(
+    page: number = 1,
+    pageSize: number = 8
+  ): Promise<{ users: User[]; totalCount: number }> {
+    const skip = (page - 1) * pageSize;
+    const [users, totalCount] = await Promise.all([
+      prisma.user.findMany({
+        skip: skip,
+        take: pageSize,
+      }),
+      prisma.user.count(), // Cuenta el total de usuarios
+    ]);
+    return { users, totalCount };
   }
 
   // Update user method

@@ -1,14 +1,15 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import styles from "./styles/accept.module.css";
 import HeaderContent from "./Components/HeaderContent";
-import { ScalarClient, ScalarLoanApplication } from "@/types/session";
-import CardRequest from "./Components/CardReq";
+import { ScalarLoanApplication } from "@/types/session";
 import axios from "axios";
 import { useGlobalContext } from "@/context/Session";
 import Loading from "@/app/dashboard/loading";
 import Image from "next/image";
-
 import noDataImg from "@/assets/out-bro.svg";
+import LoansList from "./Components/listCardsLoans"; // Asegúrate de ajustar la ruta según la ubicación real del archivo
 
 function AcceptContent() {
   const [liveLoans, setLiveLoans] = useState<ScalarLoanApplication[] | null>(
@@ -16,124 +17,108 @@ function AcceptContent() {
   );
   const [status, setStatus] = useState<string>("Aprobado");
   const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
   const { dataSession } = useGlobalContext();
 
   useEffect(() => {
-    const getAllLoans = async () => {
+    const getLoans = async () => {
+      setLoading(true);
       try {
-        const response = await axios.post("/api/loans/all");
-        const loans = response.data.data;
+        // Determinar la URL de la API en función del estado
+        let url;
+        switch (status) {
+          case "Aprobado":
+            url = "/api/loans/approved"; // Ajusta la ruta según tu API
+            break;
+          case "Aplazado":
+            url = "/api/loans/deferred"; // Ajusta la ruta según tu API
+            break;
+          case "Cantity":
+            url = "/api/loans/cantity"; // Ajusta la ruta según tu API
+            break;
+          default:
+            throw new Error("Estado desconocido");
+        }
 
-        // Obtener la información de los clientes
-        const loansWithClientInfo = await Promise.all(
-          loans.map(async (loan: ScalarLoanApplication) => {
-            const clientResponse = await axios.post(
-              "/api/clients/id",
-              {
-                userId: loan.userId,
-              },
-              { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-            );
-            if (clientResponse.data.success) {
-              const dataUser = clientResponse.data.data;
-              return { ...loan, clientInfo: dataUser };
-            }
-            return loan; // En caso de que la llamada falle, retorna el préstamo original
-          })
+        // Obtener las solicitudes del estado seleccionado con paginación
+        const response = await axios.post(
+          url,
+          { page, pageSize: 5 }, // Paginación: página actual, 5 solicitudes por página
+          { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
 
-        setLiveLoans(loansWithClientInfo);
-        setLoading(false);
+        // console.log(response.data);
+
+        const { data, totalCount } = response.data; // Suponiendo que el total se devuelve en la respuesta
+        setLiveLoans(data);
+        setTotal(totalCount); // Asignar el total de solicitudes
       } catch (error) {
         console.error("Error al obtener las solicitudes de préstamos:", error);
+      } finally {
         setLoading(false);
       }
     };
 
-    getAllLoans();
-  }, [dataSession?.token]);
+    getLoans();
+  }, [status, page, dataSession?.token]);
 
   const handleChangeStatus = (status: string) => {
     setStatus(status);
+    setPage(1); // Reiniciar la página a 1 cuando cambie el estado
   };
 
-  const filteredLoans =
-    status !== "Cantity"
-      ? liveLoans?.filter((loan) => loan.status === status) || []
-      : liveLoans?.filter(
-          (loan) => loan.newCantity && loan.newCantityOpt == null
-        ) || [];
-
   return (
-    <>
-      <div className={styles.mainActives}>
-        <HeaderContent label={"Prestaciones activas"} />
-        {loading && <Loading />}
+    <div className={styles.mainActives}>
+      <HeaderContent label={"Prestaciones activas"} />
+      {loading && <Loading />}
 
-        {!loading && (
-          <>
-            <div className={styles.barTypeLoan}>
-              <p
-                className={
-                  status === "Aprobado"
-                    ? styles.btnAproveActive
-                    : styles.btnAprove
-                }
-                onClick={() => handleChangeStatus("Aprobado")}
-              >
-                Aprobados
-              </p>
-              <p
-                className={
-                  status === "Aplazado"
-                    ? styles.btnRejectActive
-                    : styles.btnReject
-                }
-                onClick={() => handleChangeStatus("Aplazado")}
-              >
-                Aplazados
-              </p>
-              <p
-                className={
-                  status === "Cantity"
-                    ? styles.btnCantityActive
-                    : styles.btnCantity
-                }
-                onClick={() => handleChangeStatus("Cantity")}
-              >
-                Cambio de Cantidad
-              </p>
-            </div>
+      {!loading && (
+        <>
+          <div className={styles.barTypeLoan}>
+            <p
+              className={
+                status === "Aprobado"
+                  ? styles.btnAproveActive
+                  : styles.btnAprove
+              }
+              onClick={() => handleChangeStatus("Aprobado")}
+            >
+              Aprobados
+            </p>
+            <p
+              className={
+                status === "Aplazado"
+                  ? styles.btnRejectActive
+                  : styles.btnReject
+              }
+              onClick={() => handleChangeStatus("Aplazado")}
+            >
+              Aplazados
+            </p>
+            <p
+              className={
+                status === "Cantity"
+                  ? styles.btnCantityActive
+                  : styles.btnCantity
+              }
+              onClick={() => handleChangeStatus("Cantity")}
+            >
+              Cambio de Cantidad
+            </p>
+          </div>
 
-            <div className={styles.listLiveRequests}>
-              {filteredLoans.length === 0 ? (
-                <div className={styles.noData}>
-                  <div style={{ display: "grid", placeContent: "center" }}>
-                    <Image
-                      className={styles.imgNoData}
-                      src={noDataImg}
-                      alt={"No data"}
-                    />
-                  </div>
-                  <p className={styles.titleNodata}>
-                    No hay Solicitudes en este estado
-                  </p>
-                </div>
-              ) : (
-                filteredLoans.map((loan) => (
-                  <CardRequest
-                    user={loan.clientInfo as ScalarClient}
-                    loan={loan}
-                    key={loan.id}
-                    token={dataSession?.token as string}
-                  />
-                ))
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </>
+          <LoansList
+            status={status}
+            pendingLoans={liveLoans}
+            token={dataSession?.token as string}
+            page={page}
+            setPage={setPage}
+            total={total}
+          />
+        </>
+      )}
+    </div>
   );
 }
 

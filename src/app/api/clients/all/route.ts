@@ -4,15 +4,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // Verificar la autenticación JWT
     const authorizationHeader = req.headers.get("Authorization");
-
     if (!authorizationHeader) {
       throw new Error("Token de autorización no proporcionado");
     }
 
     const token = authorizationHeader.split(" ")[1];
-
     const decodedToken = TokenService.verifyToken(
       token,
       process.env.JWT_SECRET as string
@@ -22,9 +19,10 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const response = await ClientServices.all();
+    const { page = 1, pageSize = 8 } = await req.json();
+    const { users, totalCount } = await ClientServices.all(page, pageSize);
 
-    if (response) return NextResponse.json({ success: true, data: response });
+    return NextResponse.json({ success: true, data: users, totalCount });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

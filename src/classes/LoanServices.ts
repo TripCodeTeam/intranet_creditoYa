@@ -39,8 +39,200 @@ class LoanApplicationService {
   }
 
   // Método para obtener todas las solicitudes de préstamo
-  static async getAll(): Promise<LoanApplication[]> {
-    return prisma.loanApplication.findMany();
+  static async getAll(
+    page: number = 1,
+    pageSize: number = 5,
+    searchTerm: string | null = null,
+    orderBy: "asc" | "desc" = "asc",
+    filterByAmount: boolean = false
+  ): Promise<{ data: LoanApplication[]; total: number }> {
+    const skip = (page - 1) * pageSize;
+
+    // Construir el objeto de filtros
+    const where: any = {};
+
+    if (searchTerm) {
+      where.OR = [
+        { user: { names: { contains: searchTerm, mode: "insensitive" } } },
+        {
+          user: {
+            firstLastName: { contains: searchTerm, mode: "insensitive" },
+          },
+        },
+        {
+          user: {
+            secondLastName: { contains: searchTerm, mode: "insensitive" },
+          },
+        },
+        { user: { Document: { some: { number: { contains: searchTerm } } } } },
+      ];
+    }
+
+    // Construir el objeto de ordenación
+    const orderByClause = filterByAmount
+      ? { cantity: orderBy }
+      : { created_at: orderBy };
+
+    // Obtener las solicitudes de préstamo con paginación, filtros y ordenación
+    const [data, total] = await prisma.$transaction([
+      prisma.loanApplication.findMany({
+        where,
+        orderBy: orderByClause,
+        skip,
+        take: pageSize,
+        include: {
+          user: true, // Incluir la información del usuario
+        },
+      }),
+      prisma.loanApplication.count({ where }),
+    ]);
+
+    return { data, total };
+  }
+
+  // Método para obtener las solicitudes de préstamo con estado "Pendiente"
+  static async getPendingLoans(
+    page: number = 1,
+    pageSize: number = 5
+  ): Promise<{ data: LoanApplication[]; total: number }> {
+    const skip = (page - 1) * pageSize;
+
+    // Construir el objeto de filtros
+    const where: any = {
+      status: "Pendiente", // Asegúrate de que el valor coincida exactamente con los valores en la base de datos
+    };
+
+    try {
+      // Obtener las solicitudes de préstamo con paginación y filtro por estado
+      const [data, total] = await prisma.$transaction([
+        prisma.loanApplication.findMany({
+          where,
+          skip,
+          take: pageSize,
+          include: {
+            user: true, // Incluir la información del usuario
+          },
+        }),
+        prisma.loanApplication.count({ where }),
+      ]);
+
+      console.log("Data:", data);
+      console.log("Total:", total);
+
+      return { data, total };
+    } catch (error) {
+      console.error("Error getting pending loans:", error);
+      throw new Error("Error getting pending loans");
+    }
+  }
+
+  // Método para obtener las solicitudes de préstamo con estado "Aprobado"
+  static async getApprovedLoans(
+    page: number = 1,
+    pageSize: number = 5
+  ): Promise<{ data: LoanApplication[]; total: number }> {
+    const skip = (page - 1) * pageSize;
+
+    // Construir el objeto de filtros
+    const where: any = {
+      status: "Aprobado", // Asegúrate de que el valor coincida exactamente con los valores en la base de datos
+    };
+
+    try {
+      // Obtener las solicitudes de préstamo con paginación y filtro por estado
+      const [data, total] = await prisma.$transaction([
+        prisma.loanApplication.findMany({
+          where,
+          skip,
+          take: pageSize,
+          include: {
+            user: true, // Incluir la información del usuario
+          },
+        }),
+        prisma.loanApplication.count({ where }),
+      ]);
+
+      console.log("Data:", data);
+      console.log("Total:", total);
+
+      return { data, total };
+    } catch (error) {
+      console.error("Error getting approved loans:", error);
+      throw new Error("Error getting approved loans");
+    }
+  }
+
+  // Método para obtener las solicitudes de préstamo con estado "Aplazado"
+  static async getDeferredLoans(
+    page: number = 1,
+    pageSize: number = 5
+  ): Promise<{ data: LoanApplication[]; total: number }> {
+    const skip = (page - 1) * pageSize;
+
+    // Construir el objeto de filtros
+    const where: any = {
+      status: "Aplazado", // Asegúrate de que el valor coincida exactamente con los valores en la base de datos
+    };
+
+    try {
+      // Obtener las solicitudes de préstamo con paginación y filtro por estado
+      const [data, total] = await prisma.$transaction([
+        prisma.loanApplication.findMany({
+          where,
+          skip,
+          take: pageSize,
+          include: {
+            user: true, // Incluir la información del usuario
+          },
+        }),
+        prisma.loanApplication.count({ where }),
+      ]);
+
+      console.log("Data:", data);
+      console.log("Total:", total);
+
+      return { data, total };
+    } catch (error) {
+      console.error("Error getting deferred loans:", error);
+      throw new Error("Error getting deferred loans");
+    }
+  }
+
+  // Método para obtener las solicitudes de préstamo con newCantity definido y newCantityOpt nulo
+  static async getLoansWithDefinedNewCantity(
+    page: number = 1,
+    pageSize: number = 5
+  ): Promise<{ data: LoanApplication[]; total: number }> {
+    const skip = (page - 1) * pageSize;
+
+    // Construir el objeto de filtros
+    const where: any = {
+      newCantity: { not: null }, // newCantity debe estar definido
+      newCantityOpt: null, // newCantityOpt debe ser nulo
+    };
+
+    try {
+      // Obtener las solicitudes de préstamo con paginación y filtros especificados
+      const [data, total] = await prisma.$transaction([
+        prisma.loanApplication.findMany({
+          where,
+          skip,
+          take: pageSize,
+          include: {
+            user: true, // Incluir la información del usuario
+          },
+        }),
+        prisma.loanApplication.count({ where }),
+      ]);
+
+      console.log("Data:", data);
+      console.log("Total:", total);
+
+      return { data, total };
+    } catch (error) {
+      console.error("Error getting loans with defined newCantity:", error);
+      throw new Error("Error getting loans with defined newCantity");
+    }
   }
 
   // Método para obtener una solicitud de préstamo por el ID del usuario

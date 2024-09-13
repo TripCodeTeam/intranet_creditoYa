@@ -59,6 +59,7 @@ export type ScalarUser = {
 };
 
 export type ScalarLoanApplication = {
+  [x: string]: any;
   id?: string;
   userId: string;
   employeeId?: string;

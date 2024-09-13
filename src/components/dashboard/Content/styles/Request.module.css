@@ -25,6 +25,8 @@
   flex-direction: column;
   flex: 1;
   padding: 0px 40px;
+  min-height: 100dvh;
+  max-height: 100dvh;
 }
 
 .titleDate {
@@ -84,4 +86,51 @@
 
 .iconRss {
   color: var(--white-600);
+}
+
+.pagination {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.pagination button {
+  outline: none;
+  padding: 5px 10px;
+  background: var(--white-100);
+  border: 1px solid var(--white-300);
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.centerBtnSkip {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.boxIconSkipPage {
+  display: grid;
+  place-content: center;
+}
+
+.titleNodata {
+  text-align: center;
+  font-weight: 800;
+  color: var(--white-300);
+  font-size: 30px;
+}
+
+.imgNoData {
+  filter: opacity(0.3);
+  width: 100%;
+}
+
+.noData {
+  display: flex;
+  flex-direction: column;
 }
