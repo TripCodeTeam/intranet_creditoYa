@@ -25,12 +25,12 @@ export async function POST(req: Request) {
 
     const getSession = await SessionService.getSession();
 
-    console.log(getSession)
+    console.log(getSession);
 
-    if (getSession.length === 0) throw new Error("No hay sessiones guardadas");
+    if (getSession === null) throw new Error("No hay sessiones guardadas");
 
     if (getSession)
-      return NextResponse.json({ success: true, data: getSession[0] });
+      return NextResponse.json({ success: true, data: getSession });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

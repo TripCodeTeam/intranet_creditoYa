@@ -9,8 +9,12 @@ class SessionService {
     });
   }
 
-  static async getSession(): Promise<WhatsappSession[]> {
-    return prisma.whatsappSession.findMany();
+  static async getSession(): Promise<WhatsappSession | null> {
+    return prisma.whatsappSession.findFirst({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
   }
 }
 
