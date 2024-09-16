@@ -1,6 +1,6 @@
-import SessionService from "@/classes/SessionService";
 import TokenService from "@/classes/TokenServices";
-import { scalarWhatsappSession } from "@/types/session";
+import cloudinary from "@/lib/cloudinary-conf";
+import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -23,14 +23,21 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const getSession = await SessionService.getActiveSession();
+    const formData = await req.formData();
+    const image = formData.get("img") as string;
 
-    console.log(getSession);
+    const randomId = randomUUID();
 
-    if (getSession === null) throw new Error("No hay sessiones guardadas");
+    const responseUpload = await cloudinary.v2.uploader.upload(image, {
+      folder: "DraftFiles",
+      public_id: `draft.${randomId}`,
+    });
 
-    if (getSession)
-      return NextResponse.json({ success: true, data: getSession });
+    if (responseUpload)
+      return NextResponse.json({
+        success: true,
+        data: responseUpload.secure_url,
+      });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

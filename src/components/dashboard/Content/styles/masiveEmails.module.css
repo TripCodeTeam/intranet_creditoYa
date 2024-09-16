@@ -255,6 +255,42 @@
   color: var(--green-400);
 }
 
+.boxRevokeBtn {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.headerRevokeBtn {
+  display: flex;
+  flex-direction: row;
+}
+
+.headerRevokeBtn h5 {
+  display: grid;
+  place-content: center;
+}
+
+.boxCheckIcon {
+  display: grid;
+  place-content: center;
+}
+
+.revokeText {
+  display: grid;
+  place-content: center;
+  padding: 5px 10px;
+  background: var(--red-300);
+  border-radius: 8px;
+  color: var(--white-50);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.revokeText:hover {
+  background: var(--red-400);
+}
+
 /* .normalCenterBar {
   display: flex;
   flex-direction: row;

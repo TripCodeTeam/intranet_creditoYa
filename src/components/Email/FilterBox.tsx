@@ -2,14 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import { JsonExcelConvert } from "@/types/ExcelFile";
-import { TbInfoOctagon, TbMailCancel, TbMailCheck, TbX } from "react-icons/tb";
+import {
+  TbInfoOctagon,
+  TbMailCancel,
+  TbMailCheck,
+  TbPhotoPlus,
+  TbX,
+} from "react-icons/tb";
 import styles from "./styles/Filter.module.css";
 import { useGlobalContext } from "@/context/Session";
 
 import Modal from "../modal/modal";
 import VerifySend from "./verifySend";
-import EditorComponent from "../Editor/Editor";
 import axios from "axios";
+import ImageCard from "../dashboard/Content/Components/imageCard";
 
 function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +24,9 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   const [massivePhones, setMassivePhones] = useState<string[] | null>(null);
   const [massiveNames, setMassiveNames] = useState<string[] | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+
+  const [menssage, setMessage] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]); // Estado para las imágenes
 
   const [masivePerfils, setMasivePerfils] = useState<JsonExcelConvert[] | null>(
     null
@@ -29,7 +38,6 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
     null
   );
   const [verfMailSend, setVerfMailSend] = useState<boolean>(false);
-  const [sendMail, setSendMail] = useState<boolean>(false);
   const { dataSession } = useGlobalContext();
 
   useEffect(() => {
@@ -58,6 +66,21 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
 
     getSessionId();
   }, [JsonFile]);
+
+  // Manejar la carga de imágenes
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newImages = Array.from(files);
+      setFiles((prevImages) => [...(prevImages || []), ...newImages]); // Guardar múltiples imágenes
+    }
+  };
+
+  const handleDeleteImage = (image: File) => {
+    setFiles((prevImages) =>
+      prevImages ? prevImages.filter((img) => img.name !== image.name) : []
+    );
+  };
 
   const findEmailInDetail = (detail: JsonExcelConvert) => {
     for (let prop in detail) {
@@ -118,32 +141,15 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   };
 
   const filteredDetails = JsonFile.filter((detail) => {
-    // Buscamos en todas las claves del objeto detail
-    for (const key in detail) {
-      // Verificamos si el valor de la clave parece ser un correo electrónico
-      if (typeof detail[key] === "string" && /\S+@\S+\.\S+/.test(detail[key])) {
-        // Si el valor parece ser un correo electrónico, hacemos más comprobaciones
-        const email = detail[key].toLowerCase();
-        // Hacemos diferentes comprobaciones para detectar diferentes tipos de correo electrónico
-        if (
-          email.includes("@gmail") ||
-          email.includes("@yahoo") ||
-          email.includes("@hotmail") ||
-          email.includes("@outlook")
-        ) {
-          return true; // Si es uno de los correos electrónicos específicos, lo incluimos en los detalles filtrados
-        }
-      }
-    }
-    return false; // Si no encontramos un correo electrónico válido, excluimos este detalle
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      detail.nombre.toLowerCase().includes(searchTermLower) ||
+      detail.correo_electronico.toLowerCase().includes(searchTermLower)
+    );
   });
 
   const handleSubmit = () => {
     setVerfMailSend(!verfMailSend);
-  };
-
-  const successSendMail = (complete: boolean): void => {
-    setSendMail(complete);
   };
 
   console.log("Mails para enviar: ", mailSelects);
@@ -155,11 +161,44 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
   return (
     <>
       <div className={styles.editorContainer}>
-        <EditorComponent
-          send={false}
-          success={successSendMail}
-          email={masiveEmails}
-        />
+        <div className={styles.boxMessage}>
+          <h5>Mensaje</h5>
+          <textarea onChange={(e) => setMessage(e.target.value)} />
+        </div>
+
+        <div className={styles.barOpenIssues}>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: "none" }}
+            id="fileInput"
+            onChange={handleImageUpload}
+          />
+
+          <div
+            className={styles.btnPic}
+            onClick={() => {
+              document.getElementById("fileInput")?.click();
+            }}
+          >
+            <div className={styles.boxIconIssue}>
+              <TbPhotoPlus className={styles.iconAddImage} size={20} />
+            </div>
+            <p className={styles.TextPic}>Agregar Imagen</p>
+          </div>
+        </div>
+
+        <div className={styles.imageGallery}>
+          {files &&
+            files.map((image, index) => (
+              <ImageCard
+                onDelete={handleDeleteImage}
+                key={index}
+                image={image}
+              />
+            ))}
+        </div>
       </div>
 
       <div className={styles.mailDestinity}>
@@ -256,31 +295,15 @@ function FilterBox({ JsonFile }: { JsonFile: JsonExcelConvert[] }) {
       </div>
 
       <Modal isOpen={verfMailSend} onClose={handleSubmit}>
-        {masivePerfils != null &&
-          masiveEmails != null &&
-          massiveNames !== null &&
-          massivePhones !== null && (
-            <VerifySend
-              perfils={masivePerfils}
-              emails={masiveEmails}
-              phones={massivePhones}
-              names={massiveNames}
-              sessionId={sessionId as string}
-            />
-          )}
-
-        {perfilsSelects != null &&
-          mailSelects != null &&
-          massiveNames !== null &&
-          massivePhones !== null && (
-            <VerifySend
-              perfils={perfilsSelects}
-              emails={mailSelects}
-              phones={massivePhones}
-              names={massiveNames}
-              sessionId={sessionId as string}
-            />
-          )}
+        <VerifySend
+          perfils={masivePerfils as JsonExcelConvert[]}
+          emails={masiveEmails as string[]}
+          phones={massivePhones as string[]}
+          names={massiveNames as string[]}
+          sessionId={sessionId as string}
+          files={files}
+          message={menssage as string}
+        />
       </Modal>
     </>
   );

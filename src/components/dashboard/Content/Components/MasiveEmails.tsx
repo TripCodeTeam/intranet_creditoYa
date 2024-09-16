@@ -104,17 +104,56 @@ function MasiveEmails() {
         toast.success("Configuracion de reconexion completada");
     });
 
+    socket.on("successRestartServer", async (data: { message: string }) => {
+      toast.success(data.message);
+
+      await axios.post(
+        "/api/whatsapp/revoke",
+        {},
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      );
+      setIsReadySession(false);
+      setSessionId(null);
+    });
+
+    socket.on("error", (data) => {
+      console.error(data);
+    });
+
     return () => {
       socket?.off("[whatsapp]qr_obtained");
       socket?.off("[whatsapp]isReady");
       socket?.off("[whatsapp]remote_session_saved");
+      socket?.off("error");
     };
-  }, []);
+  }, [dataSession?.token]);
+
+  useEffect(() => {
+    const getSessions = async () => {
+      const session = await axios.post(
+        "/api/whatsapp/get",
+        {},
+        {
+          headers: { Authorization: `Bearer ${dataSession?.token}` },
+        }
+      );
+
+      console.log(session);
+
+      if (session.data.success == true) {
+        const data: scalarWhatsappSession = session.data.data;
+        setIsReadySession(true);
+        setSessionId(data.sessionId);
+      }
+    };
+
+    getSessions();
+  }, [dataSession?.token]);
 
   const handlerOpenMasiveMail = () => {
     try {
-      // if (isReadySession === false)
-      //   throw new Error("Primero crea una session de whatsapp");
+      if (isReadySession === false)
+        throw new Error("Primero crea una session de whatsapp");
       setOpenMails(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -149,6 +188,12 @@ function MasiveEmails() {
         toast.error(error.message);
       }
     }
+  };
+
+  const handleRemoveSession = () => {
+    if (!socket) return;
+
+    socket.emit("restartServer", dataSession?.id);
   };
 
   const processFile = async () => {
@@ -299,7 +344,7 @@ function MasiveEmails() {
           <>
             <InDevelop
               reason={"Estado de herramienta de envio de mensajes masivos"}
-              status="In Progress"
+              status="Success"
             />
 
             <div className={styles.barWhatsapp}>
@@ -402,7 +447,20 @@ function MasiveEmails() {
                 )}
 
                 {isReadySession == true && qr == null && (
-                  <TbCircleCheck size={30} className={styles.iconCheck} />
+                  <div className={styles.boxRevokeBtn}>
+                    <div className={styles.headerRevokeBtn}>
+                      <div className={styles.boxCheckIcon}>
+                        <TbCircleCheck size={20} className={styles.iconCheck} />
+                      </div>
+                      <h5>Tienes una session guardada</h5>
+                    </div>
+                    <p
+                      className={styles.revokeText}
+                      onClick={handleRemoveSession}
+                    >
+                      Eliminar Session
+                    </p>
+                  </div>
                 )}
               </div>
             </div>

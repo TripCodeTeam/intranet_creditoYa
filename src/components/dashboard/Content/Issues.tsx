@@ -138,6 +138,10 @@ function Issues() {
     setOnlyIssueData(data);
   };
 
+  const handleDeleteImage = (image: string) => {
+    setImages((prevImages) => prevImages?.filter((img) => img !== image) || []);
+  };
+
   return (
     <>
       <main className={styles.issuesContainer}>
@@ -219,7 +223,11 @@ function Issues() {
               <div className={styles.imageGallery}>
                 {images &&
                   images.map((image, index) => (
-                    <ImageCard key={index} image={image} />
+                    <ImageCard
+                      onDelete={handleDeleteImage}
+                      key={index}
+                      image={image}
+                    />
                   ))}
               </div>
             </div>

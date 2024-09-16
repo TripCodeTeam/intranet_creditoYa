@@ -35,3 +35,7 @@
 .iconSpiner {
   animation: spin 2s linear infinite;
 }
+
+.iconCheck {
+  color: var(--green-500);
+}

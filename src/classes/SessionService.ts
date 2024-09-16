@@ -9,10 +9,40 @@ class SessionService {
     });
   }
 
-  static async getSession(): Promise<WhatsappSession | null> {
+  static async getActiveSession(): Promise<WhatsappSession | null> {
     return prisma.whatsappSession.findFirst({
+      where: {
+        status: "activo", // Busca la sesión con estado activo
+      },
       orderBy: {
-        created_at: "desc",
+        created_at: "desc", // Ordena por fecha de creación descendente
+      },
+    });
+  }
+
+  static async revokeActiveSession(): Promise<WhatsappSession | null> {
+    // Obtener la sesión activa
+    const activeSession = await this.getActiveSession();
+
+    if (!activeSession) {
+      throw new Error("No active session found.");
+    }
+
+    // Actualizar el estado de la sesión activa a "revocado"
+    return prisma.whatsappSession.update({
+      where: {
+        id: activeSession.id,
+      },
+      data: {
+        status: "revocado",
+      },
+    });
+  }
+
+  static async deleteSession(id: string): Promise<WhatsappSession | null> {
+    return prisma.whatsappSession.delete({
+      where: {
+        id: id,
       },
     });
   }

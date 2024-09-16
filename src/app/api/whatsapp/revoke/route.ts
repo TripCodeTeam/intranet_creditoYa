@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const getSession = await SessionService.getActiveSession();
+    const getSession = await SessionService.revokeActiveSession()
 
     console.log(getSession);
 

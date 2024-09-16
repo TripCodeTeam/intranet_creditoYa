@@ -73,10 +73,11 @@ model LoanApplication {
 }
 
 model WhatsappSession {
-    id         String   @id @default(uuid()) @map("_id")
+    id         String        @id @default(uuid()) @map("_id")
     sessionId  String
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+    status     statusSession @default(activo)
+    created_at DateTime      @default(now())
+    updated_at DateTime      @updatedAt
 }
 
 model ReportIssue {
@@ -143,4 +144,9 @@ enum StatusIssues {
 enum appReport {
     intranet
     clients
+}
+
+enum statusSession {
+    activo
+    revocado
 }
