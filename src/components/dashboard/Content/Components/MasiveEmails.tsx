@@ -104,17 +104,23 @@ function MasiveEmails() {
         toast.success("Configuracion de reconexion completada");
     });
 
-    socket.on("successRestartServer", async (data: { message: string }) => {
-      toast.success(data.message);
-
-      await axios.post(
-        "/api/whatsapp/revoke",
-        {},
-        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-      );
-      setIsReadySession(false);
-      setSessionId(null);
-    });
+    socket.on(
+      "sessionDeleted",
+      async (data: { success: boolean; message: string }) => {
+        if (data.success == true) {
+          await axios.post(
+            "/api/whatsapp/revoke",
+            {},
+            { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+          );
+          toast.success(data.message);
+          setIsReadySession(false);
+          setSessionId(null);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    );
 
     socket.on("error", (data) => {
       console.error(data);
@@ -193,7 +199,7 @@ function MasiveEmails() {
   const handleRemoveSession = () => {
     if (!socket) return;
 
-    socket.emit("restartServer", dataSession?.id);
+    socket.emit("deleteSession", { sessionId });
   };
 
   const processFile = async () => {
