@@ -37,7 +37,7 @@ function Issues() {
   const [description, setDescription] = useState<string | null>(null);
   const [app, setApp] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
-  const [images, setImages] = useState<string[]>([]); // Estado para las imágenes
+  const [images, setImages] = useState<File[]>([]); // Estado para las imágenes
 
   const [selectIssue, setSelectIssue] = useState<ScalarIssues | null>(null);
 
@@ -45,10 +45,8 @@ function Issues() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setImages((prevImages) => [...(prevImages as string[]), ...newImages]); // Guardar múltiples imágenes
+      const newImages = Array.from(files);
+      setImages((prevImages) => [...(prevImages || []), ...newImages]); // Guardar múltiples imágenes
     }
   };
 
@@ -138,8 +136,10 @@ function Issues() {
     setOnlyIssueData(data);
   };
 
-  const handleDeleteImage = (image: string) => {
-    setImages((prevImages) => prevImages?.filter((img) => img !== image) || []);
+  const handleDeleteImage = (image: File) => {
+    setImages((prevImages) =>
+      prevImages ? prevImages.filter((img) => img.name !== image.name) : []
+    );
   };
 
   return (
