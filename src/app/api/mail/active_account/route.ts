@@ -13,7 +13,6 @@ export async function POST(req: Request) {
     }
 
     const token = authorizationHeader.split(" ")[1];
-
     const decodedToken = TokenService.verifyToken(
       token,
       process.env.JWT_SECRET as string
@@ -23,21 +22,40 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { completeName, mail, password } = await req.json();
+    // Recibir el array de nombres y correos electrónicos
+    const { completeNames, mails, message, files } = await req.json();
 
-    console.log(completeName, mail, password);
+    if (!Array.isArray(completeNames) || !Array.isArray(mails)) {
+      throw new Error("Los nombres y correos deben ser arrays");
+    }
 
-    const content = ActiveAccountMail({ completeName, mail, password });
+    if (completeNames.length !== mails.length) {
+      throw new Error(
+        "Los arrays de nombres y correos deben tener la misma longitud"
+      );
+    }
 
-    const data = await transporter.sendMail({
-      from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
-      to: mail,
-      subject: "Activacion cuenta Intranet",
-      text: "¡Funciona!",
-      html: content,
-    });
+    const responses = [];
 
-    return NextResponse.json({ success: true, data });
+    // Iterar sobre los arrays de nombres y correos para enviar los correos masivamente
+    for (let i = 0; i < mails.length; i++) {
+      const completeName = completeNames[i];
+      const mail = mails[i];
+
+      console.log(completeName, mail);
+
+      const data = await transporter.sendMail({
+        from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
+        to: mail,
+        subject: "Activacion cuenta Intranet",
+        text: "¡Funciona!",
+        html: ``,
+      });
+
+      responses.push({ mail, success: true, data });
+    }
+
+    return NextResponse.json({ success: true, responses });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

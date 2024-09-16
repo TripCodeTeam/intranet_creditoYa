@@ -21,6 +21,7 @@ import {
   TbArrowNarrowLeft,
   TbTrash,
   TbMessageBolt,
+  TbPlayerPlay,
 } from "react-icons/tb";
 import QrGenerate from "./qr_generate";
 import AddUserIntranet from "./add_user";
@@ -30,10 +31,13 @@ import QRCode from "react-qr-code";
 import { scalarWhatsappSession } from "@/types/session";
 import { useGlobalContext } from "@/context/Session";
 import InDevelop from "@/components/warns/InDevelop";
+import Modal from "@/components/modal/modal";
+import Video from "next-video";
 
 function MasiveEmails() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [jsonFile, setJsonFile] = useState<JsonExcelConvert[] | null>(null);
+  const [openTutoMasive, setOpenMasive] = useState(false);
 
   const { dataSession } = useGlobalContext();
 
@@ -113,7 +117,7 @@ function MasiveEmails() {
             {},
             { headers: { Authorization: `Bearer ${dataSession?.token}` } }
           );
-          toast.success(data.message);
+          toast.success("Tu sesion fue eliminada");
           setIsReadySession(false);
           setSessionId(null);
         } else {
@@ -131,6 +135,7 @@ function MasiveEmails() {
       socket?.off("[whatsapp]isReady");
       socket?.off("[whatsapp]remote_session_saved");
       socket?.off("error");
+      socket?.off("sessionDeleted");
     };
   }, [dataSession?.token]);
 
@@ -472,6 +477,16 @@ function MasiveEmails() {
             </div>
 
             <div
+              className={styles.tutoMasiveMessages}
+              onClick={() => setOpenMasive(true)}
+            >
+              <p>Aprende como enviar mensajes masivamente</p>
+              <div className={styles.boxIconPlay}>
+                <TbPlayerPlay />
+              </div>
+            </div>
+
+            <div
               className={styles.containerMasiveMail}
               onClick={handlerOpenMasiveMail}
             >
@@ -537,6 +552,14 @@ function MasiveEmails() {
           </>
         )}
       </div>
+
+      <Modal isOpen={openTutoMasive} onClose={() => setOpenMasive(false)}>
+        <Video
+          src={
+            "https://res.cloudinary.com/dvquomppa/video/upload/v1726496750/videos_guia/itqluko5lq6fzfxlpnwh.mp4"
+          }
+        />
+      </Modal>
     </>
   );
 }

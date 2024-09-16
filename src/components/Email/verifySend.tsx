@@ -1,9 +1,11 @@
 import { JsonExcelConvert } from "@/types/ExcelFile";
 import React, { useEffect, useState } from "react";
 import styles from "./styles/verify.module.css";
-import { TbX } from "react-icons/tb";
+import { TbCircleCheck, TbLoader, TbX } from "react-icons/tb";
 import socket from "@/app/socket";
 import { toast } from "sonner";
+import axios from "axios";
+import { useGlobalContext } from "@/context/Session";
 
 function VerifySend({
   sessionId,
@@ -29,13 +31,31 @@ function VerifySend({
   console.log(files);
   console.log(message);
 
+  const { dataSession } = useGlobalContext();
   const [localPerfils, setLocalPerfils] = useState(perfils);
+
+  const [isComplete, setIsComplete] = useState(false);
+  const [isSendMessages, setIsSendMessages] = useState(false);
+  const [messageProcces, setMessageProcces] = useState("");
 
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("[whatsapp]sendVerifyPhones", (data) => {
+    socket.on("[whatsapp]sendVerifyPhones", async (data) => {
       toast.success(data.message);
+
+      // const sendMails = await axios.post(
+      //   "/api/mail/masive",
+      //   { completeNames: names, mails: emails, message, files },
+      //   { headers: { Authorization: `Bearer ${dataSession?.token}` } }
+      // );
+
+      // if (sendMails.data.success === true) {
+      // }
+
+      setIsComplete(true);
+      setIsSendMessages(false);
+      setMessageProcces("Mensajes enviados correctamente");
     });
 
     return () => {
@@ -84,6 +104,8 @@ function VerifySend({
     };
 
     socket.emit("[whatsapp_client]entryNumbersPhone", data);
+    setIsSendMessages(true);
+    setMessageProcces("Enviando desde Whatsapp");
   };
 
   const handleDeleteUser = (id: string) => {
@@ -99,20 +121,17 @@ function VerifySend({
         ) : (
           localPerfils.map((user) => (
             <div className={styles.boxUser} key={user.id}>
-              <div className={styles.prevInfo}>
-                <div className={styles.subBoxUser}>
-                  <h5 className={styles.label}>Email</h5>
-                  <p className={styles.text}>{user.correo_electronico}</p>
-                  <p className={styles.text}>{user.telefono}</p>
-                  <p className={styles.text}>{user.nombre}</p>
-                </div>
-              </div>
-
               <div
                 className={styles.boxDelete}
                 onClick={() => handleDeleteUser(user.id)}
               >
+                <p>Informacion de contacto</p>
                 <TbX className={styles.iconDelete} size={20} />
+              </div>
+              <div className={styles.prevInfo}>
+                <p className={styles.text}>{user.nombre}</p>
+                <p className={styles.text}>{user.correo_electronico}</p>
+                <p className={styles.text}>{user.telefono}</p>
               </div>
             </div>
           ))
@@ -120,9 +139,31 @@ function VerifySend({
       </div>
 
       <div className={styles.boxSend}>
-        <p className={styles.btnSend} onClick={handleSendMessages}>
-          Enviar
-        </p>
+        {isSendMessages === false && isComplete === false && (
+          <>
+            <p className={styles.btnSend} onClick={handleSendMessages}>
+              Enviar
+            </p>
+          </>
+        )}
+
+        {isSendMessages === true && isComplete === false && (
+          <div className={styles.barLoader}>
+            <div className={styles.boxIconLoader}>
+              <TbLoader className={styles.iconLoader} size={20} />
+            </div>
+            <p className={styles.textMessage}>{messageProcces}</p>
+          </div>
+        )}
+
+        {isComplete === true && (
+          <div className={styles.barLoader}>
+            <div className={styles.boxIconLoader}>
+              <TbCircleCheck size={20} />
+            </div>
+            <p className={styles.textMessage}>{messageProcces}</p>
+          </div>
+        )}
       </div>
     </>
   );
