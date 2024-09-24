@@ -113,6 +113,7 @@ function ListClients() {
           <div className={styles.containerListUsers}>
             <div className={styles.boxInputSearch}>
               <input
+                placeholder="Ingresa el nombre del usuario"
                 className={styles.input}
                 type="text"
                 onChange={(e) => searchUser(e.target.value)}
