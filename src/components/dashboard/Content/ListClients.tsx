@@ -14,6 +14,8 @@ function ListClients() {
   const { dataSession } = useGlobalContext();
 
   const [dataUsers, setDataUsers] = useState<ScalarClient[] | null>(null);
+  const [userFilter, setUserFilter] = useState<ScalarClient[]>([]);
+
   const [option, setOption] = useState<string | null>(null);
   const [clientId, setClientId] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
@@ -31,7 +33,10 @@ function ListClients() {
       const { data, totalCount } = response.data;
       setDataUsers(data);
 
-      // Calculate total pages based on totalCount and pageSize
+      // Inicializa el filtro con todos los usuarios
+      setUserFilter(data);
+
+      // Calcula las páginas totales
       const calculatedTotalPages = Math.ceil(totalCount / pageSize);
       setTotalPages(calculatedTotalPages);
     };
@@ -60,6 +65,31 @@ function ListClients() {
     }
   };
 
+  const searchUser = (search: string) => {
+    try {
+      if (!dataUsers) return;
+
+      // console.log(search);
+
+      if (search.trim() === "") {
+        setUserFilter(dataUsers);
+        return;
+      }
+
+      const filterData = dataUsers.filter(
+        (data) =>
+          data.names.toLowerCase().includes(search.toLowerCase()) ||
+          data.email?.toLowerCase().includes(search.toLowerCase())
+      );
+      // console.log(filterData);
+      setUserFilter(filterData);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+    }
+  };
+
   return (
     <>
       <div className={styles.mainContainer}>
@@ -81,8 +111,16 @@ function ListClients() {
 
         {option == null && (
           <div className={styles.containerListUsers}>
-            {dataUsers && dataUsers.length > 0 ? (
-              dataUsers.map((user) => (
+            <div className={styles.boxInputSearch}>
+              <input
+                className={styles.input}
+                type="text"
+                onChange={(e) => searchUser(e.target.value)}
+              />
+            </div>
+
+            {userFilter.length > 0 ? (
+              userFilter.map((user) => (
                 <CardUser
                   changeOption={handleChangeOption}
                   user={user}

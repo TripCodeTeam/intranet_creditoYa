@@ -44,15 +44,6 @@ function VerifySend({
     socket.on("[whatsapp]sendVerifyPhones", async (data) => {
       toast.success(data.message);
 
-      // const sendMails = await axios.post(
-      //   "/api/mail/masive",
-      //   { completeNames: names, mails: emails, message, files },
-      //   { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-      // );
-
-      // if (sendMails.data.success === true) {
-      // }
-
       setIsComplete(true);
       setIsSendMessages(false);
       setMessageProcces("Mensajes enviados correctamente");
@@ -101,11 +92,12 @@ function VerifySend({
       names,
       message,
       files: filesBase64,
+      emails
     };
 
     socket.emit("[whatsapp_client]entryNumbersPhone", data);
     setIsSendMessages(true);
-    setMessageProcces("Enviando desde Whatsapp");
+    setMessageProcces("Enviando desde Whatsapp y Correo Electronico");
   };
 
   const handleDeleteUser = (id: string) => {

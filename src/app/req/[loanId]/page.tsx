@@ -141,9 +141,11 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         const sendMail = await axios.post(
           "/api/mail/change_cantity",
           {
-            completeName: `${dataClient?.names} ${dataClient?.firstLastName} ${dataClient?.secondLastName}`,
+            employeeName: `${dataSession?.name} ${dataSession?.lastNames}`,
             loanId: data.id,
             mail: dataClient?.email,
+            cantity_aproved: newValue,
+            reason_aproved: reasonNewCantity
           },
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );

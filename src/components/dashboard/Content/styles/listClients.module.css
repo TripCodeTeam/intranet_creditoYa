@@ -9,6 +9,21 @@
   gap: 10px;
 }
 
+.boxInputSearch {
+  padding: 10px;
+  display: flex;
+  width: 100%;
+}
+
+.boxInputSearch input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--white-400);
+  border-radius: 8px;
+  outline: none;
+}
+
 .btnBack {
   display: flex;
   justify-content: flex-start;

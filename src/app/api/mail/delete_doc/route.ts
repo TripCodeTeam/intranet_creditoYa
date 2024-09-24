@@ -1,4 +1,5 @@
 import TokenService from "@/classes/TokenServices";
+import { MJMLtoHTML } from "@/handlers/mjmlToHtml";
 import { generateMailRejectDocument } from "@/handlers/templatesEmails/generates/GenerateRejectDocument";
 import { transporter } from "@/lib/NodeMailer";
 import { NextResponse } from "next/server";
@@ -26,17 +27,19 @@ export async function POST(req: Request) {
     const { loanId, mail } = await req.json();
 
     const content = generateMailRejectDocument({ loanId });
-    console.log(content)
+    console.log(content);
+
+    const html = await MJMLtoHTML(content);
 
     const data = await transporter.sendMail({
       from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
       to: mail,
       subject: "Un documento de tu prestamo a sido rechazado",
       text: "¡Funciona!",
-      html: content,
+      html,
     });
 
-    console.log(data)
+    console.log(data);
 
     return NextResponse.json({ success: true, data });
   } catch (error) {

@@ -1,13 +1,4 @@
-export const ActiveAccountMail = ({
-  completeName,
-  mail,
-  password,
-}: {
-  completeName: string;
-  mail: string;
-  password: string;
-}) => {
-  return `<mjml>
+<mjml>
   <mj-head>
     <mj-attributes>
       <mj-all font-family="Roboto, sans-serif" />
@@ -27,7 +18,7 @@ export const ActiveAccountMail = ({
     <mj-section background-color="#E0F7FA">
       <mj-column>
         <mj-text font-size="16px" font-weight="bold" color="#00796B">Bienvenido a la intranet de Creditoya</mj-text>
-        <mj-text font-size="12px" color="#00796B">${completeName}</mj-text>
+        <mj-text font-size="12px" color="#00796B">David Vasquez</mj-text>
       </mj-column>
     </mj-section>
 
@@ -37,9 +28,9 @@ export const ActiveAccountMail = ({
         <mj-text font-size="12px" color="#388E3C">Ingresa a la intranet desde la pagina web</mj-text>
         <mj-text font-size="12px" color="#388E3C">Ingresa tus credenciales:</mj-text>
         <mj-text font-size="12px" line-height="1" color="#388E3C" font-weight="bold">Correo Electronico : </mj-text>
-        <mj-text line-height="0">${mail}</mj-text>
+        <mj-text line-height="0">davidvasquezmahecha@gmail.com</mj-text>
         <mj-text font-size="12px" line-height="1" color="#388E3C" font-weight="bold">Contraseña ( Temporal ) :</mj-text>
-        <mj-text line-height="0">${password}</mj-text>
+        <mj-text line-height="0">wlerigmeog</mj-text>
       </mj-column>
     </mj-section>
 
@@ -50,5 +41,4 @@ export const ActiveAccountMail = ({
       </mj-column>
     </mj-section>
   </mj-body>
-</mjml>`;
-};
+</mjml>

@@ -1,4 +1,5 @@
 import TokenService from "@/classes/TokenServices";
+import { MJMLtoHTML } from "@/handlers/mjmlToHtml";
 import { ChangeCantityMail } from "@/handlers/templatesEmails/generates/GenerateChangeCantityMail";
 import { transporter } from "@/lib/NodeMailer";
 import { NextResponse } from "next/server";
@@ -23,16 +24,24 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { completeName, loanId, mail } = await req.json();
+    const { employeeName, loanId, reason_aproved, cantity_aproved, mail } =
+      await req.json();
 
-    const content = ChangeCantityMail({ completeName, loanId });
+    const content = ChangeCantityMail({
+      employeeName,
+      loanId,
+      reason_aproved,
+      cantity_aproved,
+    });
+
+    const html = await MJMLtoHTML(content);
 
     const data = await transporter.sendMail({
       from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
       to: mail,
       subject: "La cantidad requerida de tu prestamo ha cambiado",
       text: "¡Funciona!",
-      html: content,
+      html,
     });
 
     return NextResponse.json({ success: true, data });

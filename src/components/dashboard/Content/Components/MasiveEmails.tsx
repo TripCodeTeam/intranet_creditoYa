@@ -355,7 +355,7 @@ function MasiveEmails() {
           <>
             <InDevelop
               reason={"Estado de herramienta de envio de mensajes masivos"}
-              status="Success"
+              status="In Progress"
             />
 
             <div className={styles.barWhatsapp}>

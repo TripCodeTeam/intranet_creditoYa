@@ -3,6 +3,7 @@ import TokenService from "@/classes/TokenServices";
 // import { EmailTemplate } from "@/components/mail/Template";
 import { NextResponse } from "next/server";
 import { generateMailChangeStatus } from "@/handlers/templatesEmails/generates/GenerateChangeStatusMail";
+import { MJMLtoHTML } from "@/handlers/mjmlToHtml";
 
 export async function POST(req: Request) {
   try {
@@ -42,12 +43,14 @@ export async function POST(req: Request) {
       loanId,
     });
 
+    const html = await MJMLtoHTML(content);
+
     const data = await transporter.sendMail({
       from: `"Credito ya" ${process.env.GOOGLE_EMAIL} `,
       to: mail,
       subject: "El estado de tu prestamo ha cambiado",
       text: "¡Funciona!",
-      html: content,
+      html,
     });
 
     console.log(data);

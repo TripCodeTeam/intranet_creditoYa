@@ -1,13 +1,4 @@
-export const generateMailChangeStatus = ({
-  newStatus,
-  employeeName,
-  loanId,
-}: {
-  newStatus: string;
-  employeeName: string;
-  loanId: string;
-}) => {
-  return `<mjml>
+<mjml>
   <mj-head>
     <mj-attributes>
       <mj-all font-family="Roboto, sans-serif" />
@@ -26,19 +17,15 @@ export const generateMailChangeStatus = ({
 
     <mj-section background-color="#E0F7FA">
       <mj-column>
-        <mj-text font-size="16px" font-weight="bold" color="#00796B">El estado de tu solicitud ha cambiado</mj-text>
-        <mj-text font-size="12px" color="#00796B">ID: ${loanId}</mj-text>
+        <mj-text font-size="16px" font-weight="bold" color="#00796B">Tu solicitud tiene documentos rechazados</mj-text>
+        <mj-text font-size="12px" color="#00796B">ID: 1345464574331095713</mj-text>
       </mj-column>
     </mj-section>
 
     <mj-section>
       <mj-column>
-        <mj-text font-size="15px" font-weight="bold">Nuevo estado</mj-text>
-        <mj-text font-size="12px" color="#388E3C">${newStatus}</mj-text>
-      </mj-column>
-      <mj-column>
-        <mj-text font-size="15px" font-weight="bold">Evaluado por:</mj-text>
-        <mj-text font-size="12px">${employeeName}</mj-text>
+        <mj-text font-size="15px" font-weight="bold">Cambios</mj-text>
+        <mj-text font-size="12px" color="#388E3C">Tienes uno o mas documentos en tu solicitud que han sido rechazados</mj-text>
       </mj-column>
     </mj-section>
 
@@ -49,5 +36,4 @@ export const generateMailChangeStatus = ({
       </mj-column>
     </mj-section>
   </mj-body>
-</mjml>`;
-};
+</mjml>
