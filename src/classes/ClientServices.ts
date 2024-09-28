@@ -1,7 +1,7 @@
 // Import statements
 import { prisma } from "@/prisma/db";
-import { ScalarClient } from "@/types/session";
-import { Document, User } from "@prisma/client";
+import { ScalarClient, ScalarDocument } from "@/types/session";
+import { Document, Prisma, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 // Class definition
@@ -31,7 +31,124 @@ class ClientServices {
 
   // Get user by ID method
   static async get(id: string): Promise<User | null> {
-    return prisma.user.findUnique({ where: { id } });
+    return prisma.user.findUnique({
+      where: { id },
+      include: { Document: true },
+    });
+  }
+
+  // Método para buscar usuarios por nombre completo o número de documento
+  static async searchUser(query: string): Promise<User[] | null> {
+    try {
+      // Separar el query en partes usando espacios
+      const queryParts = query.trim().split(" ");
+
+      // Construir condiciones de búsqueda dependiendo de cuántas partes tenga el query
+      let searchConditions: Prisma.UserWhereInput[] = [];
+
+      if (queryParts.length === 1) {
+        // Si solo hay una parte (e.g., solo el primer nombre)
+        searchConditions = [
+          {
+            names: { contains: queryParts[0], mode: "insensitive" }, // Buscar por nombres
+          },
+          {
+            firstLastName: { contains: queryParts[0], mode: "insensitive" }, // Buscar por primer apellido
+          },
+          {
+            secondLastName: { contains: queryParts[0], mode: "insensitive" }, // Buscar por segundo apellido
+          },
+        ];
+      } else if (queryParts.length === 2) {
+        // Si hay dos partes (e.g., nombre y apellido)
+        searchConditions = [
+          {
+            // Buscar por primer nombre y primer apellido
+            AND: [
+              { names: { contains: queryParts[0], mode: "insensitive" } }, // Primer nombre
+              {
+                firstLastName: { contains: queryParts[1], mode: "insensitive" },
+              }, // Primer apellido
+            ],
+          },
+          {
+            // Alternativamente, buscar por nombre y segundo apellido
+            AND: [
+              { names: { contains: queryParts[0], mode: "insensitive" } }, // Primer nombre
+              {
+                secondLastName: {
+                  contains: queryParts[1],
+                  mode: "insensitive",
+                },
+              }, // Segundo apellido
+            ],
+          },
+        ];
+      } else if (queryParts.length >= 3) {
+        // Si hay tres o más partes (e.g., dos nombres y un apellido)
+        searchConditions = [
+          {
+            // Buscar por ambos nombres y primer apellido
+            AND: [
+              {
+                names: {
+                  contains: `${queryParts[0]} ${queryParts[1]}`,
+                  mode: "insensitive",
+                },
+              }, // Ambos nombres
+              {
+                firstLastName: { contains: queryParts[2], mode: "insensitive" },
+              }, // Primer apellido
+            ],
+          },
+          {
+            // Alternativamente, buscar por ambos nombres y segundo apellido
+            AND: [
+              {
+                names: {
+                  contains: `${queryParts[0]} ${queryParts[1]}`,
+                  mode: "insensitive",
+                },
+              }, // Ambos nombres
+              {
+                secondLastName: {
+                  contains: queryParts[2],
+                  mode: "insensitive",
+                },
+              }, // Segundo apellido
+            ],
+          },
+        ];
+      }
+
+      // Hacer la búsqueda con Prisma
+      const users = await prisma.user.findMany({
+        where: {
+          OR: [
+            ...searchConditions,
+            {
+              // Filtrar también por número de documento si coincide con el query
+              Document: {
+                some: {
+                  number: { contains: query, mode: "insensitive" },
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          Document: true, // Incluir los documentos en la respuesta
+        },
+      });
+
+      return users;
+    } catch (error) {
+      // if (error instanceof Error) {
+
+      // }
+      console.log(error);
+      return null;
+    }
   }
 
   // Paginated method to get users
@@ -53,7 +170,7 @@ class ClientServices {
   // Update user method
   static async update(
     id: string,
-    data: Omit<ScalarClient, "password">
+    data: Omit<ScalarClient, "password" | "Document">
   ): Promise<User> {
     return await prisma.user.update({ where: { id }, data });
   }

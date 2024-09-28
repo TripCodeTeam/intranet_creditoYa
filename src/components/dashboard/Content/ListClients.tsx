@@ -9,12 +9,16 @@ import styles from "./styles/listClients.module.css";
 import { TbArrowLeft, TbArrowRight } from "react-icons/tb";
 import HeaderContent from "./Components/HeaderContent";
 import ContainerMail from "@/components/Email/ContainerMail";
+import InDevelop from "@/components/warns/InDevelop";
+import { toast } from "sonner";
+import PerfilClient from "./Components/PerfilClient";
 
 function ListClients() {
   const { dataSession } = useGlobalContext();
 
   const [dataUsers, setDataUsers] = useState<ScalarClient[] | null>(null);
   const [userFilter, setUserFilter] = useState<ScalarClient[]>([]);
+  const [nameUser, setNameUser] = useState<string | null>(null);
 
   const [option, setOption] = useState<string | null>(null);
   const [clientId, setClientId] = useState<string | null>(null);
@@ -49,10 +53,10 @@ function ListClients() {
     userId,
   }: {
     option: string;
-    userId: string;
+    userId?: string;
   }) => {
     setOption(option);
-    setClientId(userId);
+    if (typeof userId === "string") setClientId(userId);
   };
 
   const handleSuccessSendEmail = (complete: boolean) => {
@@ -65,27 +69,33 @@ function ListClients() {
     }
   };
 
-  const searchUser = (search: string) => {
+  const searchUser = async () => {
     try {
-      if (!dataUsers) return;
+      if (nameUser == null) return;
 
-      // console.log(search);
-
-      if (search.trim() === "") {
-        setUserFilter(dataUsers);
-        return;
-      }
-
-      const filterData = dataUsers.filter(
-        (data) =>
-          data.names.toLowerCase().includes(search.toLowerCase()) ||
-          data.email?.toLowerCase().includes(search.toLowerCase())
+      const filteredUser = await axios.post(
+        "/api/clients/full",
+        { query: nameUser },
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
-      // console.log(filterData);
-      setUserFilter(filterData);
+
+      console.log(filteredUser);
+
+      if (typeof filteredUser.data.data == "string")
+        throw new Error(filteredUser.data.data);
+
+      if (
+        filteredUser.data.success === true &&
+        typeof filteredUser.data.data !== "string"
+      ) {
+        const data: string | ScalarClient[] = filteredUser.data.data;
+        console.log(data);
+
+        setDataUsers(data as ScalarClient[]);
+      }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -94,6 +104,11 @@ function ListClients() {
     <>
       <div className={styles.mainContainer}>
         <HeaderContent label="Gestión de usuarios" />
+
+        <InDevelop
+          reason={"Implementando nuevo sistema de filtrado por usuario"}
+          status="In Progress"
+        />
 
         {option !== null && (
           <div className={styles.btnBack}>
@@ -116,12 +131,13 @@ function ListClients() {
                 placeholder="Ingresa el nombre del usuario"
                 className={styles.input}
                 type="text"
-                onChange={(e) => searchUser(e.target.value)}
+                onChange={(e) => setNameUser(e.target.value)}
               />
+              <button onClick={searchUser}>Buscar</button>
             </div>
 
-            {userFilter.length > 0 ? (
-              userFilter.map((user) => (
+            {dataUsers && dataUsers.length > 0 ? (
+              dataUsers.map((user) => (
                 <CardUser
                   changeOption={handleChangeOption}
                   user={user}
@@ -143,32 +159,41 @@ function ListClients() {
           />
         )}
 
+        {option == "dataUser" && (
+          <PerfilClient
+            userId={clientId as string}
+            token={dataSession?.token as string}
+          />
+        )}
+
         {/* Controles de paginación */}
-        <div className={styles.pagination}>
-          <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
-            <div className={styles.centerBtnSkip}>
-              <div className={styles.boxIconSkipPage}>
-                <TbArrowLeft size={20} />
+        {option === null && (
+          <div className={styles.pagination}>
+            <button
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+            >
+              <div className={styles.centerBtnSkip}>
+                <div className={styles.boxIconSkipPage}>
+                  <TbArrowLeft size={20} />
+                </div>
+                <p>Anterior</p>
               </div>
-              <p>Anterior</p>
-            </div>
-          </button>
-          {/* <span>{`Página ${page} de ${totalPages}`}</span> */}
-          <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
-          >
-            <div className={styles.centerBtnSkip}>
-              <p>Siguiente</p>
-              <div className={styles.boxIconSkipPage}>
-                <TbArrowRight size={20} />
+            </button>
+            {/* <span>{`Página ${page} de ${totalPages}`}</span> */}
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+            >
+              <div className={styles.centerBtnSkip}>
+                <p>Siguiente</p>
+                <div className={styles.boxIconSkipPage}>
+                  <TbArrowRight size={20} />
+                </div>
               </div>
-            </div>
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

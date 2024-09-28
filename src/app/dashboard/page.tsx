@@ -19,6 +19,8 @@ function Dashboard() {
   const { dataSession } = useGlobalContext();
   const router = useRouter();
 
+  console.log(dataSession)
+
   const handlerChangeOpenSide = (status: boolean) => {
     setInOpenRes(null);
     setInOpenRes(status);

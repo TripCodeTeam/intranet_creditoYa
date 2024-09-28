@@ -8,13 +8,10 @@ export default function Loading() {
   return (
     <main className={styles.mainLoader}>
       <div className={styles.centerMainLoader}>
-        <div className={styles.boxIconSpinner}>
-          <ImSpinner8 className={styles.iconSpinner} />
-        </div>
-        <p>Cargando ...</p>
         <div className={styles.boxImgLogo}>
           <Image src={logoApp} className={styles.imgLogo} alt="logo" />
         </div>
+        <p>Cargando ...</p>
       </div>
     </main>
   );

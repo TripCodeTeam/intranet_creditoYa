@@ -3,7 +3,12 @@ import React, { useState } from "react";
 import styles from "../styles/userCard.module.css";
 import Avatar from "react-avatar";
 import DatesComplete from "./datesComplete";
-import { TbAdjustmentsCog, TbHistoryToggle, TbMailPlus } from "react-icons/tb";
+import {
+  TbAdjustmentsCog,
+  TbHistoryToggle,
+  TbMailPlus,
+  TbUserSearch,
+} from "react-icons/tb";
 import Tooltip from "@/components/gadget/Tooltip";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal/modal";
@@ -20,7 +25,7 @@ function CardUser({
     userId,
   }: {
     option: string;
-    userId: string;
+    userId?: string;
   }) => void;
 }) {
   const [openModel, setOpenModel] = useState<boolean>(false);
@@ -68,10 +73,12 @@ function CardUser({
 
           <div
             className={styles.boxIconOption}
-            onClick={() => router.push(`/client/${user.id}/loans`)}
+            onClick={() =>
+              changeOption({ option: "dataUser", userId: user.id })
+            }
           >
-            <Tooltip message="Historial">
-              <TbHistoryToggle size={20} className={styles.iconOption} />
+            <Tooltip message="Ver perfil">
+              <TbUserSearch size={20} className={styles.iconOption} />
             </Tooltip>
           </div>
         </div>

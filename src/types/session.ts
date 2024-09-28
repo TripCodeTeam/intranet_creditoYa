@@ -28,6 +28,8 @@ export type ScalarClient = {
   genre?: string;
   residence_address?: string;
   city?: string;
+  isBan?: boolean;
+  Document: ScalarDocument[];
   createdAt?: Date;
   updatedAt?: Date;
 };

@@ -1,0 +1,283 @@
+.userContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.subPerfilDetails {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex: 1;
+}
+
+.boxAvatarUser,
+.infoUser {
+  display: grid;
+  place-content: center;
+}
+
+/* .avatar {
+
+} */
+
+.NameUser {
+  font-size: 50px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.boxDateCreate {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  /* background: var(--white-100); */
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+/* .boxDateCreate:hover {
+  border: 1px solid var(--white-300);
+  cursor: pointer;
+} */
+
+.prevDetailsBar {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.centerInfoUser {
+  display: flex;
+  flex-direction: column;
+}
+
+.iconMinDetails {
+  color: var(--white-800);
+  filter: drop-shadow(0px 0px 10px var(--white-950));
+}
+
+.dateCreateUser {
+  font-size: 18px;
+  display: grid;
+  place-content: center;
+  color: var(--white-700);
+  font-weight: 300;
+}
+
+.optionsContainer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 3em;
+}
+
+.subOptions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.option {
+  cursor: pointer;
+  padding-bottom: 5px;
+}
+
+.option:hover {
+  border-bottom: 3px solid var(--white-600);
+}
+
+.activeOption {
+  cursor: pointer;
+  border-bottom: 3px solid var(--green-600);
+  padding-bottom: 5px;
+}
+
+.boxInfo {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.docsTitle {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: var(--white-800);
+}
+
+.docsTitleDetail {
+  margin-top: 1em;
+  font-weight: 500;
+  color: var(--white-800);
+}
+
+.barDataInfoDocs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.numberDoc {
+  flex-basis: 400px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.numberDoc h3 {
+  font-weight: 500;
+  color: var(--white-800);
+}
+
+.barOptionsDoc {
+  flex-basis: 400px;
+  flex: 1;
+  background: var(--white-100);
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 8px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--white-200);
+}
+
+.boxOptions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.textWarn {
+  display: grid;
+  place-content: center;
+  font-weight: 400;
+  color: var(--white-600);
+}
+
+.onlyOption {
+  display: grid;
+  place-content: center;
+  padding: 5px;
+  /* background: var(--white-50); */
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.onlyOption:hover {
+  border: 1px solid var(--white-400);
+}
+
+.iconOption {
+  color: var(--white-600);
+}
+
+.boxDetail {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  padding: 5px 10px;
+  border-radius: 8px;
+  gap: 10px;
+  background: var(--white-100);
+  border: 1px solid var(--white-200);
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.boxDetail:hover {
+  border: 1px solid var(--white-300);
+}
+
+.boxIconMail {
+  display: grid;
+  place-content: center;
+}
+
+.iconDetails {
+  color: var(--white-500);
+}
+
+.barBoxsDetails {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 1em;
+  justify-content: space-between;
+}
+
+.boxIconHistory {
+  display: grid;
+  place-content: center;
+}
+
+.btnDesactive {
+  /* display: flex;
+  justify-content: flex-end; */
+  display: grid;
+  place-content: center;
+}
+
+.btnDesactive p {
+  padding: 5px 10px;
+  background: var(--red-400);
+  color: var(--white-50);
+  border-radius: 8px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+  .barDataInfoDocs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .NameUser {
+    font-size: 28px;
+  }
+
+  .userContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .infoUser {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .boxAvatarUser {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .barBoxsDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .prevDetailsBar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1em;
+  }
+
+  .boxDateCreate {
+    padding: 0;
+  }
+
+  .subPerfilDetails {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btnDesactive {
+    display: flex;
+    justify-content: flex-start;
+  }
+}

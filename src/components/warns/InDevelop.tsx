@@ -4,7 +4,7 @@ import styles from "./inDev.module.css";
 
 interface InDevProps {
   reason: string;
-  status: "In Progress" | "Success";
+  status: "In Progress" | "Success" | "Develop";
 }
 
 function InDevelop({ reason, status }: InDevProps) {
@@ -20,10 +20,14 @@ function InDevelop({ reason, status }: InDevProps) {
           {status === "Success" && (
             <TbCircleCheck className={styles.iconCheck} />
           )}
+          {status === "Develop" && (
+            <TbCircleCheck className={styles.iconSpiner} />
+          )}
         </div>
         <p>
           {status == "In Progress" && "En Mantenimiento"}
           {status == "Success" && "En Funcionamiento"}
+          {status == "Develop" && "En Desarrollo"}
         </p>
       </div>
     </div>
