@@ -291,7 +291,7 @@ function PerfilClient({ userId, token }: { userId: string; token: string }) {
             <div style={{ marginTop: "1em" }}>
             <InDevelop
                 reason="Historial de solicitudes de prestamo"
-                status="In Progress"
+                status="Develop"
               />
             </div>
             </>
