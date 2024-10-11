@@ -92,14 +92,17 @@ export type ScalarLoanApplication = {
 
 export type ScalarIssues = {
   id?: string;
-  title: string;
   description: string;
   images?: string[];
   app: appReport;
+  priority?: PriorityStatus;
+  resSupport?: string;
   status?: statusIssue;
   created_at?: Date;
   updated_at?: Date;
 };
+
+export type PriorityStatus = "Baja" | "Media" | "Alta" | "Critica";
 
 export type Status =
   | "Pendiente"

@@ -33,7 +33,6 @@ function Issues() {
 
   const { dataSession } = useGlobalContext();
 
-  const [title, setTitle] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const [app, setApp] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
@@ -57,7 +56,6 @@ function Issues() {
       let error: string[] = [];
       let imagesLoad: string[] = [];
 
-      if (!title) error.push("Falta el título");
       if (!description) error.push("Falta la descripción");
       if (!app) error.push("Falta seleccionar la app del problema");
 
@@ -101,7 +99,6 @@ function Issues() {
       const newReport = await axios.post(
         "/api/report/create",
         {
-          title,
           description,
           images: imagesLoad,
           app,
@@ -115,7 +112,6 @@ function Issues() {
         setOpenIssue(false);
 
         setApp(null);
-        setTitle(null);
         setImages([]);
         setDescription(null);
 
@@ -166,15 +162,6 @@ function Issues() {
         {openIssue && !onlyIssue && (
           <>
             <div className={styles.boxDetails}>
-              <div className={styles.boxDetailIssue}>
-                <h5>Titulo del problema</h5>
-                <input
-                  type="text"
-                  className={styles.inputForm}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-
               <div className={styles.boxDetailIssue}>
                 <h5>Aplicacion</h5>
                 <Select
@@ -286,11 +273,6 @@ function Issues() {
                   {onlyIssueData.app == "clients" && "Aplicacion de Clientes"}
                   {onlyIssueData.app == "intranet" && "Aplicacion Intranet"}
                 </h5>
-              </div>
-
-              <div className={styles.boxDetail}>
-                <h4>Titulo</h4>
-                <h5>{onlyIssueData.title}</h5>
               </div>
 
               <div className={styles.boxDetail}>

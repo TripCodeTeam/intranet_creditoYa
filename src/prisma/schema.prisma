@@ -95,14 +95,15 @@ model WhatsappSession {
 }
 
 model ReportIssue {
-    id          String       @id @default(uuid()) @map("_id")
-    title       String
+    id          String          @id @default(uuid()) @map("_id")
     description String
     images      String[]
     app         appReport
-    status      StatusIssues @default(activo)
-    created_at  DateTime     @default(now())
-    update_at   DateTime     @updatedAt
+    status      StatusIssues    @default(activo)
+    priority    PriorityStatus?
+    resSupport  String?
+    created_at  DateTime        @default(now())
+    update_at   DateTime        @updatedAt
 }
 
 enum StatusLoan {
@@ -140,6 +141,13 @@ enum StatusIssues {
     activo
     pendiente
     corregido
+}
+
+enum PriorityStatus {
+    Baja
+    Media
+    Alta
+    Critica
 }
 
 enum appReport {
