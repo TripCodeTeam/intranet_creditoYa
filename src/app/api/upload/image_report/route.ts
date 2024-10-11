@@ -1,12 +1,9 @@
 import TokenService from "@/classes/TokenServices";
 import cloudinary from "@/lib/cloudinary-conf";
-import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
-import { Buffer } from "buffer";
 
 export async function POST(req: Request) {
   try {
-    // Verificar la autenticación JWT
     const authorizationHeader = req.headers.get("Authorization");
 
     if (!authorizationHeader) {
@@ -24,38 +21,18 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { img } = await req.json(); // img será la URL del blob
+    const { img } = await req.json();
 
-    const uuidRandom = randomUUID();
+    if (!img) throw new Error("img is required");
 
-    console.log(uuidRandom);
-    console.log(img);
+    const randomUpId = Math.floor(100000 + Math.random() * 900000);
 
-    // Descargar el blob de la URL usando fetch
-    const response = await fetch(img);
-    const arrayBuffer = await response.arrayBuffer(); // Convertir el blob a un Buffer
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Subir el buffer a Cloudinary
-    const responseUpload = await new Promise((resolve, reject) => {
-      const stream = cloudinary.v2.uploader.upload_stream(
-        { folder: "reportImages", public_id: uuidRandom },
-        (error, result) => {
-          if (error) {
-            reject(new Error("Error al subir la imagen a Cloudinary"));
-          }
-          resolve(result);
-        }
-      );
-      stream.end(buffer); // Enviar el buffer a Cloudinary
+    const response = await cloudinary.v2.uploader.upload(img, {
+      folder: "reports-images",
+      public_id: `${randomUpId.toString()}-report`
     });
 
-    if (responseUpload) {
-      return NextResponse.json({
-        success: true,
-        data: (responseUpload as any).secure_url,
-      });
-    }
+    return NextResponse.json({ success: true, data: response.secure_url });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ success: false, error: error.message });

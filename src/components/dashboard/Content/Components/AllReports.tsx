@@ -21,7 +21,7 @@ function AllReports({
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      console.log(all.data);
+      // console.log(all.data);
 
       if (all.data.success == true) {
         const reports: ScalarIssues[] = all.data.data;

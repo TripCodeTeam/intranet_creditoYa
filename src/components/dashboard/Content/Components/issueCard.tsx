@@ -13,8 +13,8 @@ function IssueCard({ issue, openIssue }: issueCardProp) {
     <>
       <div onClick={openIssue} className={styles.card}>
         <div className={styles.boxTitle}>
-          <h5>Titulo</h5>
-          <h3>{issue.title}</h3>
+          <h5>Descripcion</h5>
+          <h3>{issue.description}</h3>
         </div>
 
         <div className={styles.boxStatus}>

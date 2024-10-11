@@ -35,17 +35,16 @@ function Issues() {
 
   const [description, setDescription] = useState<string | null>(null);
   const [app, setApp] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]); // Estado para las imágenes
-
-  const [selectIssue, setSelectIssue] = useState<ScalarIssues | null>(null);
 
   // Manejar la carga de imágenes
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files);
-      setImages((prevImages) => [...(prevImages || []), ...newImages]); // Guardar múltiples imágenes
+      const newImages = Array.from(files); // Convierte los archivos a un array
+
+      // Guarda los nuevos archivos en el estado
+      setImages((prevImages) => [...(prevImages || []), ...newImages]);
     }
   };
 
@@ -60,40 +59,64 @@ function Issues() {
       if (!app) error.push("Falta seleccionar la app del problema");
 
       if (error.length > 0) {
-        if (error.length === 1) {
-          toast.error(error[0]);
-        } else {
-          for (let err of error) {
-            toast.error(err);
-          }
-        }
-        setCreating(false); // Detener el proceso si hay errores
+        error.forEach((err) => toast.error(err));
+        setCreating(false);
         return;
       }
 
-      console.log(images);
+      // console.log(images);
 
       if (images.length > 0) {
-        images.map(async (image) => {
-          const addImage = await axios.post(
-            "/api/upload/image_report",
-            {
-              img: image,
-            },
-            { headers: { Authorization: `Bearer ${dataSession?.token}` } }
-          );
+        const uploadPromises = images.map((image) => {
+          return new Promise<void>(async (resolve, reject) => {
+            // Especificamos que la promesa devuelve void
+            const reader = new FileReader();
 
-          console.log(addImage.data);
+            reader.onload = async (event) => {
+              const target = event.target;
 
-          if (addImage.data.success == true) {
-            imagesLoad.push(addImage.data.data);
-            return;
-          } else if (addImage.data.success == false) {
-            toast.error(addImage.data.error);
-          }
+              if (target) {
+                const imageDataUrl = target.result as string;
 
-          console.log(image);
+                try {
+                  const addImage = await axios.post(
+                    "/api/upload/image_report",
+                    {
+                      img: imageDataUrl,
+                    },
+                    {
+                      headers: {
+                        Authorization: `Bearer ${dataSession?.token}`,
+                      },
+                    }
+                  );
+
+                  // console.log(addImage.data);
+
+                  if (addImage.data.success) {
+                    imagesLoad.push(addImage.data.data);
+                    resolve(); // Resuelve la promesa
+                  } else {
+                    toast.error(addImage.data.error);
+                    reject(new Error(addImage.data.error)); // Rechaza la promesa
+                  }
+                } catch (error) {
+                  reject(error); // Rechaza la promesa en caso de error
+                }
+              } else {
+                reject(new Error("Error al cargar la imagen")); // Manejar el caso donde target es null
+              }
+            };
+
+            reader.onerror = () => {
+              reject(new Error("Error al leer el archivo")); // Rechaza en caso de error de FileReader
+            };
+
+            reader.readAsDataURL(image); // Lee el archivo como data URL
+          });
         });
+
+        await Promise.all(uploadPromises); // Esperar a que todas las imágenes sean procesadas
       }
 
       const newReport = await axios.post(
@@ -108,13 +131,11 @@ function Issues() {
 
       console.log(newReport);
 
-      if (newReport.data.success == true) {
+      if (newReport.data.success) {
         setOpenIssue(false);
-
         setApp(null);
         setImages([]);
         setDescription(null);
-
         toast.success("Reporte creado exitosamente");
       }
     } catch (error) {
@@ -122,7 +143,7 @@ function Issues() {
         console.log(error.message);
       }
     } finally {
-      setCreating(false); // Asegurarse de detener el estado de "creando"
+      setCreating(false);
     }
   };
 
