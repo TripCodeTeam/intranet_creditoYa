@@ -11,7 +11,10 @@ export async function POST(req: Request) {
     }
 
     const token = authorizationHeader.split(" ")[1];
-    const decodedToken = TokenService.verifyToken(token, process.env.JWT_SECRET as string);
+    const decodedToken = TokenService.verifyToken(
+      token,
+      process.env.JWT_SECRET as string
+    );
     if (!decodedToken) {
       throw new Error("Token no válido");
     }
@@ -20,7 +23,10 @@ export async function POST(req: Request) {
     const { page, pageSize } = await req.json();
 
     // Llamar al servicio para obtener préstamos con cambio de cantidad
-    const response = await LoanApplicationService.getLoansWithDefinedNewCantity(page || 1, pageSize || 5);
+    const response = await LoanApplicationService.getLoansWithDefinedNewCantity(
+      page || 1,
+      pageSize || 5
+    );
 
     return NextResponse.json({
       success: true,
@@ -28,7 +34,8 @@ export async function POST(req: Request) {
       total: response.total,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+    if (error instanceof Error) {
+      return NextResponse.json({ success: false, error: error.message });
+    }
   }
 }
-
