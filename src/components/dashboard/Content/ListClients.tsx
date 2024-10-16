@@ -107,7 +107,7 @@ function ListClients() {
 
         <InDevelop
           reason={"Implementando nuevo sistema de filtrado por usuario"}
-          status="In Progress"
+          status="Success"
         />
 
         {option !== null && (

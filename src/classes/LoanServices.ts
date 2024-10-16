@@ -116,8 +116,8 @@ class LoanApplicationService {
         prisma.loanApplication.count({ where }),
       ]);
 
-      console.log("Data:", data);
-      console.log("Total:", total);
+      // console.log("Data:", data);
+      // console.log("Total:", total);
 
       return { data, total };
     } catch (error) {
@@ -129,31 +129,41 @@ class LoanApplicationService {
   // Método para obtener las solicitudes de préstamo con estado "Aprobado"
   static async getApprovedLoans(
     page: number = 1,
-    pageSize: number = 5
+    pageSize: number = 5,
+    documentNumber?: string // Añadir parámetro opcional para el número de documento
   ): Promise<{ data: LoanApplication[]; total: number }> {
     const skip = (page - 1) * pageSize;
 
     // Construir el objeto de filtros
     const where: any = {
-      status: "Aprobado", // Asegúrate de que el valor coincida exactamente con los valores en la base de datos
+      status: "Aprobado",
     };
 
+    if (documentNumber) {
+      where.user = {
+        Document: {
+          some: { number: documentNumber }, // Filtrar por número de documento
+        },
+      };
+    }
+
     try {
-      // Obtener las solicitudes de préstamo con paginación y filtro por estado
+      // Obtener las solicitudes de préstamo con paginación y filtro por estado y documento
       const [data, total] = await prisma.$transaction([
         prisma.loanApplication.findMany({
           where,
           skip,
           take: pageSize,
           include: {
-            user: true, // Incluir la información del usuario
+            user: {
+              include: {
+                Document: true, // Incluir el documento en la respuesta
+              },
+            },
           },
         }),
         prisma.loanApplication.count({ where }),
       ]);
-
-      console.log("Data:", data);
-      console.log("Total:", total);
 
       return { data, total };
     } catch (error) {
@@ -165,7 +175,8 @@ class LoanApplicationService {
   // Método para obtener las solicitudes de préstamo con estado "Aplazado"
   static async getDeferredLoans(
     page: number = 1,
-    pageSize: number = 5
+    pageSize: number = 5,
+    documentNumber?: string // Añadir parámetro opcional para el número de documento
   ): Promise<{ data: LoanApplication[]; total: number }> {
     const skip = (page - 1) * pageSize;
 
@@ -174,22 +185,32 @@ class LoanApplicationService {
       status: "Aplazado", // Asegúrate de que el valor coincida exactamente con los valores en la base de datos
     };
 
+    // Si se proporciona un número de documento, agregar filtro para el documento del usuario
+    if (documentNumber) {
+      where.user = {
+        Document: {
+          some: { number: documentNumber }, // Filtrar por número de documento
+        },
+      };
+    }
+
     try {
-      // Obtener las solicitudes de préstamo con paginación y filtro por estado
+      // Obtener las solicitudes de préstamo con paginación y filtro por estado y documento
       const [data, total] = await prisma.$transaction([
         prisma.loanApplication.findMany({
           where,
           skip,
           take: pageSize,
           include: {
-            user: true, // Incluir la información del usuario
+            user: {
+              include: {
+                Document: true, // Incluir el documento en la respuesta
+              },
+            },
           },
         }),
         prisma.loanApplication.count({ where }),
       ]);
-
-      console.log("Data:", data);
-      console.log("Total:", total);
 
       return { data, total };
     } catch (error) {
@@ -201,7 +222,8 @@ class LoanApplicationService {
   // Método para obtener las solicitudes de préstamo con newCantity definido y newCantityOpt nulo
   static async getLoansWithDefinedNewCantity(
     page: number = 1,
-    pageSize: number = 5
+    pageSize: number = 5,
+    documentNumber?: string // Añadir parámetro opcional para el número de documento
   ): Promise<{ data: LoanApplication[]; total: number }> {
     const skip = (page - 1) * pageSize;
 
@@ -211,6 +233,15 @@ class LoanApplicationService {
       newCantityOpt: null, // newCantityOpt debe ser nulo
     };
 
+    // Si se proporciona un número de documento, agregar filtro para el documento del usuario
+    if (documentNumber) {
+      where.user = {
+        Document: {
+          some: { number: documentNumber }, // Filtrar por número de documento
+        },
+      };
+    }
+
     try {
       // Obtener las solicitudes de préstamo con paginación y filtros especificados
       const [data, total] = await prisma.$transaction([
@@ -219,14 +250,15 @@ class LoanApplicationService {
           skip,
           take: pageSize,
           include: {
-            user: true, // Incluir la información del usuario
+            user: {
+              include: {
+                Document: true, // Incluir el documento en la respuesta
+              },
+            },
           },
         }),
         prisma.loanApplication.count({ where }),
       ]);
-
-      console.log("Data:", data);
-      console.log("Total:", total);
 
       return { data, total };
     } catch (error) {

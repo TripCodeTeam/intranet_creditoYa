@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // Verificar la autenticación JWT
     const authorizationHeader = req.headers.get("Authorization");
 
     if (!authorizationHeader) {
@@ -12,7 +11,6 @@ export async function POST(req: Request) {
     }
 
     const token = authorizationHeader.split(" ")[1];
-
     const decodedToken = TokenService.verifyToken(
       token,
       process.env.JWT_SECRET as string
@@ -22,17 +20,16 @@ export async function POST(req: Request) {
       throw new Error("Token no válido");
     }
 
-    const { page, pageSize } = await req.json();
+    const { page, pageSize, documentNumber } = await req.json();
 
     const response = await LoanApplicationService.getApprovedLoans(
       page || 1,
-      pageSize || 5
+      pageSize || 5,
+      documentNumber // Pasar el número de documento al servicio
     );
 
-    console.log(response);
-
     if (!response) {
-      throw new Error("Error in obtaining pending loans");
+      throw new Error("Error in obtaining loans");
     }
 
     return NextResponse.json({

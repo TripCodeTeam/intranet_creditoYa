@@ -4,36 +4,29 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // Verificar la autenticación JWT
+    // Verificar autenticación JWT
     const authorizationHeader = req.headers.get("Authorization");
-
     if (!authorizationHeader) {
       throw new Error("Token de autorización no proporcionado");
     }
 
     const token = authorizationHeader.split(" ")[1];
-
     const decodedToken = TokenService.verifyToken(
       token,
       process.env.JWT_SECRET as string
     );
-
     if (!decodedToken) {
       throw new Error("Token no válido");
     }
 
+    // Obtener paginación del cuerpo de la solicitud
     const { page, pageSize } = await req.json();
 
+    // Llamar al servicio para obtener préstamos aplazados
     const response = await LoanApplicationService.getDeferredLoans(
       page || 1,
       pageSize || 5
     );
-
-    console.log(response);
-
-    if (!response) {
-      throw new Error("Error in obtaining pending loans");
-    }
 
     return NextResponse.json({
       success: true,

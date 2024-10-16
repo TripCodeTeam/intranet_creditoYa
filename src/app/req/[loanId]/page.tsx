@@ -133,7 +133,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response.data.success == true) {
         const data: ScalarLoanApplication = response.data.data;
@@ -150,7 +150,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
 
-        console.log(sendMail);
+        // console.log(sendMail);
 
         if (sendMail.data.success == true) {
           setDataLoan(data);
@@ -158,7 +158,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             dataLoan?.id as string,
             dataSession?.token as string
           );
-          console.log(updataDataLoan);
+          // console.log(updataDataLoan);
           setDataLoan(updataDataLoan);
           toast.success("Cantidad Cambiada");
           setOpenModelChange(false);
@@ -193,7 +193,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
         { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      console.log(response);
+      // console.log(response);
 
       if (response.data.success === true) {
         const sendMail = await axios.post(
@@ -207,7 +207,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
 
-        console.log(sendMail);
+        // console.log(sendMail);
 
         if (sendMail.data.success) {
           const data: ScalarLoanApplication = response.data.data;
@@ -992,7 +992,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           }}
           link={linkScanDocs}
         >
-          hola
+          no hay documentos subidos
         </Modal>
 
         <Modal
@@ -1000,7 +1000,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
           onClose={handleCloseModalDocs}
           link={docSelect}
         >
-          hola
+          No hay documentos subidos
         </Modal>
 
         <Modal isOpen={openReject} onClose={handleCloseModalReject}>
