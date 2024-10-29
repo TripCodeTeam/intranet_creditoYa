@@ -1,7 +1,9 @@
+"use client"
+
 import { ScalarClient } from "@/types/session";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import styles from "../styles/perfil_client.module.css";
+import styles from "./page.module.css";
 import Avatar from "react-avatar";
 import { toast } from "sonner";
 import DateToPretty from "@/handlers/DateToPretty";
@@ -21,11 +23,13 @@ import {
 import Loading from "@/app/dashboard/loading";
 import Modal from "@/components/modal/modal";
 import InDevelop from "@/components/warns/InDevelop";
+import { useGlobalContext } from "@/context/Session";
 
-function PerfilClient({ userId, token }: { userId: string; token: string }) {
+function PerfilClient({ params }: { params: { clientId: string } }) {
   const [dataUser, setDataUser] = useState<ScalarClient | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [docScan, setDocScan] = useState<string | null>(null);
+  const { dataSession } = useGlobalContext()
 
   const [openModelViewDoc, setOpenModelViewDoc] = useState(false);
 
@@ -55,12 +59,12 @@ function PerfilClient({ userId, token }: { userId: string; token: string }) {
       const response = await axios.post(
         "/api/clients/id",
         {
-          userId,
+          userId: params.clientId,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${dataSession?.token}` } }
       );
 
-      // console.log(response);
+      console.log(response);
 
       if (response.data.success == true) {
         const data: ScalarClient = response.data.data;
@@ -76,7 +80,7 @@ function PerfilClient({ userId, token }: { userId: string; token: string }) {
     };
 
     getDataUser();
-  }, [userId, token]);
+  }, [params.clientId, dataSession?.token]);
 
   //   console.log(dataUser);
 

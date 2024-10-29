@@ -33,6 +33,7 @@ import { Document01 } from "@/components/pdfs/pdfCard01";
 import Document02 from "@/components/pdfs/pdfCard02";
 import { RefreshDataLoan } from "@/handlers/requests/allDataLoan";
 import { BankTypes, handleKeyToString } from "@/handlers/keyToBankString";
+import { handleKeyToCompany } from "@/handlers/keyToCompany";
 // import { DeleteFileGcs } from "@/lib/storage";
 
 function RequestPreview({ params }: { params: { loanId: string } }) {
@@ -145,7 +146,7 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
             loanId: data.id,
             mail: dataClient?.email,
             cantity_aproved: newValue,
-            reason_aproved: reasonNewCantity
+            reason_aproved: reasonNewCantity,
           },
           { headers: { Authorization: `Bearer ${dataSession?.token}` } }
         );
@@ -466,16 +467,18 @@ function RequestPreview({ params }: { params: { loanId: string } }) {
                   <h5 className={styles.subTitleClient}>Numero celular</h5>
                   <h3>{dataClient?.phone}</h3>
                 </div>
+              </div>
 
-                <div className={styles.infoClient}>
-                  <h5 className={styles.subTitleClient}>Empresa</h5>
-                  {dataClient?.currentCompanie == "no" && (
-                    <h3>No pertenece a ninguna empresa aliada</h3>
-                  )}
-                  {dataClient?.currentCompanie !== "no" && (
-                    <h3>{dataClient?.currentCompanie}</h3>
-                  )}
-                </div>
+              <h3 className={styles.titleDocs}>Empresa aliada</h3>
+              <div className={styles.infoClient}>
+                {dataClient?.currentCompanie == "no" && (
+                  <h3>No pertenece a ninguna empresa aliada</h3>
+                )}
+                {dataClient?.currentCompanie !== "no" && (
+                  <h3>
+                    {handleKeyToCompany(dataClient?.currentCompanie as string)}
+                  </h3>
+                )}
               </div>
 
               <h3 className={styles.titleDocs}>Status del prestamo</h3>

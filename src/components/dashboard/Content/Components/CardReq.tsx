@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ScalarClient, ScalarLoanApplication } from "@/types/session";
 import React from "react";
@@ -30,9 +30,7 @@ function CardRequest({
           <div className={styles.perfilInfo}>
             <h3>{`${user?.names} ${user?.firstLastName} ${user?.secondLastName}`}</h3>
 
-            <h5 className={styles.linkPerfil}>
-              {user.email}
-            </h5>
+            <h5 className={styles.linkPerfil}>{user.email}</h5>
           </div>
         </div>
       </div>
@@ -49,7 +47,10 @@ function CardRequest({
       <div className={styles.boxInfoActs}>
         <div className={styles.centerInfoActs}>
           <p onClick={() => (window.location.href = `/req/${loan.id}`)}>
-            Revisar
+            Revisar solicitud
+          </p>
+          <p onClick={() => (window.location.href = `/client/${loan.userId}`)}>
+            Ver perfil
           </p>
         </div>
       </div>

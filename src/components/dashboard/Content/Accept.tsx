@@ -139,7 +139,7 @@ function AcceptContent() {
           ) : (
             // Si no hay préstamos, mostrar el mensaje de error
             <div className={styles.noLoans}>
-              No existen solicitudes con este documento
+              No hay solicitudes en este estado
             </div>
           )}
         </>
